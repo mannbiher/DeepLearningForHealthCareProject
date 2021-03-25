@@ -147,7 +147,7 @@ experiments. COVID-Net architecture makes heavy use of a lightweight residual
 levels of convolution layers with fully connected layers and a softmax at the end.
 COVID-Net achieved higher test accuracy than other architectures such as VGG-19 and ResNet-50.
 
-\subsection{Noise-robust framework for automatic segmentation of COVID-19 from CT images}
+\subsection{Noise-robust segmentation of COVID-19 from CT images}
 
 This is a CNN model developed to be effective with detection of COVID-19 lesions from 
 CT images that have a lot of noise. This paper discusses how Wang et al developed a
@@ -164,14 +164,19 @@ framework, where an adaptive teacher and an adaptive student are introduced to f
 the performance in dealing with noisy labels. The experiments used 2D CNNs for slice-by-slice
 segmentation, and implemented COPLE-Net, 1 LNR-Dice and the adaptive self-ensembling framework
 in Pytorch with the PyMIC 3 library on a Ubuntu desktop with an NVIDIA GTX 1080 Ti GPU. 
-The details of the construction of the \texttt{.bib} file
-are beyond the scope of this sample document, but more
-information can be found in the \textit{Author's Guide},
-and exhaustive details in the \textit{\LaTeX\ User's
-Guide}\cite{Lamport:LaTeX}.
 
-So far, this article has shown only the plainest form
-of the citation command, using \texttt{{\char'134}cite}.
+The proposed COPLE-Net was compared with four state-of-the-art networks for semantic or medical
+image segmentation
+
+\begin{itemize}
+       \item 3D nnU-Net that is extended from 3D U-Net
+       \item Attention U-Net 3) ScSE U-Net
+       \item ESPNetv2 and proven to be most effective with noisy images.
+\end{itemize}
+
+In addition, COPLE-Net was compared with three variants: COPLE-Net (-A), COPLE-Net (-D)
+and COPLE-Net (-B) 
+
 %
 %You can also use a citation as a noun in a sentence, as
 % is done here, and in the \citeN{herlihy:methodology} article;
