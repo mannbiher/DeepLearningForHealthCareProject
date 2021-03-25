@@ -33,6 +33,8 @@ Two different dataset so need preprocessing to make them similar.
 
 Very small dataset so lot of data processing is required.
 
+Check the current dataset
+
 ### Approach
 
 Identify the high-level technical approaches for the project (e.g., what
@@ -59,13 +61,31 @@ Use Focal loss learning (FLANNEL Training algoritm)
 3. Confusion Matrix
 4. F1 score comparision accuracy of all methods
 
+
+Improvement and Discussion
+1. Seggregate the Patitent
+2. Covid-19 Net use base model
+
+
+
+
+
 ### Experimental Setup
 
 Setup the analytic infrastructure for your project (including both hardware
 and software environment, e.g., AWS or local clusters with Python,PyTorch and all
 necessary packages).
 
+pytorch ()
+=============*========
+200 dollar credits
+==========*===========
+
+
+
 ### Timeline
 
 Prepare a timeline and milestones of deliverables with reasonably
 proposed task distributions for the entire project.
+
+
