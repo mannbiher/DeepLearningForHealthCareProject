@@ -8,6 +8,10 @@ fix below warnings
 - FLANNEL/ensemble_step1.py:373: UserWarning: volatile was removed and now has no effect. Use `with torch.no_grad():` instead.
   inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
 
+Views have been updated for Covid19 data
+AP => AP and AP Erect
+
+
 ## Data Prepare
 ### Data Collect
 1. Download CCX data: from https://github.com/ieee8023/covid-chestxray-dataset, put them into original_data/covid-chestxray-dataset-master
