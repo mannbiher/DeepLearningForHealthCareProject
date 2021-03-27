@@ -128,10 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.DS_STORE
+.DS_Store
 *.aux
 *.fdb_latexmk
 *.fls
 *.synctex.gz
 # vscode
 .vscode/
+
+# secrets
+*.secret*
