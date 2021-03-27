@@ -21,23 +21,29 @@ x3 = 0
 n_ct = 0
 n_ards = 0
 with open(info_path,'r') as f:
-  csv_reader = csv.reader(f)
+  csv_reader = csv.DictReader(f)
   i = 0 
   for row in csv_reader:
-    if i == 0:
-      i += 1
-      continue
-    patient_id = row[0]
-    subject_id = row[1]
-    view = row[6]
-    image_name = row[10]
-    disease = row[4]
-    modality = row[7]
+    # if i == 0:
+    #   i += 1
+    #   continue
+    # print('row',row[6], row[7])
+    patient_id = row['patientid']
+    subject_id = row['offset']
+    # View
+    view = row['view']
+    # Filename
+    image_name = row['filename']
+    # Finding
+    disease = row['finding']
+    # Modality
+    modality = row['modality']
     if 'ray' not in modality:
       n_ct += 1
       continue
     jpg_path = os.path.join(image_root_dir, image_name)
     if os.path.exists(jpg_path) and 'AP' in view:    
+      print('here')
       if data_dict.get(patient_id+'_'+subject_id) is None:
           data_dict[patient_id+'_'+subject_id] = {'class':{
                                               'COVID-19':0,
@@ -121,7 +127,7 @@ print (z0, z1, z2, z3)
 print (v0, v1, v2, v3)
 print (w0, w1, w2, w3)
 
-print(data_dict)
+# print(data_dict)
 pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 ##pickle.dump(pa_list, open('pa_list.pkl','wb'))
 ###saved_path = './data_preprocess/formal_covid_dict.pkl'
