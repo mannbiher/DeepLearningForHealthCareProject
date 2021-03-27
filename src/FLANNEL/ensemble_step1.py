@@ -15,12 +15,12 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
-from explore_version_03.models import imagenet as customized_models
-from explore_version_03.data.xray_dataset_0328 import XrayDataset
-from explore_version_03.utils import Bar, AverageMeter, accuracy, mkdir_p
-from explore_version_03.utils.logger import Logger, savefig
+from models import imagenet as customized_models
+from data.xray_dataset_0328 import XrayDataset
+from utils import Bar, AverageMeter, accuracy, mkdir_p
+from utils.logger import Logger, savefig
 import csv
-from explore_version_03.utils.measure import MeasureR
+from utils.measure import MeasureR
 
 # Models
 default_model_names = sorted(name for name in models.__dict__
@@ -46,7 +46,7 @@ parser.add_argument('--experimentID', default='%s_20200407_multiclass_cv5', type
 
 # Datasets
 parser.add_argument('-d', '--data', default=
-                    './data_preprocess/standard_data_multiclass_0407_crossentropy/exp_%s_list_cv5.pkl', type=str)
+                    './data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_cv5.pkl', type=str)
 parser.add_argument('--label_file', default='./exp_data/metadata.csv', type=str)
 parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
@@ -87,7 +87,7 @@ parser.add_argument('-ck_n', '--checkpoint_saved_n', default=2, type=int, metava
                     help='each N epoch to save model')
 
 # Test Outputs
-parser.add_argument('--test', default = True, dest='test', action='store_true',
+parser.add_argument('--test', default = False, dest='test', action='store_true',
                     help='evaluate model on test set')
 parser.add_argument('--results', default='./explore_version_03/results', type=str, metavar='PATH',
                     help='path to save experiment results (default: results)')
@@ -107,7 +107,7 @@ parser.add_argument('--widen-factor', type=int, default=4, help='Widen factor. 4
 
 # Miscs
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--pretrained', dest='pretrained', default=True, action='store_false',
+parser.add_argument('--pretrained', dest='pretrained', default=False, action='store_false',
                     help='use pre-trained model')
 #Device options
 parser.add_argument('--gpu-id', default='0', type=str,
@@ -142,7 +142,10 @@ def main():
         mkdir_p(os.path.join(args.checkpoint, experimentID))
     
     checkpoint_dir = os.path.join(args.checkpoint, experimentID)
+    if not os.path.isdir(checkpoint_dir):
+        mkdir_p(checkpoint_dir)
     
+
     # Data loading code
     train_dataset = XrayDataset(args, 'train')
     train_distri = train_dataset.get_label_distri()
