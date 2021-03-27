@@ -42,6 +42,7 @@ write_files:
 - content: |
     export PATH="$HOME/.local/bin:$PATH"
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    source ~/.local/bin/virtualenvwrapper.sh
   path: /root/env
 
 
