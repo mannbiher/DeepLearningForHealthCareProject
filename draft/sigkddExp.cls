@@ -26,6 +26,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{color}
+\usepackage{float}
 %
 % ACMPROC-SP DOCUMENT STYLE
 % G.K.M. Tobin August-October 1999

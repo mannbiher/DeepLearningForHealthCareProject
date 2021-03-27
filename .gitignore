@@ -133,6 +133,8 @@ dmypy.json
 *.fdb_latexmk
 *.fls
 *.synctex.gz
+*.bbl
+*.blg
 # vscode
 .vscode/
 

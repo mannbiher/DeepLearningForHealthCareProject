@@ -1,0 +1,33 @@
+\begin{thebibliography}{1}
+
+\bibitem{pmid32339081}
+H.~X. Bai, R.~Wang, Z.~Xiong, B.~Hsieh, K.~Chang, K.~Halsey, T.~M.~L. Tran,
+  J.~W. Choi, D.~C. Wang, L.~B. Shi, J.~Mei, X.~L. Jiang, I.~Pan, Q.~H. Zeng,
+  P.~F. Hu, Y.~H. Li, F.~X. Fu, R.~Y. Huang, R.~Sebro, Q.~Z. Yu, M.~K. Atalay,
+  and W.~H. Liao.
+\newblock {{A}rtificial {I}ntelligence {A}ugmentation of {R}adiologist
+  {P}erformance in {D}istinguishing {C}{O}{V}{I}{D}-19 from {P}neumonia of
+  {O}ther {O}rigin at {C}hest {C}{T}}.
+\newblock {\em Radiology}, 296(3):E156--E165, 09 2020.
+
+\bibitem{9084097}
+S.~{Karanam}, R.~{Li}, F.~{Yang}, W.~{Hu}, T.~{Chen}, and Z.~{Wu}.
+\newblock Towards contactless patient positioning.
+\newblock {\em IEEE Transactions on Medical Imaging}, 39(8):2701--2710, 2020.
+
+\bibitem{lin2018focal}
+T.-Y. Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Dollár.
+\newblock Focal loss for dense object detection, 2018.
+
+\bibitem{pmid32396075}
+Y.~Oh, S.~Park, and J.~C. Ye.
+\newblock {{D}eep {L}earning {C}{O}{V}{I}{D}-19 {F}eatures on {C}{X}{R} {U}sing
+  {L}imited {T}raining {D}ata {S}ets}.
+\newblock {\em IEEE Trans Med Imaging}, 39(8):2688--2700, 08 2020.
+
+\bibitem{wang2020covidnet}
+L.~Wang and A.~Wong.
+\newblock Covid-net: A tailored deep convolutional neural network design for
+  detection of covid-19 cases from chest x-ray images, 2020.
+
+\end{thebibliography}
