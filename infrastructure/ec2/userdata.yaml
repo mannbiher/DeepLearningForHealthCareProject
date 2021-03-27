@@ -23,25 +23,31 @@ write_files:
     chmod 600 /home/ubuntu/.kaggle/kaggle.json
     kaggle datasets download -d paultimothymooney/chest-xray-pneumonia
     # github dataset download
-    git clone https://github.com/ieee8023/covid-chestxray-dataset.git
+    wget https://github.com/ieee8023/covid-chestxray-dataset/archive/refs/heads/master.zip
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
     source ~/.local/bin/virtualenvwrapper.sh
-    mkvirtualenv FLANNEL
-    git clone https://github.com/qxiaobu/FLANNEL.git
+    mkvirtualenv flannel
+    git clone https://github.com/mannbiher/DeepLearningForHealthCareProject.git
     # copy dataset
-    mkdir /home/ubuntu/FLANNEL/original\ data/covid-chestxray-dataset-master/
-    mkdir /home/ubuntu/FLANNEL/original\ data/chest_xray
-    cp /home/ubuntu/covid-chestxray-dataset/images/* /home/ubuntu/FLANNEL/original\ data/covid-chestxray-dataset-master/
-    unzip chest-xray-pneumonia.zip -d /home/ubuntu/FLANNEL/original\ data/chest_xray
-    # cd CourseProject/src
+    unzip covid-chestxray-dataset-master.zip -d /home/ubuntu/DeepLearningForHealthCareProject/original_data/
+    unzip chest-xray-pneumonia.zip -d /home/ubuntu/DeepLearningForHealthCareProject/original_data/
+    # cd DeepLearningForHealthCareProject/src
     # pip install -r requirements.txt
     # cd ../playground
     # python main.py > experiment1_output.txt
   path: /root/clone.sh
+- content: |
+    export PATH="$HOME/.local/bin:$PATH"
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+  path: /root/env
+
+
   
 
 runcmd:
   - sudo cp /root/clone.sh /home/ubuntu/clone.sh
+  - sudo cp /root/env /home/ubuntu/env
   - [ bash, -c, "chmod +x /home/ubuntu/clone.sh" ]
   - [ bash, -c, "chown ubuntu: /home/ubuntu/clone.sh" ]
+  - [ bash, -c, "chown ubuntu: /home/ubuntu/env" ]
   - sudo -u ubuntu bash -c 'whoami;/home/ubuntu/clone.sh'
