@@ -70,6 +70,10 @@ z2 = 0
 z3 = 0
 i = 0
 j = 0
+
+
+p0 = p1 = p2 = p3 = 0
+a0 = a1 = a2 = a3 = 0
 for key, value in data_dict.items():
   for jpg_name, jpg_info in value['image_dict'].items():
     y0 += value['class']['COVID-19']
@@ -83,11 +87,24 @@ for key, value in data_dict.items():
       z1 += value['class']['pneumonia_virus']
       z2 += value['class']['pneumonia_bacteria']
       z3 += value['class']['normal']
+      if 'PA' in jpg_info['type']:
+        p0 += value['class']['COVID-19']
+        p1 += value['class']['pneumonia_virus']
+        p2 += value['class']['pneumonia_bacteria']
+        p3 += value['class']['normal']
+      if 'AP' in jpg_info['type']:
+        a0 += value['class']['COVID-19']
+        a1 += value['class']['pneumonia_virus']
+        a2 += value['class']['pneumonia_bacteria']
+        a3 += value['class']['normal']
+      
 print (i, j)
-print (y0, y1, y2, y3)
-print (z0, z1, z2, z3)
+print ('All classes:',y0, y1, y2, y3)
+print ('PA or AP views:',z0, z1, z2, z3)
+print ('PA views:',p0, p1, p2, p3)
+print ('AP views:',a0, a1, a2, a3)
 
-print(data_dict)
+# print(data_dict)
 saved_path = './data_preprocess/formal_kaggle_dict.pkl'
 if os.path.exists(saved_path):
  os.remove(saved_path)

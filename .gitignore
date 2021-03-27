@@ -143,3 +143,6 @@ dmypy.json
 
 # Python pickel files
 *.pkl
+
+# dataset stats
+standard_data_multiclass_0922_crossentropy/

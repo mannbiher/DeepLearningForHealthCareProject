@@ -10,6 +10,7 @@ packages:
     - python3-pip
     - awscli
     - unzip
+    - zip
 
 write_files:
 - content: |
