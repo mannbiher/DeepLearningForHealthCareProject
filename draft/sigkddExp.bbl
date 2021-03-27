@@ -25,6 +25,13 @@ Y.~Oh, S.~Park, and J.~C. Ye.
   {L}imited {T}raining {D}ata {S}ets}.
 \newblock {\em IEEE Trans Med Imaging}, 39(8):2688--2700, 08 2020.
 
+\bibitem{10.1093/jamia/ocaa280}
+Z.~Qiao, A.~Bae, L.~M. Glass, C.~Xiao, and J.~Sun.
+\newblock {FLANNEL (Focal Loss bAsed Neural Network EnsembLe) for COVID-19
+  detection}.
+\newblock {\em Journal of the American Medical Informatics Association},
+  28(3):444--452, 10 2020.
+
 \bibitem{wang2020covidnet}
 L.~Wang and A.~Wong.
 \newblock Covid-net: A tailored deep convolutional neural network design for

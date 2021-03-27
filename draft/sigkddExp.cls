@@ -255,7 +255,7 @@
 %\newfont{\subsecfnt}{timesi at 11pt} % was timenrri originally - now is timesi
 %\newfont{\ttlfnt}{arialbd at 18pt} % was arialb originally - now is arialbd
 %\newfont{\subttlfnt}{arial at 14pt} % was arialr originally - now is arial
-%\newfont{\aufnt}{arial at 12pt} % was arialr originally - now is arial
+%\newfont{\aufnt}{arial at 11pt} % was arialr originally - now is arial
 %\newfont{\affaddr}{arial at 10pt} % was arialr originally - now is arial
 %\newfont{\eaddfnt}{arial at 12pt} % was arialr originally - now is arial
 %\newfont{\ixpt}{times at 9pt} % was timenrr originally - now is times
@@ -275,9 +275,9 @@
 \newfont{\subsecfnt}{ptmri at 11pt}
 \newfont{\ttlfnt}{phvb at 18pt}
 \newfont{\subttlfnt}{phvr at 14pt}
-\newfont{\aufnt}{phvr at 12pt}
-\newfont{\affaddr}{phvr at 10pt}
-\newfont{\eaddfnt}{phvr at 12pt}
+\newfont{\aufnt}{phvr at 10pt}
+\newfont{\affaddr}{phvr at 8pt}
+\newfont{\eaddfnt}{phvr at 8pt}
 \newfont{\ixpt}{ptmr at 9pt}
 \newfont{\confname}{ptmri at 8pt}
 \newfont{\crnotice}{ptmr at 8pt}
@@ -288,7 +288,7 @@
 
 \def\email#1{{{\eaddfnt{\vskip 4pt#1}}}}
 
-\def\addauthorsection{\ifnum\originalaucount>3
+\def\addauthorsection{\ifnum\originalaucount>4
     \section{Additional Authors}\the\addauthors
   \fi}
 

@@ -59,23 +59,23 @@
 % affiliation/address with \affaddr, and tag the
 %% e-mail address with \email.
 \alignauthor Maneesh Kumar Singh \\
-       \affaddr{University of Illinois at Urbana-Champaign}\\
-       \email{mksingh4@illinois.edu}
+\affaddr{University of Illinois at Urbana-Champaign}\\
+\email{mksingh4@illinois.edu}
 \alignauthor Raman Walwyn-Venugopal\\
-       \affaddr{University of Illinois at Urbana-Champaign}\\
-       \email{rsw2@illinois.edu}
+\affaddr{University of Illinois at Urbana-Champaign}\\
+\email{rsw2@illinois.edu}
 \alignauthor Satish Reddy Asi\\
-       \affaddr{University of Illinois at Urbana-Champaign}\\
-       \email{sasi2@illinois.edu}
+\affaddr{University of Illinois at Urbana-Champaign}\\
+\email{sasi2@illinois.edu}
 \alignauthor Srikanth Bharadwaz Samudrala\\
-       \affaddr{University of Illinois at Urbana-Champaign}\\
-       \email{sbs7@illinois.edu}
+\affaddr{University of Illinois at Urbana-Champaign}\\
+\email{sbs7@illinois.edu}
 }
 
 \date{30 July 1999}
 \maketitle
 \begin{abstract}
-TODO
+    TODO
 \end{abstract}
 
 \section{Introduction}
@@ -94,6 +94,12 @@ deep learning models and improve the current research.
 
 
 \section{Literature Survey}
+
+\subsection{FLANNEL for COVID-19 detection}\cite{10.1093/jamia/ocaa280}
+
+pass
+
+
 
 \subsection{COVID-19 classification using chest CT}\cite{pmid32339081}
 
@@ -169,9 +175,9 @@ The proposed COPLE-Net was compared with four state-of-the-art networks for sema
 image segmentation
 
 \begin{enumerate}
-       \item 3D nnU-Net that is extended from 3D U-Net
-       \item Attention U-Net 3) ScSE U-Net
-       \item ESPNetv2 and proven to be most effective with noisy images.
+    \item 3D nnU-Net that is extended from 3D U-Net
+    \item Attention U-Net 3) ScSE U-Net
+    \item ESPNetv2 and proven to be most effective with noisy images.
 \end{enumerate}
 
 In addition, COPLE-Net was compared with three variants: COPLE-Net (-A), COPLE-Net (-D)
@@ -195,22 +201,22 @@ and COPLE-Net (-B)
 
 The following datasets that we are considering for this project:
 \begin{enumerate}
-       
-\item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19 pneumonia images 
-as well few X-ray images from other classes. The dataset can be obtained from 
-github at this link   
-https://github.com/ieee8023/covid-chestxray-dataset
-
-\item Kaggle Chest X-ray (KCX) dataset: This dataset contains normal, bacterial pneumonia, 
-and nov-COVID-19 viral pneumonia. The dataset can be obtained from Kaggle at this 
-link
-https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
+    
+    \item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19 pneumonia images 
+    as well few X-ray images from other classes. The dataset can be obtained from 
+    github at this link   
+    https://github.com/ieee8023/covid-chestxray-dataset
+    
+    \item Kaggle Chest X-ray (KCX) dataset: This dataset contains normal, bacterial pneumonia, 
+    and nov-COVID-19 viral pneumonia. The dataset can be obtained from Kaggle at this 
+    link
+    https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
 \end{enumerate}
 
 
 In the FLANNEL paper, 5508 chest x-ray images across 2874 independent patient cases. Both dataset contains anteroposterior (AP) and posteroanterior (PA) view.
 
- As done in the research paper, we will include  both AP and PA views. Due to AP and PA views being different types of X-ray images, horizontal flips and random noise will be used to convert PA into AP view. 
+As done in the research paper, we will include  both AP and PA views. Due to AP and PA views being different types of X-ray images, horizontal flips and random noise will be used to convert PA into AP view. 
 
 \section{Approach}
 
@@ -222,11 +228,11 @@ Use a basis model and get predictions for four clases. Use pretrained model usin
 
 
 \begin{enumerate}
-       \item InceptionV3
-       \item Vgg19\_bn
-       \item ResNeXt101
-       \item Resnet152
-       \item Densenet161
+    \item InceptionV3
+    \item Vgg19\_bn
+    \item ResNeXt101
+    \item Resnet152
+    \item Densenet161
 \end{enumerate}
 
 
@@ -262,25 +268,59 @@ TODO: Latex formula
 Use below measures to calculate the accuracy of Ensemble model for verification
 
 \begin{enumerate}
-       \item Precision-Recall curve
-       \item ROC curve
-       \item Confusion Matrix
-       \item F1 score comparison accuracy of all methods 
+    \item Precision-Recall curve
+    \item ROC curve
+    \item Confusion Matrix
+    \item F1 score comparison accuracy of all methods 
 \end{enumerate}
 
 
 
 \subsection{Improvement Discussion}
+
+Based on the performance of the novel FLANNEL architecture, our team is
+motivated to improve the performance further. With inspiration from the approach
+of Oh Y., and Park S., a primary improvement that we are proposing is to extract
+the lung contours from the CXR images prior to classification. The motivation
+behind this is to have the classifier focus on the specific lung regions versus
+the whole CXR image. In addition, another improvement we propose is to modify
+each base model in the ensemble to process the segmented CXR image in K patches.
+
+To accomplish this, the steps we will follow are
+
 \begin{enumerate}
-       \item Preprocess the CXR images from the collected dataset 
-\item Extract the lung contours from the CXR images.
-\item Divide the lung contours into K patches.
-\item Process each patch with deep learning networks, in parallel.
-\item Perform ensemble (combining multiple K patch classifiers) to calculate the weighted ensemble.
-\item Get the prediction and compare with the ground truth.
-\item Apply Focal Loss to train the model (improve weights).
-\item Test the model on the ‘test’ dataset to calculate accuracy, precision, F1 measure, ROAUC and other metrics.
+    \item Extract the lung contours from the CXR images using Segment Model.
+    \item Train k-patch classifiers.
+    \begin{enumerate}
+        \item Start with pre-trained model from Image Net
+        \item Divide extracted lung contours into k-patches
+        \item Run each patch through model to generate classification,
+        prediction is calculated based on majority voting
+        \item Update shared weights for each of the k models
+    \end{enumerate}
+    \item Construct improved FLANNEL architecture by using extracted lung
+    contours as input and k-patch classifiers used as the base models.
+    \item Train Improved FLANNEL architecture
+    \begin{enumerate}
+        \item Input is CXR image
+        \item Extract lung contours using Segment Model
+        \item Create k-patches of segmented CXR
+        \item Each k-patch classifier processes k-patches and produces predictions
+        \item Calculate weighted ensemble through neural weighting module
+        \item Compute prediction based on k-patch model predictions and weights
+        \item Compute focal loss and update neural weighting module weights
+        \item Continuously calculate metrics to measure performance such as but
+        not limited to: accuracy, precision, F1 and ROAUC.
+    \end{enumerate}
+    \item Perform ensemble (combining multiple K patch classifiers) to calculate the weighted ensemble.
+    \item Get the prediction and compare with the ground truth.
+    \item Apply Focal Loss to train the model (improve weights).
+    \item Test the model on the ‘test’ dataset to calculate accuracy, precision, F1 measure, ROAUC and other metrics.
 \end{enumerate}
+
+\begin{figure}[h]
+    \includegraphics[width=8cm]{../doc/images/FLANNEL-IMPROVED.png}
+\end{figure}
 
 
 \section{Experimental Setup}
@@ -291,29 +331,30 @@ We are planning to use AWS for the training and evaluation.
 
 
 \begin{table}[H]
-\centering
-\caption{Project Timeline}
-\begin{tabular}{|c|c|} \hline
-       Research, Planning and proposal &03/28/2021\\ \hline
-       Data Cleaning and Preprocessing & 04/02/2021\\ \hline
-       Extract the lung contours & 04/09/2021\\ \hline
-       Apply classifier on each patch & 04/09/2021\\ \hline
-       Ensemble the results from each classifier & 04/16/2021\\ \hline
-       Calculate weights & 04/23/2021 \\ \hline
-       Run the training data to get the prediction & 04/23/2021 \\ \hline
-       Apply Focal Loss & 04/23/2021 \\ \hline
-       Model Training & 04/23/2021 \\ \hline
-       Performance Evaluation & 04/23/2021 \\ \hline
-       Documentation and Video presentation & 05/07/2021 \\
-       Code and Report Submission & 05/08/2021 \\
-\hline\end{tabular}
-\end{table}
-
-%
-% The following two commands are all you need in the
-% initial runs of your .tex file to
-% produce the bibliography for the citations in your paper.
-\bibliographystyle{abbrv}
-\bibliography{covid19}  % sigproc.bib is the name of the Bibliography in this case
-
-\end{document}
+    \centering
+    \caption{Project Timeline}
+    \begin{tabular}{|c|c|} \hline
+        Research, Planning and proposal &03/28/2021\\ \hline
+        Data Cleaning and Preprocessing & 04/02/2021\\ \hline
+        Extract the lung contours & 04/09/2021\\ \hline
+        Apply classifier on each patch & 04/09/2021\\ \hline
+        Ensemble the results from each classifier & 04/16/2021\\ \hline
+        Calculate weights & 04/23/2021 \\ \hline
+        Run the training data to get the prediction & 04/23/2021 \\ \hline
+        Apply Focal Loss & 04/23/2021 \\ \hline
+        Model Training & 04/23/2021 \\ \hline
+        Performance Evaluation & 04/23/2021 \\ \hline
+        Documentation and Video presentation & 05/07/2021 \\
+        Code and Report Submission & 05/08/2021 \\
+        \hline\end{tabular}
+    \end{table}
+    
+    %
+    % The following two commands are all you need in the
+    % initial runs of your .tex file to
+    % produce the bibliography for the citations in your paper.
+    \bibliographystyle{abbrv}
+    \bibliography{covid19}  % sigproc.bib is the name of the Bibliography in this case
+    
+    \end{document}
+    
