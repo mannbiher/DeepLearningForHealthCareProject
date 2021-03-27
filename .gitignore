@@ -140,3 +140,6 @@ dmypy.json
 
 # secrets
 *.secret*
+
+# Python pickel files
+*.pkl

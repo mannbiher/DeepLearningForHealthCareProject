@@ -1,7 +1,7 @@
 import os
 import pickle
 
-data_dir = './chest_xray'
+data_dir = './original_data/chest_xray'
 data_type = ['train','val','test']
 statistic_dict = {}
 data_dict = {}
@@ -86,12 +86,13 @@ for key, value in data_dict.items():
 print (i, j)
 print (y0, y1, y2, y3)
 print (z0, z1, z2, z3)
-    
-#saved_path = './data_preprocess/formal_kaggle_dict.pkl'
-#if os.path.exists(saved_path):
-#  os.remove(saved_path)
-#pickle.dump(data_dict, open(saved_path,'wb'))
-#print ('finish')
+
+print(data_dict)
+saved_path = './data_preprocess/formal_kaggle_dict.pkl'
+if os.path.exists(saved_path):
+ os.remove(saved_path)
+pickle.dump(data_dict, open(saved_path,'wb'))
+print ('finish')
 
 #print (i, j)
 #5856 5856
