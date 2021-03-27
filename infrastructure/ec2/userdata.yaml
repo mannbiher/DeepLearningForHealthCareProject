@@ -14,9 +14,9 @@ packages:
 write_files:
 - content: |
     #!/usr/bin/env bash
+    export PATH="$HOME/.local/bin:$PATH"
     cd /home/ubuntu/
     pip3 install virtualenvwrapper kaggle --user
-    export PATH="$HOME/.local/bin:$PATH"
     # Kaggle download dataset
     mkdir /home/ubuntu/.kaggle/
     aws s3 cp s3://m-secrets-us-east-2/kaggle.json /home/ubuntu/.kaggle/
