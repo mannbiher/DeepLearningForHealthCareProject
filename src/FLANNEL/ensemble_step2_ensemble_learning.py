@@ -15,14 +15,14 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 #import torchvision.models as models
-import explore_version_03.models.proposedModels.models as models 
-from explore_version_03.data.ensemble_dataset import EnsembleDataset
-from explore_version_03.data.ensemble_dataset import EnsembleDatasetSampling
-from explore_version_03.utils import Bar, AverageMeter, accuracy, mkdir_p
-from explore_version_03.utils.logger import Logger, savefig
+import models.proposedModels.models as models 
+from data.ensemble_dataset import EnsembleDataset
+from data.ensemble_dataset import EnsembleDatasetSampling
+from utils import Bar, AverageMeter, accuracy, mkdir_p
+from utils.logger import Logger, savefig
 import csv
-from explore_version_03.utils.measure import MeasureR
-from explore_version_03.models.proposedModels.loss import FocalLoss as focalloss
+from utils.measure import MeasureR
+from models.proposedModels.loss import FocalLoss as focalloss
 # cv3: 0.001
 
 # Models

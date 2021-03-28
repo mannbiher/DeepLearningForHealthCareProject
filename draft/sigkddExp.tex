@@ -96,19 +96,20 @@ understanding of deep learning models and improve the current research.
 
 \subsection{FLANNEL for COVID-19 detection}
 
-FLANNEL model \cite{10.1093/jamia/ocaa280} is a classification model
-proposed for detection of COVID-19 from other pneumonia types and normal x-ray images. 
-In this paper, Zhi Qiao \textit{et al.} has shown that with ensemble learning
-FLANNEL can detect and diagnose COVID-19 from pneumonia x-ray images with
-high accuracy, even when trained on only 100 available COVID-19 x-ray images.
+FLANNEL model \cite{10.1093/jamia/ocaa280} is a classification model proposed
+for detection of COVID-19 from other pneumonia types and normal x-ray images. In
+this paper, Zhi Qiao \textit{et al.} has shown that with ensemble learning
+FLANNEL can detect and diagnose COVID-19 from pneumonia x-ray images with high
+accuracy, even when trained on only 100 available COVID-19 x-ray images.
 
 FLANNEL model introduces two stage classification, where first stage involves
-using state of arts CNN models to classify dataset into 4 classes: COVID, Pneumonia virus, Pneumonia bacteria, Normal.
-As train dataset is very small, pre-trained models using ImageNet are utilized.
+using state of arts CNN models to classify dataset into 4 classes: COVID,
+Pneumonia virus, Pneumonia bacteria, Normal. As train dataset is very small,
+pre-trained models using ImageNet are utilized.
 
-In stage-2, a neural weight module is used to learn weights for all five predictions in Stage-1.
-For model training, instead of cross-entropy loss, focal loss is extended to handle
-multiclass classification.
+In stage-2, a neural weight module is used to learn weights for all five
+predictions in Stage-1. For model training, instead of cross-entropy loss, focal
+loss is extended to handle multiclass classification.
 
 \begin{align}
     LossFunc &=FocalLoss(\hat{y},y) \\
@@ -189,22 +190,7 @@ noisy labels for COVID-19 pneumonia lesion segmentation. To make the training
 process robust against noisy labels, a novel noise-robust Dice loss function was
 proposed and integrated into a self-ensembling framework, where an adaptive
 teacher and an adaptive student are introduced to further improve the
-performance in dealing with noisy labels. The experiments used 2D CNNs for
-slice-by-slice segmentation, and implemented COPLE-Net, 1 LNR-Dice and the
-adaptive self-ensembling framework in Pytorch with the PyMIC 3 library on a
-Ubuntu desktop with an NVIDIA GTX 1080 Ti GPU. 
-
-The proposed COPLE-Net was compared with four state-of-the-art networks for semantic or medical
-image segmentation
-
-\begin{enumerate}
-    \item 3D nnU-Net that is extended from 3D U-Net
-    \item Attention U-Net 3) ScSE U-Net
-    \item ESPNetv2 and proven to be most effective with noisy images.
-\end{enumerate}
-
-In addition, COPLE-Net was compared with three variants: COPLE-Net (-A), COPLE-Net (-D)
-and COPLE-Net (-B) 
+performance in dealing with noisy labels.
 
 %
 %You can also use a citation as a noun in a sentence, as
@@ -267,52 +253,25 @@ KCX: COVID Chest X-ray; PA: posteroanterior.
 
 \section{Approach}
 
-\subsection{Tasks}
-It is a Classification problem.
-Classes: COVID, Pneumonia virus, Pneumonia bacteria, Normal
-\subsubsection{Stage-1}
-Use a basis model and get predictions for four clases. Use pretrained model using imagenet, because 5000 images is not sufficient 
+We have planned to reproduce the FLANNEL results using the the updated data
+from original data sources. So our approach consists of two distinct stages.
 
+\subsection{Reproduce FLANNEL}
 
-\begin{enumerate}
-    \item InceptionV3
-    \item Vgg19\_bn
-    \item ResNeXt101
-    \item Resnet152
-    \item Densenet161
-\end{enumerate}
+\subsubsection{Stage-1: Base Learner Training}
 
+As done in the original paper, we would use CNN models InceptionV3, Vgg19\_bn,
+ResNeXt101, Resnet152 and Densenet161 as base learners. Due to limited data for
+training, we will utilize pre-trained models on ImageNet and fine-tune each
+model for COVID-19 classification.
 
-\subsubsection{Stage-2}
-
-Ensemble model learning
-Introducing a Neural weight module to assign weights for all five predictions in Stage-1.
-Combine the prediction and compare against the actual classification using Focal Loss (New loss function)
-
-Use Focal loss learning (FLANNEL Training algorithm)
-
-Neural Weight Module
-Concat all predictions in a long vector (called f)
-Take the outer product over f. f*f
-Flatten the prediction in a long matrix
-Pass to dense neural network
-TanH activation
-Assign Learner weights
-
-Focal Loss
-Cross Entropy Loss
-Assign uniform weight for all predictions
-TODO -> Latex formula
-
-Focal Loss
-Introduces alpha and gamma parameter which generalizes to Cross Entropy loss when gamma = 0 and alpha = 1
-
-Alpha -> higher weight of poorly/Rare classified/specific classification
-Gamma -> Downvote the well classified glass
-TODO: Latex formula
+\subsubsection{Stage-2: Ensemble model learning}
+We would feed the predictions from base learners to FLANNEL neural weight module
+to learn base learner weights. For learning, we use the Focal loss function modified
+for multi-class classification.
 
 \subsection{Performance Analysis}
-Use below measures to calculate the accuracy of Ensemble model for verification
+We would use below measures to calculate the accuracy of Ensemble model for verification.
 
 \begin{enumerate}
     \item Precision-Recall curve
@@ -372,11 +331,12 @@ To accomplish this, the steps we will follow are
 
 \section{Experimental Setup}
 
-We are planning to use FLANNEL source code as our baseline and enhance
-on top of it. So our codebase would be utilizing PyTorch. As FLANNEL
-model requires significant compute and GPU resources (3 NVIDIA Tesla P100 GPUs).
-We would be utilizing AWS EC2 service with instance type p3.8xlarge which
-provides 4 NVIDIA Tesla V100 GPUs along with 32 core CPU and 64GB RAM.
+We are planning to use \href{https://github.com/qxiaobu/FLANNEL} {FLANNEL source
+code}  as our baseline and enhance on top of it. So our codebase would be
+utilizing PyTorch. As FLANNEL model requires significant compute and GPU
+resources (3 NVIDIA Tesla P100 GPUs). We would be utilizing AWS EC2 service with
+instance type p3.8xlarge which provides 4 NVIDIA Tesla V100 GPUs along with 32
+core CPU and 64GB RAM.
 
 For data analysis and exploration, we are going to use Google Colab.
 
@@ -399,7 +359,7 @@ For data analysis and exploration, we are going to use Google Colab.
         Apply Focal Loss & 04/23/2021 \\ \hline
         Model Training & 04/23/2021 \\ \hline
         Performance Evaluation & 04/23/2021 \\ \hline
-        Documentation and Video presentation & 05/07/2021 \\
+        Documentation and Video presentation & 05/07/2021 \\ \hline
         Code and Report Submission & 05/08/2021 \\
         \hline\end{tabular}
     \end{table}
