@@ -22,7 +22,7 @@ n_ct = 0
 n_ards = 0
 
 diseases = {}
-views = set()
+views = {}
 with open(info_path,'r') as f:
   csv_reader = csv.DictReader(f)
   i = 0 
@@ -36,7 +36,7 @@ with open(info_path,'r') as f:
     # View
     view = row['view']
     # Filename
-    views.add(view)
+    views[view] = views.get(view, 0)+1
     image_name = row['filename']
     # Finding
     disease = row['finding']
@@ -47,7 +47,7 @@ with open(info_path,'r') as f:
       n_ct += 1
       continue
     jpg_path = os.path.join(image_root_dir, image_name)
-    if os.path.exists(jpg_path) and view in ('AP','PA','AP Erect'):
+    if os.path.exists(jpg_path) and ('AP' in view or 'PA' in view):
       if data_dict.get(patient_id+'_'+subject_id) is None:
           data_dict[patient_id+'_'+subject_id] = {'class':{
                                               'COVID-19':0,
@@ -105,7 +105,7 @@ for key, value in data_dict.items():
     y2 += value['class']['pneumonia_bacteria']
     y3 += value['class']['normal']
     j += 1
-    if 'PA' in jpg_info['type'] or jpg_info['type'] in ('AP','AP Erect'):
+    if 'PA' in jpg_info['type'] or 'AP' in jpg_info['type']:
       i += 1
       z0 += value['class']['COVID-19']
       z1 += value['class']['pneumonia_virus']
@@ -117,7 +117,7 @@ for key, value in data_dict.items():
         v1 += value['class']['pneumonia_virus']
         v2 += value['class']['pneumonia_bacteria']
         v3 += value['class']['normal']
-      if jpg_info['type'] in ('AP','AP Erect'):
+      if 'AP' in jpg_info['type']:
         ap_list.append(jpg_name)
         w0 += value['class']['COVID-19']
         w1 += value['class']['pneumonia_virus']
@@ -150,5 +150,5 @@ pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 for item, value in diseases.items():
   print(f'`{item}`:{value}')
 print('*********************')
-for item in sorted(list(views)):
-  print(f'`{item}`')
+for item, value in views.items():
+  print(f'`{item}`:{value}')
