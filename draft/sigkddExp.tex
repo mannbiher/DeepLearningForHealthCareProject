@@ -75,46 +75,44 @@ email: {\texttt{mksingh4@illinois.edu}})}
 \maketitle
 \begin{abstract}
     As part of CS598 Deep Learning for Healthcare course, we have decided to
-    reproduce and improve FLANNEL model for COVID-19 classification using
-    X-ray images.
+    reproduce and improve FLANNEL model\cite{10.1093/jamia/ocaa280} for COVID-19
+    classification using X-ray images.
 \end{abstract}
 
 \section{Introduction}
-COVID-19 pandemic has ravaged the world on an unprecedented scale. It has caused loss
-of millions of lives and long lasting damages on surviving patients. X-ray imaging
-is very important part of diagnosis of Covid-19 and other pneumonia and is often the
-first-line diagnosis in many cases. Using deep learning for X-ray classification is
-an ongoing research area.
-
-We have taken this paper to strengthen our understanding of
-deep learning models and improve the current research.
-
-Specifically we would work to reproduce and improve FLANNEL model for
-classification of COVID-19 X-ray images from other pneumonia and normal images.
+COVID-19 pandemic has ravaged the world on an unprecedented scale. It has caused
+loss of millions of lives and long lasting damages on surviving patients. X-ray
+imaging is very important part of diagnosis of COVID-19 and other pneumonia and
+is often the first-line diagnosis in many cases. Using deep learning for X-ray
+classification is an ongoing research area. There are some useful model proposed
+for COVID-19 classification using X-rays. FLANNEL is one such model proposed by
+Zhi Qiao \textit{et al.} \cite{10.1093/jamia/ocaa280}. FLANNEL has shown to
+accurately detect COVID-19 using X-ray images even when trained with only 100
+available COVID-19 x-ray images. We have chosen this paper to strengthen our
+understanding of deep learning models and improve the current research.
 
 \section{Literature Survey}
 
-We studied a lot of papers and found the following literature to be related To
-our task in hand i.e. to identify X-ray images for COVID-19 with imbalanced
-dataset.
-
 \subsection{FLANNEL for COVID-19 detection}
 
-This is the main paper\cite{10.1093/jamia/ocaa280} that we are trying to reproduce and improve.
+FLANNEL model \cite{10.1093/jamia/ocaa280} is a classification model
+proposed for detection of COVID-19 from other pneumonia types and normal x-ray images. 
 In this paper, Zhi Qiao \textit{et al.} has shown that with ensemble learning
 FLANNEL can detect and diagnose COVID-19 from pneumonia x-ray images with
 high accuracy, even when trained on only 100 available COVID-19 x-ray images.
 
-COVID-19 classification requires three main Tasks
-1. CNN for image classification
-2. Ensemble for poor/varied classification
-3. 
+FLANNEL model introduces two stage classification, where first stage involves
+using state of arts CNN models to classify dataset into 4 classes: COVID, Pneumonia virus, Pneumonia bacteria, Normal.
+As train dataset is very small, pre-trained models using ImageNet are utilized.
 
-The main idea in the paper is
-1. Ensemble to handle poor classification
-2. FOCAL Loss for loss optimization
-3. Use state of arts models in stage-1
+In stage-2, a neural weight module is used to learn weights for all five predictions in Stage-1.
+For model training, instead of cross-entropy loss, focal loss is extended to handle
+multiclass classification.
 
+\begin{align}
+    LossFunc &=FocalLoss(\hat{y},y) \\
+    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
+\end{align}
 
 \subsection{COVID-19 classification using chest CT}
 
@@ -227,15 +225,16 @@ For the purpose of reproduction and show comparable improvement, we have decided
 to use the same datasets that are used in the FLANNEL paper.
 
 \begin{enumerate}
-    \item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19 pneumonia images 
-    as well few X-ray images from other classes. The dataset can be obtained from 
-    github at this link   
-    https://github.com/ieee8023/covid-chestxray-dataset
+    \item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19
+    pneumonia images as well few X-ray images from other classes. The dataset
+    can be obtained from \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub}.
     
-    \item Kaggle Chest X-ray (KCX) dataset: This dataset contains normal, bacterial pneumonia, 
-    and nov-COVID-19 viral pneumonia. The dataset can be obtained from Kaggle at this 
-    link
-    https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
+    
+    \item Kaggle Chest X-ray (KCX) dataset: This dataset contains normal,
+    bacterial pneumonia, and nov-COVID-19 viral pneumonia. The dataset can be
+    obtained from
+    \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle}.
+    
 \end{enumerate}
 
 
@@ -251,14 +250,17 @@ noise will be used to convert PA into AP view.
     \caption{Experimental data description}
     \begin{tabular}{llrrrrr} \hline
     Source& &Total&COVID-19&Viral&Bacterial&Normal\\ \hline
-    \multirow{2}{*}{} Original data&CCX data&  &  &  &  &  \\
-                      &KCX data&  &  &  &  &  \\ \hline
-    \multirow{2}{*}{} View Distribution&AP view&  &  &  &  &  \\
-                      &PA view&  &  &  &  &  \\ \hline
-    \multirow{3}{*}{} Training/test splits&Training&  &  &  &  &  \\
-                      &Testing&  &  &  &  &  \\
-                      &Total&  &  &  &  &  \\ \hline
-\end{tabular}
+    \multirow{2}{*}{} Original data&CCX data&414&343&16&39&16\\
+                      &KCX data&5856&0&1493&2780&1583\\ \hline
+    \multirow{2}{*}{} View Distribution&AP view&6023&147&1501&2786&1589\\
+                      &PA view&247&196&8&33&10\\ \hline
+    \multirow{3}{*}{} Training/test splits&Training&5130&391&1216&2239&1284\\
+                      &Testing&1283&88&293&583&319\\
+                      &Total&6413&479&1509&2822&1603\\ \hline
+\end{tabular}\par
+\bigskip
+AP: anteroposterior; CCX: COVID Chest X-ray; COVID-19: coronavirus disease 2019;
+KCX: COVID Chest X-ray; PA: posteroanterior.
 \end{table*}
 
 
@@ -368,8 +370,15 @@ To accomplish this, the steps we will follow are
 
 
 \section{Experimental Setup}
-TODO
-We are planning to use AWS for the training and evaluation.
+
+We are planning to use FLANNEL source code as our baseline and enhance
+on top of it. So our codebase would be utilizing PyTorch. As FLANNEL
+model requires significant compute and GPU resources (3 NVIDIA Tesla P100 GPUs).
+We would be utilizing AWS EC2 service with instance type p3.8xlarge which
+provides 4 NVIDIA Tesla V100 GPUs along with 32 core CPU and 64GB RAM.
+
+For data analysis and exploration, we are going to use Google Colab.
+
 
 \section{Timeline}
 

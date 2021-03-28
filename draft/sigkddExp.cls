@@ -28,6 +28,7 @@
 \usepackage{color}
 \usepackage{float}
 \usepackage{multirow}
+\usepackage{hyperref}
 %
 % ACMPROC-SP DOCUMENT STYLE
 % G.K.M. Tobin August-October 1999

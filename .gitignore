@@ -135,6 +135,7 @@ dmypy.json
 *.synctex.gz
 *.bbl
 *.blg
+*.out
 # vscode
 .vscode/
 
