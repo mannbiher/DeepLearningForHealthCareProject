@@ -58,9 +58,6 @@
 % e-mail address. Additionally, tag each line of
 % affiliation/address with \affaddr, and tag the
 %% e-mail address with \email.
-\alignauthor Maneesh Kumar Singh \\
-\affaddr{University of Illinois at Urbana-Champaign}\\
-\email{mksingh4@illinois.edu}
 \alignauthor Raman Walwyn-Venugopal\\
 \affaddr{University of Illinois at Urbana-Champaign}\\
 \email{rsw2@illinois.edu}
@@ -71,77 +68,101 @@
 \affaddr{University of Illinois at Urbana-Champaign}\\
 \email{sbs7@illinois.edu}
 }
-
+\additionalauthors{Maneesh Kumar Singh
+(University of Illinois at Urbana-Champaign,
+email: {\texttt{mksingh4@illinois.edu}})}
 \date{30 July 1999}
 \maketitle
 \begin{abstract}
-    TODO
+    As part of CS598 Deep Learning for Healthcare course, we have decided to
+    reproduce and improve FLANNEL model for COVID-19 classification using
+    X-ray images.
 \end{abstract}
 
 \section{Introduction}
-As part of graduate course Deep learning for healthcare, we
-have decided to reproduce and improve current research on COVID-19 classification using
-X-ray.
-
-
-\section{Motivation}
 COVID-19 pandemic has ravaged the world on an unprecedented scale. It has caused loss
 of millions of lives and long lasting damages on surviving patients. X-ray imaging
 is very important part of diagnosis of Covid-19 and other pneumonia and is often the
 first-line diagnosis in many cases. Using deep learning for X-ray classification is
-an ongoing research area. We have taken this paper to strengthen our understanding of
+an ongoing research area.
+
+We have taken this paper to strengthen our understanding of
 deep learning models and improve the current research.
 
+Specifically we would work to reproduce and improve FLANNEL model for
+classification of COVID-19 X-ray images from other pneumonia and normal images.
 
 \section{Literature Survey}
 
-\subsection{FLANNEL for COVID-19 detection}\cite{10.1093/jamia/ocaa280}
+We studied a lot of papers and found the following literature to be related To
+our task in hand i.e. to identify X-ray images for COVID-19 with imbalanced
+dataset.
 
-pass
+\subsection{FLANNEL for COVID-19 detection}
 
+This is the main paper\cite{10.1093/jamia/ocaa280} that we are trying to reproduce and improve.
+In this paper, Zhi Qiao \textit{et al.} has shown that with ensemble learning
+FLANNEL can detect and diagnose COVID-19 from pneumonia x-ray images with
+high accuracy, even when trained on only 100 available COVID-19 x-ray images.
 
+COVID-19 classification requires three main Tasks
+1. CNN for image classification
+2. Ensemble for poor/varied classification
+3. 
 
-\subsection{COVID-19 classification using chest CT}\cite{pmid32339081}
-
-X. Bai and Wang were able to create an AI system that could differentiate
-COVID-19 and other pneumonia using a chest CT scan. They approached this
-as a classification problem and used the EfficientNet B4 architecture which
-was a CNN based network. They were able to achieve results of 96\% accuracy,
-95\% sensitivity , 96\% specificity, and an area under receiver operating
-characteristic curve of 0.95 and an area under the precision recall curve of
-0.90. When compared with radiologists on the same test dataset, the AI system
-performed better. This study concluded that the AI can support radiologists
-in detection of Covid 19 in Chest CT images.
-
-\subsection{Focal loss for dense object detection}\cite{lin2018focal}
-Lin T, Goyal P, Girshick R propose Focal loss, a modification to the standard cross
-entropy criterion that focuses weights for loss on hard examples versus well
-classified examples. This is accomplished by adding a factor $(1 - p_t)^\gamma$ to the
-standard cross entropy criterion where setting $\gamma  > 0$ reduces the relative loss 
-for well-classified examples $(p_t > .5)$. This results in achieving higher accuracy 
-than using the standard cross entropy loss and surpassed speed and accuracy when 
-compared with state of the art two stage detectors; Faster R CNN Variants.
+The main idea in the paper is
+1. Ensemble to handle poor classification
+2. FOCAL Loss for loss optimization
+3. Use state of arts models in stage-1
 
 
-\subsection{Towards contactless patient positioning}\cite{9084097}
-This paper discussed about patient positioning routine that comprised a novel robust 
-dynamic fusion (RDF) algorithm for accurate 3D patient body modeling. 
-With ‘multi-modal’ inference capability, RDF can be trained once and used across 
-different applications (without re-training). They have used multiple CNN branches 
-o learn the joint feature representation and a fully-connected parameter regressor 
-module to estimate the 3D mesh parameters.
+\subsection{COVID-19 classification using chest CT}
+
+X. Bai and Wang \cite{pmid32339081} were able to create an AI system that could
+differentiate COVID-19 and other pneumonia using a chest CT scan. They
+approached this as a classification problem and used the EfficientNet B4
+architecture which was a CNN based network. They were able to achieve results of
+96\% accuracy, 95\% sensitivity , 96\% specificity, and an area under receiver
+operating characteristic curve of 0.95 and an area under the precision recall
+curve of 0.90. When compared with radiologists on the same test dataset, the AI
+system performed better. This study concluded that the AI can support
+radiologists in detection of COVID-19 in Chest CT images.
+
+\subsection{Focal loss for dense object detection}
+
+Lin T, Goyal P, Girshick R propose Focal loss \cite{lin2018focal}, a
+modification to the standard cross entropy criterion that focuses weights for
+loss on hard examples versus well classified examples. This is accomplished by
+adding a factor $(1 - p_t)^\gamma$ to the standard cross entropy criterion where
+setting $\gamma  > 0$ reduces the relative loss for well-classified examples
+$(p_t > .5)$. This results in achieving higher accuracy than using the standard
+cross entropy loss and surpassed speed and accuracy when compared with state of
+the art two stage detectors; Faster R CNN Variants.
 
 
-\subsection{Deep learning COVID-19 features on CXR using limited training data sets}\cite{pmid32396075}
-The authors of this paper, proposed a patch-based convolutional neural network approach
-with a relatively small number of trainable parameters for Covid-19 diagnosis.
-The architecture contains first pre-processed data that are fed into a segmentation
-network [FC-DenseNet] to extract lung areas. From this segmented lung area, classification
-network is used to classify the corresponding diseases using a patch-by-patch training
-and inferences [ResNet-18 (pre-trained) and many ResNet-18 models are used for K patches],
-final decision is made based on the majority voting from previous layers. A Grad-CAM
-saliency map is calculated to provide an interpretable result. This method has an accuracy
-of 91.9\%, compared to that of 92.4\% for COVID-Net.
+\subsection{Towards contactless patient positioning}
+
+This paper \cite{9084097} discussed about patient positioning routine that
+comprised a novel robust dynamic fusion (RDF) algorithm for accurate 3D patient
+body modeling. With ‘multi-modal’ inference capability, RDF can be trained once
+and used across different applications (without re-training). They have used
+multiple CNN branches o learn the joint feature representation and a
+fully-connected parameter regressor module to estimate the 3D mesh parameters.
+
+
+\subsection{Deep learning COVID-19 features on CXR using limited training data sets}
+
+The authors of this paper\cite{pmid32396075}, proposed a patch-based
+convolutional neural network approach with a relatively small number of
+trainable parameters for Covid-19 diagnosis. The architecture contains first
+pre-processed data that are fed into a segmentation network [FC-DenseNet] to
+extract lung areas. From this segmented lung area, classification network is
+used to classify the corresponding diseases using a patch-by-patch training and
+inferences [ResNet-18 (pre-trained) and many ResNet-18 models are used for K
+patches], final decision is made based on the majority voting from previous
+layers. A Grad-CAM saliency map is calculated to provide an interpretable
+result. This method has an accuracy of 91.9\%, compared to that of 92.4\% for
+COVID-Net.
 
 \subsection{COVID19-Net Deep Convolutional Neural Network}
 
@@ -153,23 +174,26 @@ experiments. COVID-Net architecture makes heavy use of a lightweight residual
 levels of convolution layers with fully connected layers and a softmax at the end.
 COVID-Net achieved higher test accuracy than other architectures such as VGG-19 and ResNet-50.
 
-\subsection{Noise-robust segmentation of COVID-19 from CT images}\cite{wang2020covidnet}
+\subsection{Noise-robust segmentation of COVID-19 from CT images}
 
-This is a CNN model developed to be effective with detection of COVID-19 lesions from 
-CT images that have a lot of noise. This paper discusses how Wang et al developed a
-novel noise-robust learning framework based on self-ensembling of CNNs.  To better
-deal with the complex lesions, a novel COVID-19 Pneumonia Lesion segmentation network
-(COPLE-Net) was proposed that uses a combination of max-pooling and average pooling to
-reduce information loss during downsampling, and employs bridge layers to alleviate the
-semantic gap between features in the encoder and decoder. Experimental results with CT
-images of 558 COVID-19 patients showed the effectiveness of the noise-robust Dice loss
-function, COPLE-Net and adaptive self-ensembling in learning from noisy labels for COVID-19
-pneumonia lesion segmentation. To make the training process robust against noisy labels,
-a novel noise-robust Dice loss function was proposed and integrated into a self-ensembling
-framework, where an adaptive teacher and an adaptive student are introduced to further improve
-the performance in dealing with noisy labels. The experiments used 2D CNNs for slice-by-slice
-segmentation, and implemented COPLE-Net, 1 LNR-Dice and the adaptive self-ensembling framework
-in Pytorch with the PyMIC 3 library on a Ubuntu desktop with an NVIDIA GTX 1080 Ti GPU. 
+This is a CNN model \cite{wang2020covidnet} developed to be effective with
+detection of COVID-19 lesions from CT images that have a lot of noise. This
+paper discusses how Wang et al developed a novel noise-robust learning framework
+based on self-ensembling of CNNs.  To better deal with the complex lesions, a
+novel COVID-19 Pneumonia Lesion segmentation network (COPLE-Net) was proposed
+that uses a combination of max-pooling and average pooling to reduce information
+loss during downsampling, and employs bridge layers to alleviate the semantic
+gap between features in the encoder and decoder. Experimental results with CT
+images of 558 COVID-19 patients showed the effectiveness of the noise-robust
+Dice loss function, COPLE-Net and adaptive self-ensembling in learning from
+noisy labels for COVID-19 pneumonia lesion segmentation. To make the training
+process robust against noisy labels, a novel noise-robust Dice loss function was
+proposed and integrated into a self-ensembling framework, where an adaptive
+teacher and an adaptive student are introduced to further improve the
+performance in dealing with noisy labels. The experiments used 2D CNNs for
+slice-by-slice segmentation, and implemented COPLE-Net, 1 LNR-Dice and the
+adaptive self-ensembling framework in Pytorch with the PyMIC 3 library on a
+Ubuntu desktop with an NVIDIA GTX 1080 Ti GPU. 
 
 The proposed COPLE-Net was compared with four state-of-the-art networks for semantic or medical
 image segmentation
@@ -199,9 +223,10 @@ and COPLE-Net (-B)
 
 \section{Data}
 
-The following datasets that we are considering for this project:
+For the purpose of reproduction and show comparable improvement, we have decided
+to use the same datasets that are used in the FLANNEL paper.
+
 \begin{enumerate}
-    
     \item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19 pneumonia images 
     as well few X-ray images from other classes. The dataset can be obtained from 
     github at this link   
@@ -214,9 +239,28 @@ The following datasets that we are considering for this project:
 \end{enumerate}
 
 
-In the FLANNEL paper, 5508 chest x-ray images across 2874 independent patient cases. Both dataset contains anteroposterior (AP) and posteroanterior (PA) view.
+In the FLANNEL paper, 5508 chest x-ray images across 2874 independent patient
+cases. Both dataset contains anteroposterior (AP) and posteroanterior (PA) view.
 
-As done in the research paper, we will include  both AP and PA views. Due to AP and PA views being different types of X-ray images, horizontal flips and random noise will be used to convert PA into AP view. 
+As done in the research paper, we will include  both AP and PA views. Due to AP
+and PA views being different types of X-ray images, horizontal flips and random
+noise will be used to convert PA into AP view. 
+
+\begin{table*}
+    \centering
+    \caption{Experimental data description}
+    \begin{tabular}{llrrrrr} \hline
+    Source& &Total&COVID-19&Viral&Bacterial&Normal\\ \hline
+    \multirow{2}{*}{} Original data&CCX data&  &  &  &  &  \\
+                      &KCX data&  &  &  &  &  \\ \hline
+    \multirow{2}{*}{} View Distribution&AP view&  &  &  &  &  \\
+                      &PA view&  &  &  &  &  \\ \hline
+    \multirow{3}{*}{} Training/test splits&Training&  &  &  &  &  \\
+                      &Testing&  &  &  &  &  \\
+                      &Total&  &  &  &  &  \\ \hline
+\end{tabular}
+\end{table*}
+
 
 \section{Approach}
 
@@ -334,6 +378,7 @@ We are planning to use AWS for the training and evaluation.
     \centering
     \caption{Project Timeline}
     \begin{tabular}{|c|c|} \hline
+        Task&Planned Due Date\\ \hline
         Research, Planning and proposal &03/28/2021\\ \hline
         Data Cleaning and Preprocessing & 04/02/2021\\ \hline
         Extract the lung contours & 04/09/2021\\ \hline

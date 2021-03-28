@@ -1,7 +1,7 @@
 Task:
 Chest x-ray classification
-Classes: COVID, Pneumonia virus, Pneumonia bacteria, Normal
-Data: 5508 check x-ray images across 2874 patients
+Classes: COVID-19, Pneumonia virus, Pneumonia bacteria, Normal
+Data: 5580 check x-ray images across 2874 patients
 Method:
 FLANNEL (Focal Loss based Neural Network Ensemble) model
 
@@ -14,6 +14,8 @@ recall  0.8609 +- 0.03
 F1 score of 0.8168 +- 0.03
 
 -------------------------------------------
+
+
 
 Motivation
 COVID-19 pandemic has ravaged the world on unprecedented scale. It has caused loss
@@ -32,13 +34,17 @@ can we differenciate COVID cases from other diseases based on chest x-ray images
 
 Challenges
 - Sample size
-- Class imbalance
+- Class imbalance fewer covid classes
 
 
 Related Work
 - Convolutional neural network models
+Differenr CNN models
 - Ensemble methods (Strategy for ensemble simple everaging , multi layer perceptron
-- Handling class imbalance (repeat and duplicate rare classes, reduce examples majority classes)
+training simple nueral network)
+- Handling class imbalance (
+  Traditional: repeat and duplicate rare classes, reduce examples majority classes)
+
 - Design special loss to hanlde that (Focal loss)
 
 
@@ -56,21 +62,31 @@ Kaggle Chest X-ray images dataset (No covid classes)
     https://github.com/ieee8023/covid-chestxray-dataset
     
     Kaggle Chest X-ray (KCX) dataset:
+    No covid classes
     This dataset contains normal, bacterial pneumonia, and nov-COVID-19 viral pneumonia.
     https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
 
 
-Training/Test splits
+AP view is common. PA view preprocessed to be similar to AP view.
+
+Training/Test splits 80%/20% cross validation function 
+
+
 Methods
 
 1. Base model different CCN models with different architecture
 2. 4 predications
 
+---
+
+
 Stage-2
 Combine Ensemble Model Learning
 
+Learn proper weight
+
 --- Neural Weight module ---> outputs five different weights ---> 
-Their prediction would be weithed
+Their prediction would be weigthed
 
 compare 
 Prediction
@@ -81,18 +97,20 @@ Focal loss
 Neural Weight module
 
 Concat ===> all predictions in long vector
-==>
-outer product over f
+==> 5*4 = 20
+outer product over f => 20*20
 ===>
-Flatten 
+Flatten the matrix into 400 images
 ===>
-Dense
+Dense Neural Network
 -===>
 TanH
 ===>
 Learner weights
 
-Pretrained model because 5000 is not sufficient
+Possible to assign negative weights as well
+
+Pretrained model trained on ImageNet because 5000 is not sufficient
 
 Standard Cross ENtropy loss
 
