@@ -50,7 +50,7 @@ write_files:
   
 
 runcmd:
-  # - sudo sysctl fs.inotify.max_user_watches=524288
+  - sudo sysctl fs.inotify.max_user_watches=524288
   - sudo cp /root/clone.sh /home/ubuntu/clone.sh
   - sudo cp /root/env /home/ubuntu/env
   - [ bash, -c, "chmod +x /home/ubuntu/clone.sh" ]

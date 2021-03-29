@@ -10,10 +10,11 @@ H.~X. Bai, R.~Wang, Z.~Xiong, B.~Hsieh, K.~Chang, K.~Halsey, T.~M.~L. Tran,
   {O}ther {O}rigin at {C}hest {C}{T}}.
 \newblock {\em Radiology}, 296(3):E156--E165, 09 2020.
 
-\bibitem{9084097}
-S.~{Karanam}, R.~{Li}, F.~{Yang}, W.~{Hu}, T.~{Chen}, and Z.~{Wu}.
-\newblock Towards contactless patient positioning.
-\newblock {\em IEEE Transactions on Medical Imaging}, 39(8):2701--2710, 2020.
+\bibitem{58871}
+L.~K. {Hansen} and P.~{Salamon}.
+\newblock Neural network ensembles.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  12(10):993--1001, 1990.
 
 \bibitem{lin2018focal}
 T.-Y. Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Dollár.
@@ -31,6 +32,11 @@ Z.~Qiao, A.~Bae, L.~M. Glass, C.~Xiao, and J.~Sun.
   detection}.
 \newblock {\em Journal of the American Medical Informatics Association},
   28(3):444--452, 10 2020.
+
+\bibitem{combine}
+A.~Sharkey.
+\newblock On combining artificial neural nets.
+\newblock {\em Connect. Sci.}, 8:299--314, 12 1996.
 
 \bibitem{wang2020covidnet}
 L.~Wang and A.~Wong.
