@@ -332,8 +332,24 @@ To accomplish this, the steps we will follow are
 \section{Experimental Setup}
 
 We are planning to use \href{https://github.com/qxiaobu/FLANNEL} {FLANNEL source
-code}  as our baseline and enhance on top of it. So our codebase would be
-utilizing PyTorch. As FLANNEL model requires significant compute and GPU
+code}  as our baseline and enhance on top of it. Our codebase would be
+using below software/python packages
+\begin{table}[H]
+    \centering
+    \caption{Software/Tools used}
+    \begin{tabular}{|l|l|} \hline
+        Software/Tool&Version\\ \hline
+        Python&3.8.5\\ \hline
+        numpy &1.20.2\\ \hline
+        torch &1.8.1\\ \hline
+        torchvision &0.9.1\\ \hline
+        matplotlib &3.4.0\\ \hline
+        scikit-learn &0.24.1\\ \hline
+        pandas &1.2.3\\
+        \hline\end{tabular}
+    \end{table}
+
+As FLANNEL model requires significant compute and GPU
 resources (3 NVIDIA Tesla P100 GPUs). We would be utilizing AWS EC2 service with
 instance type p3.8xlarge which provides 4 NVIDIA Tesla V100 GPUs along with 32
 core CPU and 64GB RAM.
