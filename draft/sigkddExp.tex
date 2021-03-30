@@ -89,8 +89,12 @@ classification is an ongoing research area. There are some useful model proposed
 for COVID-19 classification using X-rays. FLANNEL is one such model proposed by
 Zhi Qiao \textit{et al.} \cite{10.1093/jamia/ocaa280}. FLANNEL has shown to
 accurately detect COVID-19 using X-ray images even when trained with only 100
-available COVID-19 x-ray images. We have chosen this paper to strengthen our
-understanding of deep learning models and improve the current research.
+available COVID-19 x-ray images. From the FLANNEL paper, we identified poor
+performance by base models due to the fact that we have less number of COVID 19
+CXR images. In this paper, we wanted to improve performance of base models by
+performing classification on K-patches for each segmented CXR image which shows
+performance improvement on limited dataset \cite{pmid32396075}.
+
 
 \section{Literature Survey}
 
@@ -103,7 +107,7 @@ FLANNEL can detect and diagnose COVID-19 from pneumonia x-ray images with high
 accuracy, even when trained on only 100 available COVID-19 x-ray images.
 
 FLANNEL model introduces two stage classification, where first stage involves
-using state of arts CNN models to classify dataset into 4 classes: COVID,
+using state of the art CNN models to classify dataset into 4 classes: COVID,
 Pneumonia virus, Pneumonia bacteria, Normal. As train dataset is very small,
 pre-trained models using ImageNet are utilized.
 
@@ -154,7 +158,7 @@ reduce model complexity and making the overall system easier to understand.
 
 \subsection{Deep learning COVID-19 features on CXR using limited training data sets}
 
-The authors of this paper\cite{pmid32396075}, proposed a patch-based
+The authors of this paper \cite{pmid32396075}, proposed a patch-based
 convolutional neural network approach with a relatively small number of
 trainable parameters for Covid-19 diagnosis. The architecture contains first
 pre-processed data that are fed into a segmentation network [FC-DenseNet] to
