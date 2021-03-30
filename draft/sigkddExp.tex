@@ -90,10 +90,10 @@ for COVID-19 classification using X-rays. FLANNEL is one such model proposed by
 Zhi Qiao \textit{et al.} \cite{10.1093/jamia/ocaa280}. FLANNEL has shown to
 accurately detect COVID-19 using X-ray images even when trained with only 100
 available COVID-19 x-ray images. From the FLANNEL paper, we identified poor
-performance by base models due to the fact that we have less number of COVID 19
-CXR images. In this paper, we wanted to improve performance of base models by
-performing classification on K-patches for each segmented CXR image which shows
-performance improvement on limited dataset \cite{pmid32396075}.
+performance by base models is due to less number of COVID 19 CXR images. In this
+paper, we wanted to improve performance of base models by performing
+classification on K-patches for each segmented CXR image which shows performance
+improvement on limited dataset \cite{pmid32396075}.
 
 
 \section{Literature Survey}
@@ -214,33 +214,29 @@ performance in dealing with noisy labels.
 
 \section{Data}
 
-For the purpose of reproduction and show comparable improvement, we have decided
-to use the same datasets that are used in the FLANNEL paper.
+We will use same data source as used in original paper. COVID Chest X-ray
+(CCX) dataset: This dataset contains COVID-19 pneumonia images as well few X-ray
+images from other classes. The dataset can be obtained from
+\href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub}.
+Kaggle Chest X-ray (KCX) dataset: This dataset contains normal, bacterial
+pneumonia, and nov-COVID-19 viral pneumonia. The dataset can be
+obtained from \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle}.
+These public datasets contain 6410 chest x-ray images across 3015 patient. The initial
+statistics are shown in Table \ref{table:datastats}.
 
-\begin{enumerate}
-    \item Covid Chest X-ray (CCX) dataset: This dataset contains COVID-19
-          pneumonia images as well few X-ray images from other classes. The dataset
-          can be obtained from \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub}.
-
-
-    \item Kaggle Chest X-ray (KCX) dataset: This dataset contains normal,
-          bacterial pneumonia, and nov-COVID-19 viral pneumonia. The dataset can be
-          obtained from
-          \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle}.
-
-\end{enumerate}
-
-
-In the FLANNEL paper, 5508 chest x-ray images across 2874 independent patient
-cases. Both dataset contains anteroposterior (AP) and posteroanterior (PA) view.
-
-As done in the research paper, we will include  both AP and PA views. Due to AP
-and PA views being different types of X-ray images, horizontal flips and random
-noise will be used to convert PA into AP view.
+Our data preprocessing steps are same as in original paper. We will apply
+horizontal flips and random noise to convert PA view into AP view, so that model
+can be trained on same view. We will use train-test ration of 4:1 to randomly
+generate train test split. We will apply 5 fold cross validation on training to
+get 5 models. This is done to maximize limited sample size. For Image
+preprocessing, we will resize the original input image from 256 x 256 to 224 x
+224 by randomly cropping them in center. The original x-ray has some labels
+which will be masked by the crop.
 
 \begin{table*}
     \centering
     \caption{Experimental data description}
+    \label{table:datastats}
     \begin{tabular}{llrrrrr} \hline
         Source                              &          & Total & COVID-19 & Viral & Bacterial & Normal \\ \hline
         \multirow{2}{*}{} Original data     & CCX data & 554   & 478      & 16    & 42        & 18     \\
@@ -388,7 +384,7 @@ For data analysis and exploration, we are going to use Google Colab.
 
 
 
-\newpage
+% \newpage
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
