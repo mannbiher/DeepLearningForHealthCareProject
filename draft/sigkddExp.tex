@@ -257,13 +257,10 @@ which will be masked by the crop.
 
 \section{Approach}
 
-We have planned to reproduce the FLANNEL results using the the updated data
-from original data sources. So our approach consists of two distinct stages.
+We will use updated data to reproduce FLANNEL and our proposed improvement.
 
 \subsection{Reproduce FLANNEL}
-
 \subsubsection{Stage-1: Base Learner Training}
-
 As done in the original paper, we would use CNN models InceptionV3, Vgg19\_bn,
 ResNeXt101, Resnet152 and Densenet161 as base learners. Due to limited data for
 training, we will utilize pre-trained models on ImageNet and fine-tune each
@@ -271,63 +268,49 @@ model for COVID-19 classification.
 
 \subsubsection{Stage-2: Ensemble model learning}
 We would feed the predictions from base learners to FLANNEL neural weight module
-to learn base learner weights. For learning, we use the Focal loss function modified
-for multi-class classification.
-
-\subsection{Performance Analysis}
-We would use below measures to calculate the accuracy of Ensemble model for verification.
-
-\begin{enumerate}
-    \item Precision-Recall curve
-    \item ROC curve
-    \item Confusion Matrix
-    \item F1 score comparison accuracy of all methods
-\end{enumerate}
-
-
+to learn base learner weights. For learning, we use the Focal loss function
+modified for multi-class classification. To compare the advantage of FLANNEL
+model on ensemble learning, We would also train FLANNEL with traditional
+ensemble methods voting and stacking, training FLANNEL with cross-entropy loss
+replacing focal loss and training FLANNEL with re-sampling and without focal
+loss.
 
 \subsection{Improvement Discussion}
 
 Based on the performance of the novel FLANNEL architecture, our team is
 motivated to improve the performance further. With inspiration from the approach
-of Oh Y., and Park S., a primary improvement that we are proposing is to extract
-the lung contours from the CXR images prior to classification. The motivation
-behind this is to have the classifier focus on the specific lung regions versus
-the whole CXR image. In addition, another improvement we propose is to modify
-each base model in the ensemble to process the segmented CXR image in K patches
-as shown in Figure \ref{fig:improve}.
-
+of Oh Y., and Park S. \cite{pmid32396075}, a primary improvement that we are
+proposing is to extract the lung contours from the CXR images prior to
+classification. The motivation behind this is to have the classifier focus on
+the specific lung regions versus the whole CXR image. In addition, another
+improvement we propose is to modify each base model in the ensemble to process
+the segmented CXR image in K patches as shown in Figure \ref{fig:improve}.
 
 To accomplish this, the steps we will follow are
 
 \begin{enumerate}
     \item Extract the lung contours from the CXR images using Segment Model.
-    \item Train k-patch classifiers.
-          \begin{enumerate}
-              \item Start with pre-trained model from Image Net
-              \item Divide extracted lung contours into k-patches
-              \item Run each patch through model to generate classification,
-                    prediction is calculated based on majority voting
-              \item Update shared weights for each of the k models
-          \end{enumerate}
+    \item Train k-patch classifiers by starting with pre-trained model from
+    ImageNet. Divide extracted lung contours into k-patches. Run each patch
+    through model to generate classification, prediction is calculated based on
+    majority voting. Update shared weights for each of the k models.
+    
     \item Construct improved FLANNEL architecture by using extracted lung
           contours as input and k-patch classifiers used as the base models.
-    \item Train Improved FLANNEL architecture
-          \begin{enumerate}
-              \item Input is CXR image
-              \item Extract lung contours using Segment Model
-              \item Create k-patches of segmented CXR
-              \item Each k-patch classifier processes k-patches and produces predictions
-              \item Calculate weighted ensemble through neural weighting module
-              \item Compute prediction based on k-patch model predictions and weights
-              \item Compute focal loss and update neural weighting module weights
-              \item Continuously calculate metrics to measure performance such as but
-                    not limited to: accuracy, precision, F1 and ROAUC.
-          \end{enumerate}
+    \item Train Improved FLANNEL architecture.
+    From input CXR images, extract the lung contours using Segment Model.
+    Create k-patches of segmented CXR.
+    Each k-patch classifier processes k-patches and produces predictions.
+    Calculate weighted ensemble through neural weighting module.
+    Compute prediction based on k-patch model predictions and weights.
+    Compute focal loss and update neural weighting module weights.
+    Continuously calculate metrics to measure performance such as but
+    not limited to: accuracy, recall, precision, F1 and ROC.
     \item Perform ensemble (combining multiple K patch classifiers) to calculate the weighted ensemble.
     \item Get the prediction and compare with the ground truth.
     \item Apply Focal Loss to train the model (improve weights).
-    \item Test the model on the ‘test’ dataset to calculate accuracy, precision, F1 measure, ROAUC and other metrics.
+    \item Test the model on the ‘test’ dataset to calculate accuracy, precision, F1 measure, 
+    ROC and other metrics.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -336,15 +319,24 @@ To accomplish this, the steps we will follow are
     \label{fig:improve}
 \end{figure}
 
+\subsection{Performance Analysis}
+We will record the classification accuracy for 4 classes using F1-score. We
+compare the F1-score accuracy for COVID-19 vs other classes for five base
+learners, FLANNEL with ensemble strategies voting and stacking, FLANNEL with
+cross entropy loss, FLANNEL with re-sampling and FLANNEL with k-patch
+improvement. We use receiving operating characteristic (ROC) curve and
+precision-recall (PR) curve to display classification performance against
+threshold. Finally we will provide visual description of FLANNEL and proposed
+improvement performance using confusion matrix.
 
 \section{Experimental Setup}
-
 We are planning to use \href{https://github.com/qxiaobu/FLANNEL} {FLANNEL source
     code}  as our baseline and enhance on top of it. Our codebase would be
-using below software/python packages
-\begin{table}[H]
+using below software/python packages as shown in Table \ref{table:package}
+\begin{table}[h]
     \centering
     \caption{Software/Tools used}
+    \label{table:package}
     \begin{tabular}{|l|l|} \hline
         Software/Tool & Version \\ \hline
         Python        & 3.8.5   \\ \hline
@@ -367,7 +359,6 @@ For data analysis and exploration, we are going to use Google Colab.
 
 \section{Timeline}
 
-
 \begin{table}[H]
     \centering
     \caption{Project Timeline}
@@ -389,8 +380,7 @@ For data analysis and exploration, we are going to use Google Colab.
 \end{table}
 
 
-
-% \newpage
+\newpage
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
