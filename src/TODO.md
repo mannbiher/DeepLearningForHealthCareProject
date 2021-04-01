@@ -11,11 +11,10 @@ We will run the GPU instance.
 
 # Plan
 
-04/03 (Decide on base models, segment model, RUn base flannel)
-04/06 (Run FLannel improvemnet, complete base flannel evaluation)
-
-04/10 (Complete Flannel improvment evaluation, decide on what to go in draft)
-04/13 (First version of draft)
+- 04/03 (Decide on base models, segment model, RUn base flannel)
+- 04/06 (Run FLannel improvemnet, complete base flannel evaluation)
+- 04/10 (Complete Flannel improvment evaluation, decide on what to go in draft)
+- 04/13 (First version of draft)
 
 
 
