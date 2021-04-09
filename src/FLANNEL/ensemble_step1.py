@@ -216,7 +216,7 @@ def main():
 #    criterion = focalloss(label_distri = train_distri, model_name = args.arch)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    
+    title = args.arch
     logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
     logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
 
@@ -266,7 +266,7 @@ def main():
         
         print (train_loss, train_acc, test_acc, l_acc)
         # append logger file
-        logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        logger.append([state['lr'], train_loss.cpu(), test_loss.cpu(), train_acc.cpu(), test_acc.cpu()])
 
         # save model
         is_best = test_acc > best_acc
