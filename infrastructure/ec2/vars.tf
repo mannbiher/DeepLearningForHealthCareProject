@@ -14,3 +14,10 @@ variable "ec2_iam_profile" {
   description = "EC2 IAM profile"
 }
 
+variable "ec2_security_group" {
+
+}
+
+variable "ec2_availability_zone" {
+
+}
