@@ -7,6 +7,60 @@ fix below warnings
   warnings.warn(
 - FLANNEL/ensemble_step1.py:373: UserWarning: volatile was removed and now has no effect. Use `with torch.no_grad():` instead.
   inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
+  
+
+## Changes
+
+
+### Ensemble Step1 volatile has no effect
+
+```python
+FLANNEL/ensemble_step2_ensemble_learning.py:375: UserWarning: volatile was removed and now has no effect. Use `with torch.no_grad():` instead.
+  inputs, targets= torch.autograd.Variable(inputs, volatile=True).float(), torch.autograd.Variable(targets)
+
+```
+
+```diff
+-        inputs, targets= torch.autograd.Variable(inputs, volatile=True).float(), torch.autograd.Variable(targets)
++        inputs = inputs.float()
+         # compute output
+-        outputs = model(inputs)
+-        loss = criterion(outputs, targets)
++        with torch.no_grad():
++            outputs = model(inputs)
++            loss = criterion(outputs, targets)
+```
+
+### Ensemble Step2 All tensors to be on same device
+
+```python
+Traceback (most recent call last):
+  File "FLANNEL/ensemble_step2_ensemble_learning.py", line 420, in <module>
+    main()
+  File "FLANNEL/ensemble_step2_ensemble_learning.py", line 262, in main
+    train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch, use_cuda)
+  File "FLANNEL/ensemble_step2_ensemble_learning.py", line 315, in train
+    loss = criterion(outputs, targets.type(torch.LongTensor).cuda())
+  File "/home/neha/.virtualenvs/flannel/lib/python3.8/site-packages/torch/nn/modules/module.py", line 889, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/neha/DeepLearningForHealthCareProject/src/FLANNEL/models/proposedModels/loss.py", line 38, in forward
+    loss = -1 * (1-p)**self.gamma * log_p * target_v * self.label_distri
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+```
+
+```diff
+-        inputs, targets= torch.autograd.Variable(inputs, volatile=True).float(), torch.autograd.Variable(targets)
++        inputs = inputs.float()
+         # compute output
+-        outputs = model(inputs)
+-        loss = criterion(outputs, targets)
++        with torch.no_grad():
++            outputs = model(inputs)
++            loss = criterion(outputs, targets)
+```
+
+
+
 
 Views have been updated for Covid19 data
 AP => AP and AP Erect
