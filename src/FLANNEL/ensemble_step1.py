@@ -174,8 +174,8 @@ def main():
         model = models.__dict__[args.arch](pretrained=True)
     elif args.arch.startswith('resnext'):
         model = models.__dict__[args.arch](
-                    baseWidth=args.base_width,
-                    cardinality=args.cardinality,
+                    width_per_group=args.base_width,
+                    groups=args.cardinality,
                 )
     else:
         print("=> creating model '{}'".format(args.arch))
