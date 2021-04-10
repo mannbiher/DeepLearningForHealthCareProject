@@ -49,14 +49,13 @@ RuntimeError: Expected all tensors to be on the same device, but found at least 
 ```
 
 ```diff
--        inputs, targets= torch.autograd.Variable(inputs, volatile=True).float(), torch.autograd.Variable(targets)
-+        inputs = inputs.float()
-         # compute output
--        outputs = model(inputs)
--        loss = criterion(outputs, targets)
-+        with torch.no_grad():
-+            outputs = model(inputs)
-+            loss = criterion(outputs, targets)
+         temp = torch.zeros(p.shape)
+         if self.cuda_a:
+           temp = temp.cuda()
++          if self.label_distri != None:
++            self.label_distri = self.label_distri.cuda()
+         target_v=temp.scatter_(1,torch.unsqueeze(target_d,dim=1),1.)
+
 ```
 
 
