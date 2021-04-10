@@ -1,7 +1,7 @@
 import os
 import pickle
 
-data_dir = './original_data/chest_xray'
+data_dir = os.path.expanduser('~/original_data/chest_xray')
 data_type = ['train','val','test']
 statistic_dict = {}
 data_dict = {}
