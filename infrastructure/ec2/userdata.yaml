@@ -38,12 +38,12 @@ write_files:
 - content: |
     #!/usr/bin/env bash
     export PATH="$HOME/.local/bin:$PATH"
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
     cd /home/ubuntu/
     pip3 install virtualenvwrapper --user
     # virtual env setup
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.8
     source ~/.local/bin/virtualenvwrapper.sh
-    mkvirtualenv flannel
+    mkvirtualenv -p /usr/bin/python3.8 flannel
     # download source repo
     token=$(aws s3 cp s3://m-secrets-us-east-2/github_token - | cat)
     git clone "https://$${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
@@ -59,7 +59,7 @@ write_files:
   path: /root/clone.sh
 - content: |
     export PATH="$HOME/.local/bin:$PATH"
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.8
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
     source ~/.local/bin/virtualenvwrapper.sh
   path: /root/env
 
