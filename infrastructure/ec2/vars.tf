@@ -21,3 +21,28 @@ variable "ec2_security_group" {
 variable "ec2_availability_zone" {
 
 }
+
+variable "user1" {
+  description = "EC2 user 1"
+}
+
+variable "user2" {
+  description = "EC2 user 2"
+}
+
+variable "user3" {
+  description = "EC2 user 3"
+}
+
+variable "user1_key" {
+  description = "EC2 user 1 public key"
+}
+
+variable "user2_key" {
+  description = "EC2 user 2 public key"
+}
+
+variable "user3_key" {
+  description = "EC2 user 3 public key"
+}
+

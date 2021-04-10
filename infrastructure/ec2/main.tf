@@ -2,6 +2,17 @@ provider "aws" {
   region = "us-east-2"
 }
 
+locals {
+  user_data = templatefile("${path.module}/userdata.yaml", {
+    user1     = var.user1,
+    user2     = var.user2,
+    user3     = var.user3,
+    user1_key = var.user1_key,
+    user2_key = var.user2_key,
+    user3_key = var.user3_key
+  })
+}
+
 data "terraform_remote_state" "network" {
   backend = "s3"
 
@@ -46,7 +57,7 @@ resource "aws_spot_instance_request" "cheap_worker" {
   key_name                    = var.ec2_key
   vpc_security_group_ids      = [var.ec2_security_group]
   associate_public_ip_address = true
-  user_data                   = file("${path.module}/userdata.yaml")
+  user_data                   = local.user_data
   iam_instance_profile        = var.ec2_iam_profile
   availability_zone           = var.ec2_availability_zone
 
@@ -58,7 +69,7 @@ resource "aws_spot_instance_request" "cheap_worker" {
 
   }
 
-    tags = {
+  tags = {
     Project = "CS598"
   }
 

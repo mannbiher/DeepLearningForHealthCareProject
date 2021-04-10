@@ -1,4 +1,24 @@
 #cloud-config
+# users:
+#   - name: ${user1}
+#     groups: [ wheel ]
+#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+#     shell: /bin/bash
+#     ssh-authorized-keys: 
+#     - ${user1_key}
+#   - name: ${user2}
+#     groups: [ wheel ]
+#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+#     shell: /bin/bash
+#     ssh-authorized-keys: 
+#     - ${user2_key}
+#   - name: ${user3}
+#     groups: [ wheel ]
+#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+#     shell: /bin/bash
+#     ssh-authorized-keys: 
+#     - ${user3_key}
+
 package_update: true
 package_upgrade: true
 
@@ -26,7 +46,7 @@ write_files:
     mkvirtualenv flannel
     # download source repo
     token=$(aws s3 cp s3://m-secrets-us-east-2/github_token - | cat)
-    git clone "https://${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
+    git clone "https://$${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
     # copy dataset
     aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/chest-xray-pneumonia.zip .
     aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
