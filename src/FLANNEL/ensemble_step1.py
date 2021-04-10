@@ -318,6 +318,8 @@ def train(train_loader, model, criterion, optimizer, epoch, use_cuda):
 
         # compute output
         outputs = model(inputs)
+        if isinstance(outputs, tuple):
+            outputs = outputs[0]
         if use_cuda:
           loss = criterion(outputs, targets.type(torch.LongTensor).cuda())
         else:
