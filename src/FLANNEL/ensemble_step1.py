@@ -380,10 +380,11 @@ def test(val_loader, model, criterion, epoch, use_cuda):
         real_labels += list(targets)
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
+        #inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
         # compute output
-        outputs = model(inputs)
-        loss = criterion(outputs, targets)
+        with torch.no_grad():
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
 
         # print('test', loss)
         # measure accuracy and record loss

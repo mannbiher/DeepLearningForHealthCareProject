@@ -6,7 +6,9 @@ packages:
     - build-essential
     - libssl-dev
     - libffi-dev 
-    - python3
+    - python3.8
+    - python3.8-dev
+    - python3.8-venv
     - python3-pip
     - awscli
     - unzip
@@ -17,22 +19,17 @@ write_files:
     #!/usr/bin/env bash
     export PATH="$HOME/.local/bin:$PATH"
     cd /home/ubuntu/
-    pip3 install virtualenvwrapper kaggle --user
-    # Kaggle download dataset
-    mkdir /home/ubuntu/.kaggle/
-    aws s3 cp s3://m-secrets-us-east-2/kaggle.json /home/ubuntu/.kaggle/
-    chmod 600 /home/ubuntu/.kaggle/kaggle.json
-    kaggle datasets download -d paultimothymooney/chest-xray-pneumonia
-    # github dataset download
-    wget https://github.com/ieee8023/covid-chestxray-dataset/archive/refs/heads/master.zip
+    pip3 install virtualenvwrapper --user
     # virtual env setup
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.8
     source ~/.local/bin/virtualenvwrapper.sh
     mkvirtualenv flannel
     # download source repo
     token=$(aws s3 cp s3://m-secrets-us-east-2/github_token - | cat)
     git clone "https://${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
     # copy dataset
+    aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/chest-xray-pneumonia.zip .
+    aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
     unzip master.zip -d /home/ubuntu/DeepLearningForHealthCareProject/src/original_data/
     unzip chest-xray-pneumonia.zip -d /home/ubuntu/DeepLearningForHealthCareProject/src/original_data/
     # cd DeepLearningForHealthCareProject/src
@@ -42,7 +39,7 @@ write_files:
   path: /root/clone.sh
 - content: |
     export PATH="$HOME/.local/bin:$PATH"
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.8
     source ~/.local/bin/virtualenvwrapper.sh
   path: /root/env
 

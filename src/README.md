@@ -11,6 +11,7 @@ fix below warnings
 Views have been updated for Covid19 data
 AP => AP and AP Erect
 
+XRay data commit: 78543292f8b01d5e0ed1d0e15dce71949f0657bb
 
 ## Data Prepare
 ### Data Collect
