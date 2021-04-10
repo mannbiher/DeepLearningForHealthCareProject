@@ -93,7 +93,7 @@ parser.add_argument('-ck_n', '--checkpoint_saved_n', default=2, type=int, metava
                     help='each N epoch to save model')
 
 # Test Outputs
-parser.add_argument('--test', default = True, dest='test', action='store_true',
+parser.add_argument('--test', default = False, dest='test', action='store_true',
                     help='evaluate model on test set')
 parser.add_argument('--results', default='./explore_version_03/results', type=str, metavar='PATH',
                     help='path to save experiment results (default: results)')
@@ -112,7 +112,7 @@ parser.add_argument('--base-width', type=int, default=4, help='ResNet base width
 parser.add_argument('--widen-factor', type=int, default=4, help='Widen factor. 4 -> 64, 8 -> 128, ...')
 # Miscs
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--pretrained', dest='pretrained', default=True, action='store_false',
+parser.add_argument('--pretrained', dest='pretrained', default=False, action='store_false',
                     help='use pre-trained model')
 #Device options
 parser.add_argument('--gpu-id', default='0', type=str,
@@ -263,7 +263,7 @@ def main():
         
         print (train_loss, train_acc, test_acc, l_acc)
         # append logger file
-        logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        logger.append([state['lr'], train_loss.cpu(), test_loss.cpu(), train_acc.cpu(), test_acc.cpu()])
 
         # save model
         is_best = test_acc > best_acc
@@ -369,10 +369,11 @@ def test(val_loader, model, criterion, epoch, use_cuda):
         real_labels += list(targets)
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets= torch.autograd.Variable(inputs, volatile=True).float(), torch.autograd.Variable(targets)
+        inputs = inputs.float()
         # compute output
-        outputs = model(inputs)
-        loss = criterion(outputs, targets)
+        with torch.no_grad():
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
 
         # print('test', loss)
         # measure accuracy and record loss

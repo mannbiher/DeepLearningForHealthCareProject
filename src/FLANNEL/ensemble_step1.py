@@ -107,7 +107,7 @@ parser.add_argument('--widen-factor', type=int, default=4, help='Widen factor. 4
 
 # Miscs
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--pretrained', dest='pretrained', default=False, action='store_false',
+parser.add_argument('--pretrained', dest='pretrained', default=True, action='store_false',
                     help='use pre-trained model')
 #Device options
 parser.add_argument('--gpu-id', default='0', type=str,
@@ -222,7 +222,7 @@ def main():
     logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
 
     if args.test:
-        print('\Test only')
+        print('Test only')
         if len(args.resume) > 0:
           print ('load %s-th checkpoint'%args.resume)
           checkpoint_path = os.path.join(checkpoint_dir,args.resume+'.checkpoint.pth.tar')
