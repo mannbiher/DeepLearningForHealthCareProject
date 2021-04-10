@@ -50,8 +50,8 @@ write_files:
     # copy dataset
     aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/chest-xray-pneumonia.zip .
     aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
-    unzip master.zip -d /home/ubuntu/DeepLearningForHealthCareProject/src/original_data/
-    unzip chest-xray-pneumonia.zip -d /home/ubuntu/DeepLearningForHealthCareProject/src/original_data/
+    unzip chest-xray-pneumonia.zip -d ~/original_data/
+    unzip master.zip -d ~/original_data/
     # cd DeepLearningForHealthCareProject/src
     # pip install -r requirements.txt
     # cd ../playground
