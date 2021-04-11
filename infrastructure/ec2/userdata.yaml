@@ -52,8 +52,8 @@ write_files:
     aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
     unzip chest-xray-pneumonia.zip -d ~/original_data/
     unzip master.zip -d ~/original_data/
-    # cd DeepLearningForHealthCareProject/src
-    # pip install -r requirements.txt
+    cd DeepLearningForHealthCareProject/src
+    pip install -r requirements.txt
     # cd ../playground
     # python main.py > experiment1_output.txt
   path: /root/clone.sh
