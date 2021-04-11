@@ -2,6 +2,20 @@ provider "aws" {
   region = "us-east-2"
 }
 
+locals {
+  user_data = templatefile("${path.module}/userdata.yaml", {
+    user1     = var.user1,
+    user2     = var.user2,
+    user3     = var.user3,
+    user1_key = var.user1_key,
+    user2_key = var.user2_key,
+    user3_key = var.user3_key
+  })
+  tags = {
+    Project = "CS598"
+  }
+}
+
 data "terraform_remote_state" "network" {
   backend = "s3"
 
@@ -19,7 +33,9 @@ data "aws_ami" "amazon2_linux" {
   filter {
     name = "name"
     # values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    # values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    # values = ["ubuntu/images/hvm-ssd/ubuntu*-amd64-server-*"]
+    values = ["Deep Learning Base AMI (Ubuntu 18.04) Version 36.1"]
   }
 
   filter {
@@ -28,8 +44,8 @@ data "aws_ami" "amazon2_linux" {
   }
 
 
-  # owners = ["amazon"]
-  owners = ["099720109477"] # Canonical
+  owners = ["amazon"]
+  # owners = ["099720109477"] # Canonical
 }
 
 resource "aws_spot_instance_request" "cheap_worker" {
@@ -42,17 +58,25 @@ resource "aws_spot_instance_request" "cheap_worker" {
   ami                         = data.aws_ami.amazon2_linux.id
   instance_type               = var.instance_type
   key_name                    = var.ec2_key
-  vpc_security_group_ids      = [data.terraform_remote_state.network.outputs.security_group]
+  vpc_security_group_ids      = [var.ec2_security_group]
   associate_public_ip_address = true
-  user_data                   = file("${path.module}/userdata.yaml")
+  user_data                   = local.user_data
   iam_instance_profile        = var.ec2_iam_profile
+  availability_zone           = var.ec2_availability_zone
 
 
   root_block_device {
     delete_on_termination = true
     volume_type           = "gp2"
-    volume_size           = 50
+    volume_size           = 80
 
+  }
+
+  tags        = {
+    Project = "CS598"
+  }
+  volume_tags = {
+    Project = "CS598"
   }
 
 }

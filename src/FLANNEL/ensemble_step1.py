@@ -41,12 +41,13 @@ model_names = default_model_names + customized_models_names
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 
 # Experiment ID
-parser.add_argument('--experimentID', default='%s_20200407_multiclass_cv5', type=str, metavar='E_ID',
+parser.add_argument('--experimentID', default='%s_20200407_multiclass_%s', type=str, metavar='E_ID',
                     help='ID of Current experiment')
-
+parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
+                    help='Cross Validation Fold')
 # Datasets
 parser.add_argument('-d', '--data', default=
-                    './data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_cv5.pkl', type=str)
+                    './data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_%s.pkl', type=str)
 parser.add_argument('--label_file', default='./exp_data/metadata.csv', type=str)
 parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
@@ -107,7 +108,7 @@ parser.add_argument('--widen-factor', type=int, default=4, help='Widen factor. 4
 
 # Miscs
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--pretrained', dest='pretrained', default=False, action='store_false',
+parser.add_argument('--pretrained', dest='pretrained', default=True, action='store_false',
                     help='use pre-trained model')
 #Device options
 parser.add_argument('--gpu-id', default='0', type=str,
@@ -134,7 +135,8 @@ def main():
     global best_acc
     start_epoch = args.start_epoch  # start from epoch 0 or last checkpoint epoch
     
-    experimentID = args.experimentID%args.arch
+    experimentID = args.experimentID%(args.arch, args.cv)
+    args.data = args.data%('%s',args.cv)
     if not os.path.isdir(args.checkpoint):
         mkdir_p(args.checkpoint)
     
@@ -142,6 +144,7 @@ def main():
         mkdir_p(os.path.join(args.checkpoint, experimentID))
     
     checkpoint_dir = os.path.join(args.checkpoint, experimentID)
+    # checkpoint_s3 = "s3://uiuc-dlh-spring2021-finalproject-us-east-2/checkpoint/"
     if not os.path.isdir(checkpoint_dir):
         mkdir_p(checkpoint_dir)
     
@@ -173,8 +176,8 @@ def main():
         model = models.__dict__[args.arch](pretrained=True)
     elif args.arch.startswith('resnext'):
         model = models.__dict__[args.arch](
-                    baseWidth=args.base_width,
-                    cardinality=args.cardinality,
+                    width_per_group=args.base_width,
+                    groups=args.cardinality,
                 )
     else:
         print("=> creating model '{}'".format(args.arch))
@@ -216,12 +219,12 @@ def main():
 #    criterion = focalloss(label_distri = train_distri, model_name = args.arch)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    
+    title = args.arch
     logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
     logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
 
     if args.test:
-        print('\Test only')
+        print('Test only')
         if len(args.resume) > 0:
           print ('load %s-th checkpoint'%args.resume)
           checkpoint_path = os.path.join(checkpoint_dir,args.resume+'.checkpoint.pth.tar')
@@ -244,7 +247,8 @@ def main():
         runtype = []
         for func in loders:
           test_loss, test_acc, pred_d, real_d = test(func[0], model, criterion, start_epoch, use_cuda)
-          with open(os.path.join(results_dir, 'result_detail_%s_%s_cv1.csv'%(args.arch, func[1])), 'w') as f:
+          detail_file = 'result_detail_%s_%s_%s.csv'%(args.arch, func[1], args.cv)
+          with open(os.path.join(results_dir, detail_file), 'w') as f:
               csv_writer = csv.writer(f)
               for i in range(len(real_d)):
                   x = np.zeros(len(pred_d[i]))
@@ -252,8 +256,9 @@ def main():
 #                  y = np.exp(pred_d[i])/np.sum(np.exp(pred_d[i]))
                   csv_writer.writerow(list(np.array(pred_d[i])) + list(x))
         
-#        mr = MeasureR(results_dir, test_loss, test_acc)
-#        mr.output()
+          meaure_file='measure_detail_%s_%s_%s.csv'%(args.arch, func[1], args.cv)
+          mr = MeasureR(results_dir, test_loss, test_acc, infile=detail_file, outfile=meaure_file)
+          mr.output()
           print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))
         return
     
@@ -262,11 +267,11 @@ def main():
         print('\nEpoch: [%d | %d] LR: %f' % (epoch + 1, args.epochs, state['lr']))
         train_loss, train_acc = train(train_loader, model, criterion, optimizer, epoch, use_cuda)
         test_loss, test_acc, _, _ = test(val_loader, model, criterion, epoch, use_cuda)
-        l_loss, l_acc, _, _ = test(test_loader, model, criterion, epoch, use_cuda)
+        # l_loss, l_acc, _, _ = test(test_loader, model, criterion, epoch, use_cuda)
         
-        print (train_loss, train_acc, test_acc, l_acc)
+        # print (train_loss, train_acc, test_acc, l_acc)
         # append logger file
-        logger.append([state['lr'], train_loss, test_loss, train_acc, test_acc])
+        logger.append([state['lr'], train_loss.cpu(), test_loss.cpu(), train_acc.cpu(), test_acc.cpu()])
 
         # save model
         is_best = test_acc > best_acc
@@ -279,10 +284,16 @@ def main():
                   'best_acc': best_acc,
                   'optimizer' : optimizer.state_dict(),
               }, epoch, is_best, checkpoint=checkpoint_dir)
+        #   try:
+        #       print("Saving checkpoint to s3 ...")
+        #       os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
+        #       print("Saving checkpoint to S3 is completed")
+        #   except:
+        #       print("AWS-Sync failed")
 
     logger.close()
     logger.plot()
-    savefig(os.path.join(checkpoint_dir, 'log.eps'))
+    savefig(os.path.join(checkpoint_dir, 'log.png'))
 
     print('Best acc:')
     print(best_acc)
@@ -311,6 +322,8 @@ def train(train_loader, model, criterion, optimizer, epoch, use_cuda):
 
         # compute output
         outputs = model(inputs)
+        if isinstance(outputs, tuple):
+            outputs = outputs[0]
         if use_cuda:
           loss = criterion(outputs, targets.type(torch.LongTensor).cuda())
         else:
@@ -373,10 +386,11 @@ def test(val_loader, model, criterion, epoch, use_cuda):
         real_labels += list(targets)
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
+        #inputs, targets= torch.autograd.Variable(inputs, volatile=True), torch.autograd.Variable(targets)
         # compute output
-        outputs = model(inputs)
-        loss = criterion(outputs, targets)
+        with torch.no_grad():
+            outputs = model(inputs)
+            loss = criterion(outputs, targets)
 
         # print('test', loss)
         # measure accuracy and record loss

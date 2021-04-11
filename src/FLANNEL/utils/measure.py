@@ -7,10 +7,14 @@ import csv
 from sklearn.metrics  import roc_curve,auc
 
 class MeasureR(object):
-    def __init__(self, fdir, loss, acc):
+    def __init__(self, fdir, loss, acc, infile=None, outfile=None):
       self.fdir = fdir
-      self.file_path = os.path.join(self.fdir, 'result_detail.csv')
-      self.wfile_path = os.path.join(self.fdir, 'measure_detail.csv')
+      if not infile:
+        infile = 'result_detail.csv'
+      if not outfile:
+        outfile = 'measure_detail.csv'
+      self.file_path = os.path.join(self.fdir, infile)
+      self.wfile_path = os.path.join(self.fdir, outfile)
       
       self.acc = acc
       self.loss = loss
@@ -93,7 +97,8 @@ class MeasureR(object):
         plt.title('Receiver operating characteristic example')
         plt.legend(loc="lower right")
         foo_fig = plt.gcf()
-        saved_path = os.path.join(self.fdir, 'results.png')
+        outplt = self.file_path.rsplit('/',1)[-1].rsplit('.',1)[0] + '.png'
+        saved_path = os.path.join(self.fdir, outplt)
         if os.path.exists(saved_path):
           os.remove(saved_path)
         foo_fig.savefig(saved_path)

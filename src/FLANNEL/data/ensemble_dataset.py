@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import csv
 import random
-from explore_version_03.data.base_dataset import BaseDataset
+from data.base_dataset import BaseDataset
 # add data augumentation 
 #from torch.utils.data import DataLoader
 
