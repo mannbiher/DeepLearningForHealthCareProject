@@ -47,8 +47,8 @@ parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 # Experiment ID
 parser.add_argument('--experimentID', default='%s_20200719_gamma_10_multiclass_cv5_focal', type=str, metavar='E_ID',
                     help='ID of Current experiment')
-parser.add_argument('--cv', default='cv5', type=str, metavar='E_ID',
-                    help='ID of Current experiment')
+parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
+                    help='Cross Validation Fold')
 parser.add_argument('--data_dir', default='./explore_version_03/results_class_ensemble/%s_20200407_multiclass_%s', type=str, metavar='E_ID',
                     help='ID of Current experiment')
 

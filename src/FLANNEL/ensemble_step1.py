@@ -41,12 +41,13 @@ model_names = default_model_names + customized_models_names
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 
 # Experiment ID
-parser.add_argument('--experimentID', default='%s_20200407_multiclass_cv5', type=str, metavar='E_ID',
+parser.add_argument('--experimentID', default='%s_20200407_multiclass_%s', type=str, metavar='E_ID',
                     help='ID of Current experiment')
-
+parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
+                    help='Cross Validation Fold')
 # Datasets
 parser.add_argument('-d', '--data', default=
-                    './data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_cv5.pkl', type=str)
+                    './data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_%s.pkl', type=str)
 parser.add_argument('--label_file', default='./exp_data/metadata.csv', type=str)
 parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
@@ -134,7 +135,8 @@ def main():
     global best_acc
     start_epoch = args.start_epoch  # start from epoch 0 or last checkpoint epoch
     
-    experimentID = args.experimentID%args.arch
+    experimentID = args.experimentID%(args.arch, args.cv)
+    args.data = args.data%('%s',args.cv)
     if not os.path.isdir(args.checkpoint):
         mkdir_p(args.checkpoint)
     
@@ -245,7 +247,8 @@ def main():
         runtype = []
         for func in loders:
           test_loss, test_acc, pred_d, real_d = test(func[0], model, criterion, start_epoch, use_cuda)
-          with open(os.path.join(results_dir, 'result_detail_%s_%s_cv1.csv'%(args.arch, func[1])), 'w') as f:
+          detail_file = 'result_detail_%s_%s_%s.csv'%(args.arch, func[1], args.cv)
+          with open(os.path.join(results_dir, detail_file), 'w') as f:
               csv_writer = csv.writer(f)
               for i in range(len(real_d)):
                   x = np.zeros(len(pred_d[i]))
@@ -253,8 +256,9 @@ def main():
 #                  y = np.exp(pred_d[i])/np.sum(np.exp(pred_d[i]))
                   csv_writer.writerow(list(np.array(pred_d[i])) + list(x))
         
-#        mr = MeasureR(results_dir, test_loss, test_acc)
-#        mr.output()
+          meaure_file='measure_detail_%s_%s_%s.csv'%(args.arch, func[1], args.cv)
+          mr = MeasureR(results_dir, test_loss, test_acc, infile=detail_file, outfile=meaure_file)
+          mr.output()
           print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))
         return
     
@@ -289,7 +293,7 @@ def main():
 
     logger.close()
     logger.plot()
-    savefig(os.path.join(checkpoint_dir, 'log.eps'))
+    savefig(os.path.join(checkpoint_dir, 'log.png'))
 
     print('Best acc:')
     print(best_acc)
