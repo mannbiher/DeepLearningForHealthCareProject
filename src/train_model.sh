@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 python data_preprocess/get_covid_data_dict.py
 python data_preprocess/get_kaggle_data_dict.py
 rm -rf './data_preprocess/standard_data_multiclass_0922_crossentropy'

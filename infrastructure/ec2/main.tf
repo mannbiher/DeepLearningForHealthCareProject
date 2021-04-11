@@ -11,6 +11,9 @@ locals {
     user2_key = var.user2_key,
     user3_key = var.user3_key
   })
+  tags = {
+    Project = "CS598"
+  }
 }
 
 data "terraform_remote_state" "network" {
@@ -69,7 +72,10 @@ resource "aws_spot_instance_request" "cheap_worker" {
 
   }
 
-  tags = {
+  tags        = {
+    Project = "CS598"
+  }
+  volume_tags = {
     Project = "CS598"
   }
 
