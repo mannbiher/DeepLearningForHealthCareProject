@@ -36,7 +36,7 @@ def main():
 
     # Flag  
     flag_eval_JI = False # calculate JI
-    flag_save_JPG = False # preprocessed, mask
+    flag_save_JPG = True # preprocessed, mask
 
     # GPU   
     if torch.cuda.is_available():
