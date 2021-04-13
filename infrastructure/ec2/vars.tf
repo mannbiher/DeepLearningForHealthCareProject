@@ -46,3 +46,6 @@ variable "user3_key" {
   description = "EC2 user 3 public key"
 }
 
+variable "ami_id" {
+  description = "Preconfigured image for FLANNEL data and code"
+}
