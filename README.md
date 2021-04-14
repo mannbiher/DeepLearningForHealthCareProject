@@ -3,6 +3,7 @@ Final project for UIUC graduate course CS598 Deep Learning for Healthcare
 
 [FLANNEL paper](https://academic.oup.com/jamia/article/28/3/444/5943880)
 
+[Patch by Patch paper](https://ieeexplore.ieee.org/document/9090149)
 
 ## Changes
 
