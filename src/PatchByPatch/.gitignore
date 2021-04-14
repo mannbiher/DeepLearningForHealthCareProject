@@ -3,3 +3,8 @@ checkpoint/*
 venv
 output/*
 output_visualize/*
+output_visualize.zip
+output.zip
+runs/*
+classification_data/*
+classification_data.zip

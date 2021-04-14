@@ -34,8 +34,12 @@ variable "user3" {
   description = "EC2 user 3"
 }
 
-variable "user1_key" {
-  description = "EC2 user 1 public key"
+variable "user1_key1" {
+  description = "EC2 user 1 public key 1"
+}
+
+variable "user1_key2" {
+  description = "EC2 user 1 public key 2"
 }
 
 variable "user2_key" {
@@ -44,5 +48,45 @@ variable "user2_key" {
 
 variable "user3_key" {
   description = "EC2 user 3 public key"
+}
+
+variable "ami_id" {
+  description = "Preconfigured image for FLANNEL data and code"
+}
+
+variable "on_demand_instances" {
+  type = list(string)
+  default = [
+    "t3.medium",
+    "c5.large",
+    "c5.xlarge",
+    "c5.2xlarge",
+    "m5.large",
+    "m5.xlarge",
+    "m5.2xlarge",
+    "p2.xlarge",
+    "p3.2xlarge"
+  ]
+  description = "Allowed on-demand instances"
+}
+
+variable "spot_instances" {
+  type = list(string)
+  default = [
+    "t3.medium",
+    "c5.large",
+    "c5.xlarge",
+    "c5.2xlarge",
+    "c5.4xlarge",
+    "m5.large",
+    "m5.xlarge",
+    "m5.2xlarge",
+    "m5.4xlarge",
+    "p2.xlarge",
+    "p2.8xlarge",
+    "p3.2xlarge",
+    "p3.8xlarge"
+  ]
+  description = "Allowed spot instances"
 }
 

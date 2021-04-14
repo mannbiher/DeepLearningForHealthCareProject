@@ -20,7 +20,7 @@ from utils.customloader import COVID_Dataset
 from torch.utils.tensorboard import SummaryWriter
 
 ## Detect if we have a GPU available
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Save data
 save_dir = header.save_dir

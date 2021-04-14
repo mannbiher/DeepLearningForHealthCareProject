@@ -2,6 +2,12 @@ provider "aws" {
   region = "us-east-2"
 }
 
+locals {
+  tags = {
+    Project = "CS598"
+  }
+}
+
 resource "aws_security_group" "private_ssh" {
   name        = "allow_ssh"
   description = "Allow OpenSSH traffic"
@@ -12,7 +18,7 @@ resource "aws_security_group" "private_ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = var.my_ips
   }
 
   egress {
@@ -21,6 +27,8 @@ resource "aws_security_group" "private_ssh" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = local.tags
 
 
 }
