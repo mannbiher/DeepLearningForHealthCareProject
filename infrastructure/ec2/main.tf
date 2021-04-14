@@ -55,28 +55,78 @@ resource "aws_spot_instance_request" "cheap_worker" {
   wait_for_fulfillment = true
   valid_until          = timeadd(timestamp(), "10m")
 
-  ami                         = data.aws_ami.amazon2_linux.id
+  ami                         = var.ami_id
   instance_type               = var.instance_type
   key_name                    = var.ec2_key
   vpc_security_group_ids      = [var.ec2_security_group]
   associate_public_ip_address = true
-  user_data                   = local.user_data
-  iam_instance_profile        = var.ec2_iam_profile
-  availability_zone           = var.ec2_availability_zone
+  # user_data                   = local.user_data
+  iam_instance_profile = var.ec2_iam_profile
+  availability_zone    = var.ec2_availability_zone
 
 
   root_block_device {
     delete_on_termination = true
     volume_type           = "gp2"
     volume_size           = 80
+    tags                  = local.tags
 
   }
 
-  tags        = {
-    Project = "CS598"
-  }
-  volume_tags = {
-    Project = "CS598"
-  }
-
+  tags = local.tags
 }
+
+
+resource "aws_ec2_tag" "ec2_tag" {
+  for_each    = local.tags
+  resource_id = aws_spot_instance_request.cheap_worker.spot_instance_id
+  key         = each.key
+  value       = each.value
+}
+
+data "aws_ebs_volume" "ebs_volume" {
+  most_recent = true
+
+  filter {
+    name   = "attachment.instance-id"
+    values = [aws_spot_instance_request.cheap_worker.spot_instance_id]
+  }
+}
+
+resource "aws_ec2_tag" "volume_atg" {
+  for_each    = local.tags
+  resource_id = data.aws_ebs_volume.ebs_volume.id
+  key         = each.key
+  value       = each.value
+}
+
+
+# resource "aws_instance" "cheap_worker" {
+#   # spot settings
+#   # spot_price           = var.spot_price
+#   # spot_type            = "one-time"
+#   # wait_for_fulfillment = true
+#   # valid_until          = timeadd(timestamp(), "10m")
+#   # lifecycle {
+#   #   ignore_changes = [associate_public_ip_address]
+#   # }
+#   ami                         = data.aws_ami.amazon2_linux.id
+#   instance_type               = var.instance_type
+#   key_name                    = var.ec2_key
+#   vpc_security_group_ids      = [var.ec2_security_group]
+#   associate_public_ip_address = true
+#   user_data                   = local.user_data
+#   iam_instance_profile        = var.ec2_iam_profile
+#   availability_zone           = var.ec2_availability_zone
+
+
+#   root_block_device {
+#     delete_on_termination = true
+#     volume_type           = "gp2"
+#     volume_size           = 80
+#     tags                  = local.tags
+
+#   }
+
+#   tags = local.tags
+# }

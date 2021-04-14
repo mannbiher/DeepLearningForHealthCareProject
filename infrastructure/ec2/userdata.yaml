@@ -1,76 +1,103 @@
 #cloud-config
-# users:
-#   - name: ${user1}
-#     groups: [ wheel ]
-#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
-#     shell: /bin/bash
-#     ssh-authorized-keys: 
-#     - ${user1_key}
-#   - name: ${user2}
-#     groups: [ wheel ]
-#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
-#     shell: /bin/bash
-#     ssh-authorized-keys: 
-#     - ${user2_key}
-#   - name: ${user3}
-#     groups: [ wheel ]
-#     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
-#     shell: /bin/bash
-#     ssh-authorized-keys: 
-#     - ${user3_key}
+users:
+  - default
+  - name: ${user1}
+    groups: [wheel]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ${user1_key}
+  - name: ${user2}
+    groups: [wheel]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ${user2_key}
+  - name: ${user3}
+    groups: [wheel]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ${user3_key}
 
 package_update: true
 package_upgrade: true
 
 packages:
-    - build-essential
-    - libssl-dev
-    - libffi-dev 
-    - python3.8
-    - python3.8-dev
-    - python3.8-venv
-    - python3-pip
-    - awscli
-    - unzip
-    - zip
+  - build-essential
+  - libssl-dev
+  - libffi-dev
+  - python3.8
+  - python3.8-dev
+  - python3.8-venv
+  - python3-pip
+  - awscli
+  - unzip
+  - zip
 
 write_files:
-- content: |
-    #!/usr/bin/env bash
-    export PATH="$HOME/.local/bin:$PATH"
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    cd /home/ubuntu/
-    pip3 install virtualenvwrapper --user
-    # virtual env setup
-    source ~/.local/bin/virtualenvwrapper.sh
-    mkvirtualenv -p /usr/bin/python3.8 flannel
-    # download source repo
-    token=$(aws s3 cp s3://m-secrets-us-east-2/github_token - | cat)
-    git clone "https://$${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
-    # copy dataset
-    aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/chest-xray-pneumonia.zip .
-    aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
-    unzip chest-xray-pneumonia.zip -d ~/original_data/
-    unzip master.zip -d ~/original_data/
-    cd DeepLearningForHealthCareProject/src
-    pip install -r requirements.txt
-    # cd ../playground
-    # python main.py > experiment1_output.txt
-  path: /root/clone.sh
-- content: |
-    export PATH="$HOME/.local/bin:$PATH"
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    source ~/.local/bin/virtualenvwrapper.sh
-  path: /root/env
-
-
-  
+  - content: |
+      #!/usr/bin/env bash
+      export PATH="$HOME/.local/bin:$PATH"
+      export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+      cd /home/ubuntu/
+      pip3 install virtualenvwrapper --user
+      # virtual env setup
+      source ~/.local/bin/virtualenvwrapper.sh
+      mkvirtualenv -p /usr/bin/python3.8 flannel
+      # download source repo
+      token=$(aws s3 cp s3://m-secrets-us-east-2/github_token - | cat)
+      git clone "https://$${token}@github.com/mannbiher/DeepLearningForHealthCareProject.git"
+      # copy dataset
+      aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/chest-xray-pneumonia.zip .
+      aws s3 cp s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/master.zip .
+      unzip chest-xray-pneumonia.zip -d ~/original_data/
+      unzip master.zip -d ~/original_data/
+      cd DeepLearningForHealthCareProject/src
+      pip install -r requirements.txt
+      # cd ../playground
+      # python main.py > experiment1_output.txt
+    path: /root/clone.sh
+  - content: |
+      export PATH="$HOME/.local/bin:$PATH"
+      export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+      source ~/.local/bin/virtualenvwrapper.sh
+    path: /root/env
+  - content: |
+      {
+        "agent": {
+          "metrics_collection_interval": 10,
+          "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+        },
+        "logs": {
+          "logs_collected": {
+            "files": {
+              "collect_list": [
+                {
+                  "file_path": "/home/ubuntu/flannel.log",
+                  "log_group_name": "/cs598/flannel/ec2",
+                  "log_stream_name": "{instance_id}",
+                  "timezone": "UTC"
+                }
+              ]
+            }
+          },
+          "log_stream_name": "{instance_id}",
+          "force_flush_interval": 15
+        }
+      }
+    path: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 runcmd:
-  - sudo sysctl fs.inotify.max_user_watches=524288
-  - sudo cp /root/clone.sh /home/ubuntu/clone.sh
-  - sudo cp /root/env /home/ubuntu/env
-  - [ bash, -c, "chmod +x /home/ubuntu/clone.sh" ]
-  - [ bash, -c, "chown ubuntu: /home/ubuntu/clone.sh" ]
-  - [ bash, -c, "chown ubuntu: /home/ubuntu/env" ]
+  - sysctl fs.inotify.max_user_watches=524288
+  - [wget, "https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
+      -O,/run/amazon-cloudwatch-agent.deb]
+  - dpkg -i -E /run/amazon-cloudwatch-agent.deb
+  - [/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl, -a, fetch-config, -m, ec2 ,-s, 
+      -c, "file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"]
+  - cp /root/clone.sh /home/ubuntu/clone.sh
+  - cp /root/env /home/ubuntu/env
+  - [bash, -c, "chmod +x /home/ubuntu/clone.sh"]
+  - [bash, -c, "chown ubuntu: /home/ubuntu/clone.sh"]
+  - [bash, -c, "chown ubuntu: /home/ubuntu/env"]
   - sudo -u ubuntu bash -c 'whoami;/home/ubuntu/clone.sh'
