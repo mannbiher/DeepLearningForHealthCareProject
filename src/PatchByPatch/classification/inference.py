@@ -21,7 +21,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 
 ## Detect if we have a GPU available
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Load data
 data_dir = header.data_dir
@@ -142,6 +142,8 @@ def main():
     for x in range(445):
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
+
+    y_pred = list(filter(lambda x: x != None, y_pred))
 
     print()
 
