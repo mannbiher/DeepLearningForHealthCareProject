@@ -6,7 +6,8 @@ users:
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     shell: /bin/bash
     ssh-authorized-keys:
-      - ${user1_key}
+      - ${user1_key1}
+      - ${user1_key2}
   - name: ${user2}
     groups: [wheel]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
@@ -74,7 +75,7 @@ write_files:
             "files": {
               "collect_list": [
                 {
-                  "file_path": "/home/ubuntu/flannel.log",
+                  "file_path": "/home/ubuntu/flannel*.log",
                   "log_group_name": "/cs598/flannel/ec2",
                   "log_stream_name": "{instance_id}",
                   "timezone": "UTC"
