@@ -15,7 +15,7 @@ python -m venv venv
 
 - install packages
 ```
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 - download patch by patch data from s3 database https://msingh.signin.aws.amazon.com/console and store in `data` folder
@@ -30,17 +30,33 @@ SCR
   |- fold2
 ```
 
-__Run Training__
+__Segmentation__
 - ensure you are in activated virtual environment with installed packages
-
-- enter train directory
+- enter segmentation directory
 ```
-cd train
+cd segmentation
 ```
-
 - run train.py
 ```
 python train.py
+```
+- run inference.py
+```
+python inference.py
+```
+
+__Classification__
+- prep classification dataset
+```
+python prep_classification_dataset.py
+```
+- run training
+```
+python classification_train.py
+```
+- run inference
+```
+python classification_inference.py
 ```
 
 # Summary
