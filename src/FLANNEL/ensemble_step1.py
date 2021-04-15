@@ -284,12 +284,12 @@ def main():
                   'best_acc': best_acc,
                   'optimizer' : optimizer.state_dict(),
               }, epoch, is_best, checkpoint=checkpoint_dir)
-          try:
-              print("Saving checkpoint to s3 ...")
-              os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
-              print("Saving checkpoint to S3 is completed")
-          except:
-              print("AWS-Sync failed")
+          #try:
+          #    print("Saving checkpoint to s3 ...")
+          #    os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
+          #    print("Saving checkpoint to S3 is completed")
+          #except:
+          #    print("AWS-Sync failed")
 
     logger.close()
     logger.plot()
