@@ -144,7 +144,7 @@ def main():
         mkdir_p(os.path.join(args.checkpoint, experimentID))
     
     checkpoint_dir = os.path.join(args.checkpoint, experimentID)
-    # checkpoint_s3 = "s3://uiuc-dlh-spring2021-finalproject-us-east-2/checkpoint/"
+    checkpoint_s3 = "s3://alchemists-uiuc-dlh-spring2021-us-east-2/flannel/checkpoint/"
     if not os.path.isdir(checkpoint_dir):
         mkdir_p(checkpoint_dir)
     
@@ -284,12 +284,12 @@ def main():
                   'best_acc': best_acc,
                   'optimizer' : optimizer.state_dict(),
               }, epoch, is_best, checkpoint=checkpoint_dir)
-        #   try:
-        #       print("Saving checkpoint to s3 ...")
-        #       os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
-        #       print("Saving checkpoint to S3 is completed")
-        #   except:
-        #       print("AWS-Sync failed")
+          try:
+              print("Saving checkpoint to s3 ...")
+              os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
+              print("Saving checkpoint to S3 is completed")
+          except:
+              print("AWS-Sync failed")
 
     logger.close()
     logger.plot()
