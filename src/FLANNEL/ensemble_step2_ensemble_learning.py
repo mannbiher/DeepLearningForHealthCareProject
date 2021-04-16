@@ -45,7 +45,7 @@ model_names = default_model_names
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 
 # Experiment ID
-parser.add_argument('--experimentID', default='%s_20200719_gamma_10_multiclass_cv5_focal', type=str, metavar='E_ID',
+parser.add_argument('--experimentID', default='%s_20200719_gamma_10_multiclass_%s_focal', type=str, metavar='E_ID',
                     help='ID of Current experiment')
 parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
                     help='Cross Validation Fold')
@@ -139,7 +139,8 @@ def main():
     global best_acc
     start_epoch = args.start_epoch  # start from epoch 0 or last checkpoint epoch
     
-    experimentID = args.experimentID%args.arch
+    experimentID = args.experimentID%(args.arch, args.cv)
+    # args.data = args.data%('%s',args.cv)
     if not os.path.isdir(args.checkpoint):
         mkdir_p(args.checkpoint)
     
@@ -406,6 +407,7 @@ def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename=
     torch.save(state, filepath)
     if is_best:
         shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
+        
 
 def adjust_learning_rate(optimizer, epoch):
     global state

@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-source ~/env
-workon flannel
+#source ~/env
+#workon flannel
 set -x
-python data_preprocess/get_covid_data_dict.py
-python data_preprocess/get_kaggle_data_dict.py
-rm -rf './data_preprocess/standard_data_multiclass_0922_crossentropy'
-python data_preprocess/extract_exp_data_crossentropy.py
 for i in $(seq 1 5); do
     python FLANNEL/ensemble_step1.py --arch inception_v3 --epochs=1 --crop_size=299 -ck_n=10 --cv=cv$i
     python FLANNEL/ensemble_step1.py --arch inception_v3 --epochs=1 --crop_size=299 -ck_n=10 --cv=cv$i --test

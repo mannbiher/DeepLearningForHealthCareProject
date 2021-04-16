@@ -274,8 +274,10 @@ def main():
         logger.append([state['lr'], train_loss.cpu(), test_loss.cpu(), train_acc.cpu(), test_acc.cpu()])
 
         # save model
-        is_best = test_acc > best_acc
-        best_acc = max(test_acc, best_acc)
+        is_best = test_acc.item() > best_acc
+        print('test vs best accuracy', test_acc.item(), best_acc, is_best)
+        best_acc = max(test_acc.item(), best_acc)
+        print(epoch, epoch%args.checkpoint_saved_n)
         if epoch%args.checkpoint_saved_n == 0:
           save_checkpoint({
                   'epoch': epoch,
@@ -420,9 +422,10 @@ def test(val_loader, model, criterion, epoch, use_cuda):
 
 def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
     filepath = os.path.join(checkpoint, str(epoch_id)+'.'+filename)
-    torch.save(state, filepath)
+    # torch.save(state, filepath)
     if is_best:
-        shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
+        # shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
+        torch.save(state, os.path.join(checkpoint, 'model_best.pth.tar'))
 
 def adjust_learning_rate(optimizer, epoch):
     global state
