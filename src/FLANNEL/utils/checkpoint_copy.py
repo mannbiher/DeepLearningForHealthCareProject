@@ -7,7 +7,7 @@ class Handler(FileSystemEventHandler):
     @staticmethod
     def on_any_event(event):
         new_obj = event.src_path
-        ### update these 2 lines
+        # update these 2 lines
         checkpoint_dir = "/Users/sreddyasi/kgdata/"
         checkpoint_s3 = "s3://uiuc-dlh-spring2021-finalproject-us-east-2/checkpoint/"
         s3_key = new_obj.replace(checkpoint_dir,"")
@@ -26,8 +26,10 @@ class Handler(FileSystemEventHandler):
 class OnMyWatch:
     # update this
     checkpoint_dir = "/Users/sreddyasi/kgdata/"
+
     def __init__(self):
         self.observer = Observer()
+
     def run(self):
         event_handler = Handler()
         self.observer.schedule(event_handler, self.checkpoint_dir, recursive = True)
