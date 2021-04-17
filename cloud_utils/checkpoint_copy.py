@@ -11,6 +11,7 @@ S3_CLIENT = boto3.client('s3')
 S3_BUCKET = 'alchemists-uiuc-dlh-spring2021-us-east-2'
 WATCH_DIR = os.path.expanduser('~/DeepLearningForHealthCareProject/src/explore_version_03/')
 logger = logging.getLogger(__name__)
+FLAG_DIR = os.path.expanduser('~/DeepLearningForHealthCareProject/src/flag_dir/')
 
 
 def delete_file(filename):
@@ -18,6 +19,7 @@ def delete_file(filename):
         os.remove(filename)
     except OSError:
         logger.exception('Delete failed')
+
 
 class Handler(FileSystemEventHandler):
     def upload_file(self, event):
@@ -28,20 +30,30 @@ class Handler(FileSystemEventHandler):
         S3_CLIENT.upload_file(path,S3_BUCKET, 'flannel/' + s3_key)
         if path.endswith('checkpoint.pth.tar'):
             delete_file(path)
+
+    def sync_directory(self):
+        try:
+            os.system("aws s3 sync {} {}".format(WATCH_DIR, "s3://" + S3_BUCKET + "/flannel/"))
+            os.remove(FLAG_DIR + "flag")
+        except:
+            print("Sync Failed")
         
     def on_created(self, event):
-        self.upload_file(event)
+        self.sync_directory()
+        #self.upload_file(event)
         
-    def on_modified(self, event):
-        self.upload_file(event)
-  
+    #def on_modified(self, event):
+    #    self.upload_file(event)
+
+
 class OnMyWatch:
     def __init__(self):
         self.observer = Observer()
 
     def run(self):
         event_handler = Handler()
-        self.observer.schedule(event_handler, WATCH_DIR, recursive = True)
+        #self.observer.schedule(event_handler, WATCH_DIR, recursive = True)
+        self.observer.schedule(event_handler, FLAG_DIR, recursive=True)
         self.observer.start()
         try:
             while True:
