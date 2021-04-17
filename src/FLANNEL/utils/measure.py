@@ -62,7 +62,7 @@ class MeasureR(object):
         l1 = np.array(l1)
         l2 = np.array(l2)
         l3 = np.array(l3)
-
+        print('tp_s and predict_s', tp_s, predict_s, target_s)
         precision = tp_s/predict_s
         recall = tp_s/target_s 
         with open(self.wfile_path, 'w') as f:

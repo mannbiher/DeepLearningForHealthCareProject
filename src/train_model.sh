@@ -2,7 +2,7 @@
 #source ~/env
 #workon flannel
 set -x
-for i in $(seq 1 5); do
+for i in $(seq 1 1); do
     python FLANNEL/ensemble_step1.py --arch inception_v3 --epochs=1 --crop_size=299 -ck_n=10 --cv=cv$i
     python FLANNEL/ensemble_step1.py --arch inception_v3 --epochs=1 --crop_size=299 -ck_n=10 --cv=cv$i --test
     python FLANNEL/ensemble_step1.py --arch resnext101_32x8d --epochs=1 -ck_n=10 --cv=cv$i
