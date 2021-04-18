@@ -269,7 +269,7 @@ def main():
         # save model
         is_best = test_acc > best_acc
         best_acc = max(test_acc, best_acc)
-        if epoch%args.checkpoint_saved_n == 0:
+        if is_best or epoch%args.checkpoint_saved_n == 0:
           save_checkpoint({
                   'epoch': epoch,
                   'state_dict': model.state_dict(),

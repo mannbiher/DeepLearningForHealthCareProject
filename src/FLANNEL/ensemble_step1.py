@@ -278,7 +278,7 @@ def main():
         print('test vs best accuracy', test_acc.item(), best_acc, is_best)
         best_acc = max(test_acc.item(), best_acc)
         print(epoch, epoch%args.checkpoint_saved_n)
-        if epoch%args.checkpoint_saved_n == 0:
+        if is_best or epoch%args.checkpoint_saved_n == 0:
           save_checkpoint({
                   'epoch': epoch,
                   'state_dict': model.state_dict(),
@@ -426,6 +426,7 @@ def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename=
     if is_best:
         # shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
         torch.save(state, os.path.join(checkpoint, 'model_best.pth.tar'))
+
 
 def adjust_learning_rate(optimizer, epoch):
     global state
