@@ -59,6 +59,22 @@ python classification_train.py
 python classification_inference.py
 ```
 
+__Notes__
+- classification
+  - classification/header/repeat is the number of patches
+  - the utils/customloader __getitem__ function calls __data_generation__ which imports the numpified image and mask, then creates a masked version of the image, then creates a patch from the numpified patch
+  - the classification/infernece.py repeats by number of patches it calls getItem for
+- how do we add segmentation to FLANNEL??
+  - IDEA 1: run segmentation of all images first
+    - will need to run segmentation on all images in data pre-processing
+    - need to modify data pre-processing step to store image and mask information along with the labels
+    - need to modify data loader to behave more like customloader __data_generation
+  - IDEA 2: run segmentation of image in data loader
+    - will need to load instance of segmentation model when data loader initializes
+    - should we modify the __get_item__ to return a patch?
+- how do we add K-Patch model to FLANNEL??
+
+
 # Summary
 -------
 This is the Github repository for "Deep Learning COVID-19 on CXR using Limited Training Data Sets".
