@@ -278,7 +278,7 @@ def main():
         print('test vs best accuracy', test_acc.item(), best_acc, is_best)
         best_acc = max(test_acc.item(), best_acc)
         print(epoch, epoch%args.checkpoint_saved_n)
-        if is_best or epoch%args.checkpoint_saved_n == 0:
+        if is_best or epoch%args.checkpoint_saved_n == 0 or epoch==args.epochs-1:
           save_checkpoint({
                   'epoch': epoch,
                   'state_dict': model.state_dict(),
