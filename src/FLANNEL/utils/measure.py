@@ -62,9 +62,10 @@ class MeasureR(object):
         l1 = np.array(l1)
         l2 = np.array(l2)
         l3 = np.array(l3)
-        print('tp_s and predict_s', tp_s, predict_s, target_s)
+        if (predict_s==0).any() or (target_s==0).any():
+          print('true positive:', tp_s,',predicted positive:', predict_s, ',actual positive:', target_s)
         precision = tp_s/predict_s
-        recall = tp_s/target_s 
+        recall = tp_s/target_s
         with open(self.wfile_path, 'w') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(['Type','Covid-19','Pneumonia Virus','Pneumonia Bacteria','Normal'])            
