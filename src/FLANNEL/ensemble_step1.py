@@ -219,9 +219,31 @@ def main():
 #    criterion = focalloss(label_distri = train_distri, model_name = args.arch)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    title = args.arch
-    logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
-    logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+    # title = args.arch
+    # logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
+    # logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+
+
+    if args.test is False:
+      # Resume
+      title = args.arch
+      if args.resume:
+          # Load checkpoint.
+          print('==> Resuming from checkpoint..')
+          checkpoint_path = os.path.join(checkpoint_dir,args.resume+'.checkpoint.pth.tar')
+          print (checkpoint_path)
+          assert os.path.isfile(checkpoint_path), 'Error: no checkpoint directory found!'
+          checkpoint = torch.load(checkpoint_path)
+          best_acc = checkpoint['best_acc']
+          start_epoch = checkpoint['epoch']
+          model.load_state_dict(checkpoint['state_dict'])
+          optimizer.load_state_dict(checkpoint['optimizer'])
+          logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title, resume=True)
+      else:
+          logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
+          logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+
+
 
     if args.test:
         print('Test only')
