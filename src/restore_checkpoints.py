@@ -4,6 +4,8 @@ import torch
 
 CHECKPOINT_PATH = './explore_version_03/checkpoint/'
 
+s3_client = 
+
 def list_all_checkpoints(folder):
     checkpoint_map = defaultdict(list)
     for basedir, dirs, files in os.walk(folder):
