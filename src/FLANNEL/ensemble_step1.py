@@ -232,10 +232,13 @@ def main():
           print('==> Resuming from checkpoint..')
           checkpoint_path = os.path.join(checkpoint_dir,args.resume+'.checkpoint.pth.tar')
           print (checkpoint_path)
-          assert os.path.isfile(checkpoint_path), 'Error: no checkpoint directory found!'
+          if not os.path.isfile(checkpoint_path):
+              print('Error: no checkpoint directory found! Trying best model.')
+              checkpoint_path = os.path.join(checkpoint_dir,'model_best.pth.tar')
           checkpoint = torch.load(checkpoint_path)
           best_acc = checkpoint['best_acc']
           start_epoch = checkpoint['epoch']
+          assert start_epoch == int(args.resume), f"Checkpoint epoch {start_epoch} doesn't match args.resume {args.resume}."
           model.load_state_dict(checkpoint['state_dict'])
           optimizer.load_state_dict(checkpoint['optimizer'])
           logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title, resume=True)
@@ -310,7 +313,7 @@ def main():
               }, epoch, is_best, checkpoint=checkpoint_dir)
           try:
               print("Saving checkpoint to s3 ...")
-              os.system("aws s3 sync {} {}".format(args.checkpoint, checkpoint_s3))
+              # os.system("aws s3 sync {} {}".format(args.checkpoint, checkpoint_s3))
               print("Saving checkpoint to S3 is completed")
           except:
               print("AWS-Sync failed")
