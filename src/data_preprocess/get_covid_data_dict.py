@@ -23,7 +23,7 @@ n_ards = 0
 
 diseases = {}
 views = {}
-with open(info_path,'r') as f:
+with open(info_path,'r', encoding='utf8') as f:
   csv_reader = csv.DictReader(f)
   i = 0 
   for row in csv_reader:
