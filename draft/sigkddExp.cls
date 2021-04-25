@@ -29,6 +29,7 @@
 \usepackage{float}
 \usepackage{multirow}
 \usepackage{hyperref}
+\usepackage[ruled]{algorithm2e}
 %
 % ACMPROC-SP DOCUMENT STYLE
 % G.K.M. Tobin August-October 1999
