@@ -32,11 +32,12 @@ def draw_cf(matrix):
     df_cm = pd.DataFrame(matrix, index=TYPES,
                   columns = TYPES)
     print(df_cm)
-    plt.figure(figsize = (12,8))
-    # sn.set(font_scale=1.4)
-    fig = sn.heatmap(df_cm, annot=True, fmt="d",center=700)
+    # plt.figure(figsize = (12,10))
+    # sn.set(font_scale=1.1)
+    fig = sn.heatmap(df_cm, annot=True, fmt="d",center=700, annot_kws={"size": 18})
     fig.set_yticklabels(fig.get_yticklabels(), rotation = 0)
-    plt.savefig('confusion_matrix.png')
+    fig.set_xticklabels(fig.get_xticklabels(), rotation = 90)
+    plt.savefig('confusion_matrix.png', bbox_inches = "tight")
 
 
 
