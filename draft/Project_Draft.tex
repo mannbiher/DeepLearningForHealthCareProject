@@ -37,8 +37,8 @@
     are a limited number of CXR images available which results in a challenge
     for training deep neural networks. Existing research has shown different
     approaches to address this imbalanced data issue. Two notable studies are
-    FLANNEL[5]  an ensemble based network with focal loss and a patch-based
-    classifier[6]  that works on segmented versions of the lung contours. We
+    FLANNEL an ensemble based network with focal loss and a patch-based
+    classifier that works on segmented versions of the lung contours. We
     propose merging these two concepts together to improve performance of
     detecting COVID-19 in CXR images.
 
@@ -65,18 +65,18 @@
     we are hoping that this will lead to a further improvement once we finalize
     the patch-based classifiers. Our optimism is due to the patch-based
     classifiers outperforming their “global” counterparts that processed the
-    whole non-segmented image as discussed by Park et. al [6].
+    whole non-segmented image.
 
 \end{abstract}
 
 \section{Introduction}
-The sudden outbreak of an unexplained pneumonia found in Wuhan, China [1] was
+The sudden outbreak of an unexplained pneumonia found in Wuhan, China was
 caused by a new coronavirus infection named nCOVID-19 (Novel CoronaVirus Disease
 2019). This pandemic has ravaged the world on an unprecedented scale. By April
 2021, 141 million people have been infected and there have been 3.01 million
 deaths. The related studies reveal that infected patients exhibit distinct
 radiographic visual characteristics along with fever, dry cough, fatigue,
-dyspnea, etc. Chest X-Ray (CXR) is one of the important, non-invasive [2]
+dyspnea, etc. Chest X-Ray (CXR) is one of the important, non-invasive
 clinical diagnosis tools that helps to detect COVID-19 and other pneumonia for
 affected patients.
 
@@ -210,7 +210,7 @@ selected among 200 epochs training.
 Here are our considerations discussed below -
 \begin{itemize}
     \item The pretrained model for segmentation (FC-Densenet103) will perform
-          well on the datasets used in FLANNEL[7] paper.
+          well on the datasets used in FLANNEL \cite{10.1093/jamia/ocaa280} paper.
     \item The number of patches(K) to be 100 to start with, will be fine tuned
           after evaluating the results.
     \item The patch image size will be chosen as 224X224 initially and will be
@@ -307,7 +307,8 @@ We are planning to create and train patch-based versions of the base learners
 that will use the masked version of the same images from the dataset. We will
 then re-run the FLANNEL with the patch-based learners and compare performance.
 In addition to the improvements, we are  also planning to compare 2 recent
-COVID-19 deep learning models, COVID-Net[9] and AI-COVID[3].
+COVID-19 deep learning models, COVID-Net \cite{wang2020covidnet} and AI-COVID
+\cite{pmid32339081}.
 
 
 \subsection{Evaluation strategy}
@@ -360,11 +361,11 @@ Number of Images Training 197 Validation 50
             5. Pass random k-patches to base models.\;
             6. Perform majority voting to get get confidence scores/prediction values from each base model.\;
             7. Get prediction values from all Base Models.\;
-            $P_i = Learner_i(X) R^{Bx4}$, where i = 1,...n\;
+            $P_i = Learner_i(X) \in R^{B\times 4}$, where i = 1,...n\;
             8. Get Learner weights.\;
-            $W=NeuralWeightModule([P_i, i=1,..,n]) R^{BX5}$\;
+            $W=NeuralWeightModule([P_i, i=1,..,n]) \in R^{B\times 5}$\;
             9. Linear Combination for Prediction\;
-            $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) R^{BX4}$ (where $W_i$ represents i-th column of $W$)\;
+            $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) \in R^{B \times 4}$ (where $W_i$ represents i-th column of $W$)\;
             10. Loss = $FocalLoss(\hat{Y}, Y)$\;
             11. Back-propagate on Loss and update parameters
             }
