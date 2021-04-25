@@ -219,7 +219,7 @@ Here are our considerations discussed below -
 
 
 \begin{figure*}[h]
-    \includegraphics[width=\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
+    \includegraphics[width=0.8\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
     \caption{FLANNEL Improvement}
     \label{fig:improve}
 \end{figure*}
@@ -398,45 +398,45 @@ concatenated output layers of the base models as the input features.
 \subsection{Experimental Results}
 \subsubsection{Segmentation Training}
 Training the Segmentation Network on the JSRT/SCR dataset had a Jaccard Index
-(JI) score of 93.39\% for creating the lung contour masks.
-
-
-\subsubsection{FLANNEL}
-This stage of our experiment deals with performance of FLANNEL and all baseline
-methods. The overall accuracy is not the appropriate measure for evaluation of
-the model due to the fact that our dataset is imbalanced in favor of
-non-COVID-19 related pneumonia images. With this imbalance, even a significant
-increase in COVID-19 detection performance will not affect overall accuracy
-much. So, we leaned towards F1 score for COVID-19 vs the rest, comparing
-different models. Clearly, FLANNEL outperformed the other state-of-the-art
-models in detecting COVID-19 cases. We also present F1 score for each disease
-classification and macro-F1 score for all classes of the label set.
-
-We also provided the visual description of FLANNEL performance, via confusion
-matrix. As the matrix depicts, the cases predicted as pneumonia are mainly from
-the GroundTruth pneumonia-related cases and COVID-19 identification, FLANNEL has
-higher precision and recall than the other 2 types of pneumonia. This proves
-FLANNEL can distinguish pneumonia images from normal images and differentiate
-chest x-ray images of COVID-19 against other pneumonia images.
-
-
-\section{Conclusion}
-As we are making progress, we have run the base models and FLANNEL on the new
-dataset. We completed the Segmentation training and are able to feed that to
-base models. We still need to run the stage-1 and stage-2 of FLANNEL approach to
-see the actual performance cost of bringing in Patch-by-Patch training to
-FLANNEL.
-
-With the improved distribution of COVID-19 data we see FLANNEL outperforms the
-metrics as seen in the base flannel paper.
-
+(JI) score of 93.39\% for creating the lung contour masks. The figure \ref{fig:segtrain}
+shows the mask creation and applying the mask on the image.
 
 \begin{figure}[h]
+    \includegraphics[width=8cm]{../doc/images/segmentation_training.png}
+    \caption{Segmentation Training}
+    \label{fig:segtrain}
+\end{figure}
+
+\subsubsection{FLANNEL}
+
+When reproducing the FLANNEL paper we used the same base models;  Densenet161,
+InceptionV3, Resnet152, ResneXt101 and Vgg19\_bn. These models were fine-tuned
+using the default parameter values, settings and by using the Adam optimizer. We
+compared FLANNEL ensemble performance with the independent performance for each
+of the base models. The overall accuracy is not the appropriate measure for
+evaluation of the model due to the fact that our dataset is imbalanced in favor
+of non-COVID-19 related pneumonia images. With this imbalance, even a
+significant increase in COVID-19 detection performance will not affect overall
+accuracy much. So, we leaned towards F1 score for COVID-19 vs the rest,
+comparing different models. As shown in the figure \ref{fig:f1score}, clearly
+FLANNEL outperformed the other state-of-the-art models in detecting COVID-19
+cases. We also present F1 score for each disease classification and macro-F1
+score for all classes of the label set. 
+
+\begin{figure}[H]
     \includegraphics[width=8cm]{../doc/images/F1Score_vs_rest.png}
     \caption{FLANNEL Improvement}
     \label{fig:f1score}
 \end{figure}
 
+
+We also provided the visual description of FLANNEL performance, via confusion
+matrix as shown in figure \ref{fig:cfmatrix}. As the matrix depicts, the cases
+predicted as pneumonia are mainly from the GroundTruth pneumonia-related cases
+and COVID-19 identification, FLANNEL has higher precision and recall than the
+other 2 types of pneumonia. This proves FLANNEL can distinguish pneumonia images
+from normal images and differentiate chest x-ray images of COVID-19 against
+other pneumonia images.
 
 \begin{figure}[h]
     \includegraphics[width=8cm]{../doc/images/confusion_matrix.png}
@@ -444,12 +444,15 @@ metrics as seen in the base flannel paper.
     \label{fig:cfmatrix}
 \end{figure}
 
-\begin{figure*}[h]
-    \includegraphics[width=\textwidth]{../doc/images/segmentation_training.png}
-    \caption{Segmentation Training}
-    \label{fig:segtrain}
-\end{figure*}
-
+\section{Conclusion}
+As we are making progress, we have run the base models and FLANNEL on the new
+dataset. With the improved distribution of COVID-19 data we see FLANNEL
+outperforms the metrics as seen in the base flannel paper. We completed the
+Segmentation training and are able to feed that to base models. We still need to
+update the FLANNEL ensemble with patch-based models and compare the performance
+against the original FLANNEL. In addition to measuring classification
+performance, we will also measure timing performance to note how much of an
+impact the patch-based classification technique has on runtime.
 
 \newpage
 %
