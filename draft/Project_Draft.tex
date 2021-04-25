@@ -147,7 +147,7 @@ FLANNEL architecture. We used the same datasets that were used in the FLANNEL
 paper, the COVID Chest X-ray Dataset from
 \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub} and the
 \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle
-Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
+    Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
 the types of images used to anteroposterior (AP) or posteroanterior (PA). The
 restricted images were then labelled into one of four categories; COVID-19,
 Viral Pneumonia, Bacterial Pneumonia and Normal.
@@ -204,17 +204,19 @@ for each class based on the k patches. The optimization algorithm used during
 training was the Adam optimizer with a learning rate of 0.00001. An early
 stopping strategy based on validation performance was applied and a weight decay
 and L1 regularization were used to prevent overfitting. The best model is
-selected among 200 epochs training. Considerations Here are our considerations
-discussed below -
+selected among 200 epochs training.
+
+\subsection{Considerations}
+Here are our considerations discussed below -
 \begin{itemize}
     \item The pretrained model for segmentation (FC-Densenet103) will perform
-    well on the datasets used in FLANNEL[7] paper.
+          well on the datasets used in FLANNEL[7] paper.
     \item The number of patches(K) to be 100 to start with, will be fine tuned
-    after evaluating the results.
+          after evaluating the results.
     \item The patch image size will be chosen as 224X224 initially and will be
-    fine tuned after evaluating the results.
+          fine tuned after evaluating the results.
 \end{itemize}
-  
+
 
 \begin{figure*}[h]
     \includegraphics[width=\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
@@ -228,9 +230,9 @@ discussed below -
     \caption{FC\-DenseNet103 Segmentation Training \& Validation Dataset}
     \label{table:segdata}
     \begin{tabular}{ll} \hline
-        Dataset & Number of images \\ \hline
-        Training & 197 \\
-        Validation & 50 \\
+        Dataset    & Number of images \\ \hline
+        Training   & 197              \\
+        Validation & 50               \\
         \hline
     \end{tabular}
 
@@ -242,22 +244,22 @@ discussed below -
     \label{table:datastats}
     \begin{tabular}{llrrrrr} \hline
         Source                                 &           & Total  & COVID-19 &
-        Viral                                  & Bacterial & Normal \\ \hline
+        Viral                                  & Bacterial & Normal              \\ \hline
         \multirow{2}{*}{} Original data        & CCX data  & 554    & 478      &
-        16                                     & 42        & 18 \\
+        16                                     & 42        & 18                  \\
                                                & KCX data  & 5856   & 0        &
-        1493                                   & 2780      & 1583 \\
+        1493                                   & 2780      & 1583                \\
         \hline
         \multirow{2}{*}{} View Distribution    & AP view   & 6163   & 282      &
-        1501                                   & 2789      & 1591 \\
+        1501                                   & 2789      & 1591                \\
                                                & PA view   & 247    & 196      &
-                                               8 & 33        & 10 \\ \hline
+        8                                      & 33        & 10                  \\ \hline
         \multirow{3}{*}{} Training/test splits & Training  & 5127   & 378      &
-        1509                                   & 2291      & 1288 \\
+        1509                                   & 2291      & 1288                \\
                                                & Testing   & 1283   & 100      &
-        339                                    & 531       & 313 \\
+        339                                    & 531       & 313                 \\
                                                & Total     & 6410   & 478      &
-        1509                                   & 2822      & 1601 \\
+        1509                                   & 2822      & 1601                \\
         \hline
     \end{tabular}\par
     \bigskip
@@ -273,22 +275,22 @@ discussed below -
     \label{table:resultstats}
     \begin{tabular}{ lccccc } \hline
                       & COVID-19      & Pneumonia virus & Pneumonia bacteria &
-        Normal        & Macro-F1 \\ \hline
+        Normal        & Macro-F1                                               \\ \hline
 
         Densenet161   & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
-        0.8875 (0.02) & 0.7625 (0.02) \\
+        0.8875 (0.02) & 0.7625 (0.02)                                          \\
         InceptionV3   & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
-        0.9015 (0.03) & 0.8120 (0.02) \\
+        0.9015 (0.03) & 0.8120 (0.02)                                          \\
         Resnet152     & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
-        0.9080 (0.00) & 0.7911 (0.01) \\
+        0.9080 (0.00) & 0.7911 (0.01)                                          \\
         ResNeXt101    & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
-        0.9046 (0.01) & 0.7852 (0.02) \\
+        0.9046 (0.01) & 0.7852 (0.02)                                          \\
         Vgg19\_bn     & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
-        0.8950 (0.00) & 0.7936 (0.00) \\
+        0.8950 (0.00) & 0.7936 (0.00)                                          \\
         FLANNEL\_old  & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
-        0.9144 (0.01) & 0.7910 (0.01) \\
+        0.9144 (0.01) & 0.7910 (0.01)                                          \\
         FLANNEL       & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
-        0.9322 (0.00) & 0.8385 (0.01) \\ \hline
+        0.9322 (0.00) & 0.8385 (0.01)                                          \\ \hline
     \end{tabular}\par
     \bigskip
     The values in parentheses are the standard deviations.
@@ -312,8 +314,8 @@ COVID-19 deep learning models, COVID-Net[9] and AI-COVID[3].
 Our main goal is to study the detection of COVID-19 among different respiratory
 x-ray images. We first measured the overall accuracy and precision of all 4
 classes of x-ray images (COVID-19 viral pneumonia, non-COVID-19 viral pneumonia,
-bacterial pneumonia and normal images). 
- 
+bacterial pneumonia and normal images).
+
 For each image class, F1 score is recorded For each class of images, the F1
 score is calculated to convey the balance between precision and recall.
 
@@ -328,26 +330,46 @@ Number of Images Training 197 Validation 50
 
 
 
-
+\setlength{\algomargin}{0pt}
 \begin{algorithm}
-    \SetAlgoLined \SetKwInOut{Input}{input} \Input{\\
-        X-ray Images, Class Labels\\
-        Segmentation Base Model \{FCDenseNet103\} \\
-        FLANNEL Base Models \{$Learner_1, Learner_2, …, Learner_n$\} \\
-        \{Define B as batch size) \\
-        \{K random patches)}
+    \SetAlgoNoLine
+    \DontPrintSemicolon
+    \SetKwProg{Input}{Input:}{}{}
+    \SetKwBlock{AlgBlock}{}{}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{StageOne}{Stage 1}
+    \SetKwInOut{StageTwo}{Stage 2}
+    \SetKwFor{ForE}{For each}{do}{End For}
+    \Input{\;
+        X-ray Images, Class Labels\;
+        Segmentation Model\;
+        Base Models \{$Learner_1, Learner_2, …, Learner_n$\}\;
+        \emph{(Define B as batch size)}\;
+        \emph{(Define K patch count)}\;
+    }
+   
+   \StageOne{\;
+        Run segmentation network on the dataset to generate masks for each CXR image.\;
+    }
+    \StageTwo{\;
+        \ForE{batch of images from input images and labels}{
+            1. Fetch the segmented mask and image.\;
+            2. Resize the CXR image to 1024x1024.\;
+            3. Upscale the mask to 1024x1024.\;
+            4. Separate image into random k patches.\;
+            5. Pass random k-patches to base models.\;
+            6. Perform majority voting to get get confidence scores/prediction values from each base model.\;
+            7. Get prediction values from all Base Models.\;
+            $P_i = Learner_i(X) R^{Bx4}$, where i = 1,...n\;
+            8. Get Learner weights.\;
+            $W=NeuralWeightModule([P_i, i=1,..,n]) R^{BX5}$\;
+            9. Linear Combination for Prediction\;
+            $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) R^{BX4}$ (where $W_i$ represents i-th column of $W$)\;
+            10. Loss = $FocalLoss(\hat{Y}, Y)$\;
+            11. Back-propagate on Loss and update parameters
+            }
+        }
 
-
-
-    Stage 1: Train segmentation network using FC-DenseNet103 with respect to
-    input images and labels. Using trained segmentation network, pass random k
-    patches to FLANNEL base models Stage 2: For each batch (TODO: Dimensions)
-    from input images and labels do -> Step1: Get prediction values from all
-    Base Models (TODO: LATEX formula) -> Step2: Get learner weights W =
-    NeuralWeightModel( Latex Formula) -> Step3: Linear Combination for
-    Prediction (Latex softmax formula) (Where W\_i represents i-the column of W)
-    -> Step4: Loss = FocalLoss($\hat{Y} , Y$) Back-propagate on Loss and update
-    parameters ENd For
     \caption{FLANNEL with patch-by-patch Training}
     % \label{algo:duplicate}
 \end{algorithm}
@@ -377,7 +399,7 @@ concatenated output layers of the base models as the input features.
 \subsubsection{Segmentation Training}
 Training the Segmentation Network on the JSRT/SCR dataset had a Jaccard Index
 (JI) score of 93.39\% for creating the lung contour masks.
-  
+
 
 \subsubsection{FLANNEL}
 This stage of our experiment deals with performance of FLANNEL and all baseline
@@ -388,14 +410,14 @@ increase in COVID-19 detection performance will not affect overall accuracy
 much. So, we leaned towards F1 score for COVID-19 vs the rest, comparing
 different models. Clearly, FLANNEL outperformed the other state-of-the-art
 models in detecting COVID-19 cases. We also present F1 score for each disease
-classification and macro-F1 score for all classes of the label set. 
+classification and macro-F1 score for all classes of the label set.
 
 We also provided the visual description of FLANNEL performance, via confusion
 matrix. As the matrix depicts, the cases predicted as pneumonia are mainly from
 the GroundTruth pneumonia-related cases and COVID-19 identification, FLANNEL has
 higher precision and recall than the other 2 types of pneumonia. This proves
 FLANNEL can distinguish pneumonia images from normal images and differentiate
-chest x-ray images of COVID-19 against other pneumonia images. 
+chest x-ray images of COVID-19 against other pneumonia images.
 
 
 \section{Conclusion}
