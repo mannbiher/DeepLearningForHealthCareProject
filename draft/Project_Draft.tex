@@ -134,8 +134,8 @@ of improving performance. To accomplish this we will make modifications to the
 existing FLANNEL architecture by first pre-processing the CXR images by
 performing segmentation of the lung contours. Afterwards, we will then update
 the independent base learners in the ensemble to be patch-based classifiers. We
-call this new architecture “Patched FLANNEL”
-
+call this new architecture “Patched FLANNEL”. The network structure is shown in
+Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 
 
 \section{Method}
@@ -166,25 +166,26 @@ segmentation masks for the CXR images from the JSRT dataset. The JSRT/SCR
 dataset were randomly split where 80\% of images were used for training and 20\%
 were used for validation; this resulted in 197 images being used for training
 and 50 images being used for validation for the JSRT dataset as shown in Table
-2. Since CXR images from different data sources will come in a wide variety of
-formats, the JSRT dataset was pre-processed by performing data type casting to
-float32, histogram equalization to adjust the contrast, gamma correction to
-adjust brightness and standardizing the image size by resizing it to 256x256.
-During training, the network parameters were initialized with a random
-distribution and the Adam optimizer was used with an initial learning rate of
-0.0001. The learning rate was decreased by a factor of 10 when there was no
-improvement in the loss. The Jaccard Index (JI) was used to evaluate the model
-during training since we were comparing the similarity of the mask produced by
-the network to the mask provided in the SCR dataset. An early stopping strategy
-was used based on the validation performance to prevent the model from
-overfitting.
+\ref{table:segdata}. Since CXR images from different data sources will come in a
+wide variety of formats, the JSRT dataset was pre-processed by performing data
+type casting to float32, histogram equalization to adjust the contrast, gamma
+correction to adjust brightness and standardizing the image size by resizing it
+to 256x256. During training, the network parameters were initialized with a
+random distribution and the Adam optimizer was used with an initial learning
+rate of 0.0001. The learning rate was decreased by a factor of 10 when there was
+no improvement in the loss. The Jaccard Index (JI) was used to evaluate the
+model during training since we were comparing the similarity of the mask
+produced by the network to the mask provided in the SCR dataset. An early
+stopping strategy was used based on the validation performance to prevent the
+model from overfitting.
 
 We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
 CXR images from the Covid Chest X-ray and Kaggle X-ray datasets, this resulted
 in producing a mask for the lung contours for each of the images. We then split
 the segmented dataset using a train-test ratio of 4:1 to randomly generate train
 test splits. To ensure reporting accurate performance on the base models, we
-used five fold cross validation while training.
+used five fold cross validation while training. The detailed statistics are
+shown in Table \ref{table:datastats}.
 
 The next improvement that we produced was creating patch-based classifiers.
 Similar to the original global base models in FLANNEL, the patch base models
@@ -204,7 +205,52 @@ for each class based on the k patches. The optimization algorithm used during
 training was the Adam optimizer with a learning rate of 0.00001. An early
 stopping strategy based on validation performance was applied and a weight decay
 and L1 regularization were used to prevent overfitting. The best model is
-selected among 200 epochs training.
+selected among 200 epochs training. The overall algorithm is shown in Algorithm
+\ref{algo:flannel-improved}.
+
+\setlength{\algomargin}{0pt}
+\begin{algorithm}
+    \SetAlgoNoLine
+    \DontPrintSemicolon
+    \SetKwProg{Input}{Input:}{}{}
+    \SetKwBlock{AlgBlock}{}{}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{StageOne}{Stage 1}
+    \SetKwInOut{StageTwo}{Stage 2}
+    \SetKwFor{ForE}{For each}{do}{End For}
+    \Input{\;
+        X-ray Images, Class Labels\;
+        Segmentation Model\;
+        Base Models \{$Learner_1, Learner_2, …, Learner_n$\}\;
+        \emph{(Define B as batch size)}\;
+        \emph{(Define K patch count)}\;
+    }
+   
+   \StageOne{\;
+        Run segmentation network on the dataset to generate masks for each CXR image.\;
+    }
+    \StageTwo{\;
+        \ForE{batch of images from input images and labels}{
+            1. Fetch the segmented mask and image.\;
+            2. Resize the CXR image to 1024x1024.\;
+            3. Upscale the mask to 1024x1024.\;
+            4. Separate image into random k patches.\;
+            5. Pass random k-patches to base models.\;
+            6. Perform majority voting to get get confidence scores/prediction values from each base model.\;
+            7. Get prediction values from all Base Models.\;
+            $P_i = Learner_i(X) \in R^{B\times 4}$, where i = 1,...n\;
+            8. Get Learner weights.\;
+            $W=NeuralWeightModule([P_i, i=1,..,n]) \in R^{B\times 5}$\;
+            9. Linear Combination for Prediction\;
+            $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) \in R^{B \times 4}$ (where $W_i$ represents i-th column of $W$)\;
+            10. Loss = $FocalLoss(\hat{Y}, Y)$\;
+            11. Back-propagate on Loss and update parameters
+            }
+        }
+
+    \caption{FLANNEL with patch-by-patch Training}
+    \label{algo:flannel-improved}
+\end{algorithm}
 
 \subsection{Considerations}
 Here are our considerations discussed below -
@@ -331,49 +377,7 @@ Number of Images Training 197 Validation 50
 
 
 
-\setlength{\algomargin}{0pt}
-\begin{algorithm}
-    \SetAlgoNoLine
-    \DontPrintSemicolon
-    \SetKwProg{Input}{Input:}{}{}
-    \SetKwBlock{AlgBlock}{}{}
-    \SetKwInOut{Input}{Input}
-    \SetKwInOut{StageOne}{Stage 1}
-    \SetKwInOut{StageTwo}{Stage 2}
-    \SetKwFor{ForE}{For each}{do}{End For}
-    \Input{\;
-        X-ray Images, Class Labels\;
-        Segmentation Model\;
-        Base Models \{$Learner_1, Learner_2, …, Learner_n$\}\;
-        \emph{(Define B as batch size)}\;
-        \emph{(Define K patch count)}\;
-    }
-   
-   \StageOne{\;
-        Run segmentation network on the dataset to generate masks for each CXR image.\;
-    }
-    \StageTwo{\;
-        \ForE{batch of images from input images and labels}{
-            1. Fetch the segmented mask and image.\;
-            2. Resize the CXR image to 1024x1024.\;
-            3. Upscale the mask to 1024x1024.\;
-            4. Separate image into random k patches.\;
-            5. Pass random k-patches to base models.\;
-            6. Perform majority voting to get get confidence scores/prediction values from each base model.\;
-            7. Get prediction values from all Base Models.\;
-            $P_i = Learner_i(X) \in R^{B\times 4}$, where i = 1,...n\;
-            8. Get Learner weights.\;
-            $W=NeuralWeightModule([P_i, i=1,..,n]) \in R^{B\times 5}$\;
-            9. Linear Combination for Prediction\;
-            $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) \in R^{B \times 4}$ (where $W_i$ represents i-th column of $W$)\;
-            10. Loss = $FocalLoss(\hat{Y}, Y)$\;
-            11. Back-propagate on Loss and update parameters
-            }
-        }
 
-    \caption{FLANNEL with patch-by-patch Training}
-    % \label{algo:duplicate}
-\end{algorithm}
 
 \subsection{Implementation Details}
 The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
@@ -413,8 +417,11 @@ significant increase in COVID-19 detection performance will not affect overall
 accuracy much. So, we leaned towards F1 score for COVID-19 vs the rest,
 comparing different models. As shown in the figure \ref{fig:f1score}, clearly
 FLANNEL outperformed the other state-of-the-art models in detecting COVID-19
-cases. We also present F1 score for each disease classification and macro-F1
-score for all classes of the label set. 
+cases.
+
+In Table \ref{table:resultstats}, we also show F1-score for each classification
+and macro F1-score for all classes. In Table \ref{table:resultstats}, we can see
+FLANNEL performed better than base models.
 
 \begin{figure}[H]
     \includegraphics[width=8cm]{../doc/images/F1Score_vs_rest.png}
@@ -447,7 +454,7 @@ against the original FLANNEL. In addition to measuring classification
 performance, we will also measure timing performance to note how much of an
 impact the patch-based classification technique has on runtime.
 
-\newpage
+\clearpage
 %
 % The following two commands are all you need in the initial runs of your .tex
 % file to produce the bibliography for the citations in your paper.
