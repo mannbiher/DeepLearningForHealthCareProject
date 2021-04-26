@@ -100,18 +100,8 @@ network since each base model should capture patterns in the images
 independently \cite{combine}. The second core component for the FLANNEL is its
 use of the special Focal Loss \cite{lin2018focal} function, a modification of
 the standard cross-entropy loss that places a focus on the imbalance negatives
-by applying down-weights to well-classified examples. Focal Loss \ref{eq:loss}
-has been known to improve performance for imbalanced datasets.
-
-\begin{align}
-    LossFunc &=FocalLoss(\hat{y},y) \\
-    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
-    \label{eq:loss}
-\end{align}
-
-Where $(1-\hat{y}_m)^\gamma$ is a modulating factor with tunable focusing
-parameters $\gamma$ and $\alpha_m$ \cite{10.1093/jamia/ocaa280}. $\alpha_m$
-is set to be inverse class frequency of each class.
+by applying down-weights to well-classified examples. Focal Loss has been known
+to improve performance for imbalanced datasets.
 
 Park et. al \cite{pmid32396075} has also created a deep learning model that has
 been proven to be effective on detecting COVID-19 when trained with limited
@@ -239,6 +229,20 @@ network with TanH layer to map features into base models weights. Then we train
 ensemble model to learn optimal weight combination by feeding linear combination
 of predictions and weights of base models. The neural weight module uses a
 modified Focal loss function to handle multiclass classification.
+
+The neural weight module uses a modified Focal loss function to handle multiclass
+classification. It downweighs the well classified classes, in-favor of
+poorly classified classes so the model can focus on learning imbalanced examples.
+
+\begin{align}
+    LossFunc &=FocalLoss(\hat{y},y) \\
+    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
+    \label{eq:loss}
+\end{align}
+
+Where $(1-\hat{y}_m)^\gamma$ is a modulating factor with tunable focusing
+parameters $\gamma$ and $\alpha_m$ \cite{10.1093/jamia/ocaa280}. $\alpha_m$
+is set to be inverse class frequency of each class.
 
 The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
 
