@@ -74,15 +74,13 @@
 \end{abstract}
 
 \section{Introduction}
-The sudden outbreak of an unexplained pneumonia found in Wuhan, China was
-caused by a new Coronavirus infection named nCOVID-19 (Novel CoronaVirus Disease
-2019). This pandemic has ravaged the world on an unprecedented scale. By April
-2021, 141 million people have been infected and there have been 3.01 million
-deaths. The related studies reveal that infected patients exhibit distinct
-radiographic visual characteristics along with fever, dry cough, fatigue,
-dyspnea, etc. Chest X-Ray (CXR) is one of the important, non-invasive
-clinical diagnosis tools that helps to detect COVID-19 and other pneumonia for
-affected patients.
+Coronavirus disease 2019 (COVID-19) is a contagious disease caused by severe
+acute respiratory syndrome Coronavirus 2 (SARS-CoV-2). It has spread worldwide
+leading to ongoing pandemic. This pandemic has ravaged the world on an
+unprecedented scale. By April 2021, 141 million people have been infected with
+over 3 million deaths \cite{whocovid1920-apr-21}. Chest X-Ray (CXR) is one of
+the important, non-invasive clinical diagnosis tools that helps to detect
+COVID-19 and other pneumonia for affected patients.
 
 Using deep learning for X-ray classification is an ongoing research area and
 recently there have been promising models proposed for COVID-19 classification.
@@ -229,8 +227,8 @@ selected among 200 epochs training. The overall algorithm is shown in Algorithm
         \emph{(Define B as batch size)}\;
         \emph{(Define K patch count)}\;
     }
-   
-   \StageOne{\;
+
+    \StageOne{\;
         Run segmentation network on the dataset to generate masks for each CXR image.\;
     }
     \StageTwo{\;
@@ -249,8 +247,8 @@ selected among 200 epochs training. The overall algorithm is shown in Algorithm
             $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) \in R^{B \times 4}$ (where $W_i$ represents i-th column of $W$)\;
             10. Loss = $FocalLoss(\hat{Y}, Y)$\;
             11. Back-propagate on Loss and update parameters
-            }
         }
+    }
 
     \caption{FLANNEL with patch-by-patch Training}
     \label{algo:flannel-improved}
@@ -324,23 +322,23 @@ Here are our considerations discussed below -
     \caption{Performance comparison on F1 score: Class-specific F1 score is calculated using 1 class vs the rest strategy}
     \label{table:resultstats}
     \begin{tabular}{ lccccc } \hline
-                      & COVID-19      & Pneumonia virus & Pneumonia bacteria &
-        Normal        & Macro-F1                                               \\ \hline
+                         & COVID-19      & Pneumonia virus & Pneumonia bacteria &
+        Normal           & Macro-F1                                               \\ \hline
 
-        Densenet161   & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
-        0.8875 (0.02) & 0.7625 (0.02)                                          \\
-        InceptionV3   & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
-        0.9015 (0.03) & 0.8120 (0.02)                                          \\
-        Resnet152     & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
-        0.9080 (0.00) & 0.7911 (0.01)                                          \\
-        ResNeXt101    & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
-        0.9046 (0.01) & 0.7852 (0.02)                                          \\
-        Vgg19\_bn     & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
-        0.8950 (0.00) & 0.7936 (0.00)                                          \\
-        FLANNEL\_OldData  & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
-        0.9144 (0.01) & 0.7910 (0.01)                                          \\
-        FLANNEL       & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
-        0.9322 (0.00) & 0.8385 (0.01)                                          \\ \hline
+        Densenet161      & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
+        0.8875 (0.02)    & 0.7625 (0.02)                                          \\
+        InceptionV3      & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
+        0.9015 (0.03)    & 0.8120 (0.02)                                          \\
+        Resnet152        & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
+        0.9080 (0.00)    & 0.7911 (0.01)                                          \\
+        ResNeXt101       & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
+        0.9046 (0.01)    & 0.7852 (0.02)                                          \\
+        Vgg19\_bn        & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
+        0.8950 (0.00)    & 0.7936 (0.00)                                          \\
+        FLANNEL\_OldData & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
+        0.9144 (0.01)    & 0.7910 (0.01)                                          \\
+        FLANNEL          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
+        0.9322 (0.00)    & 0.8385 (0.01)                                          \\ \hline
     \end{tabular}\par
     \bigskip
     The values in parentheses are the standard deviations.
@@ -457,7 +455,7 @@ paper are used as baseline for this improvement.
 \begin{itemize}
     \item \href{https://github.com/qxiaobu/FLANNEL}{FLANNEL GitHub Repository}
     \item \href{https://github.com/jongcye/Deep-Learning-COVID-19-on-CXR-using-Limited-Training-Data-Sets}
-    {Patch-by-Patch classification}
+          {Patch-by-Patch classification}
 \end{itemize}
 
 
