@@ -9,7 +9,7 @@
 % \crdata{0-12345-67-8/90/01}  % Allows non-default copyright data to be
 % 'entered' - IF NEED BE. --- End of author Metadata ---
 
-\title{Covid-19 X-ray Image Classification}
+\title{COVID-19 X-ray Image Classification}
 %\subtitle{[Extended Abstract]
 
 \numberofauthors{4}
@@ -38,7 +38,7 @@
     are a limited number of CXR images available which results in a challenge
     for training deep neural networks. Existing research has shown different
     approaches to address this imbalanced data issue. Two notable studies are
-    FLANNEL an ensemble based network with focal loss and a patch-based
+    FLANNEL (Focal Loss bAsed Neural Network EnsembLe) model and a patch-based
     classifier that works on segmented versions of the lung contours. We
     propose merging these two concepts together to improve performance of
     detecting COVID-19 in CXR images.
@@ -91,11 +91,11 @@ FLANNEL is a COVID-19 CXR classification model proposed by Zhi Qiao et al.
 \cite{10.1093/jamia/ocaa280} that has been shown to accurately detect COVID-19
 even when trained with only 100 available COVID-19 x-ray images. There are two
 core components for the FLANNEL architecture, the first is that it uses an
-ensemble \cite{58871} of five independent base learners that predict the
+ensemble \cite{58871} of five independent base models that predict the
 classification of the CXR. Each of the predictions are then passed through
 another ensemble network to determine the final prediction classification. The
 goal of the ensemble is to increase the robustness and accuracy of the network
-since each base learner should capture patterns in the images independently
+since each base model should capture patterns in the images independently
 \cite{combine}. The second core component for the FLANNEL is its use of the
 special Focal Loss \cite{lin2018focal} function, a modification of the standard
 cross-entropy loss that places a focus on the imbalance negatives by applying
@@ -135,12 +135,18 @@ Our goal is to take the novel ideas of each approach listed above with the goal
 of improving performance. To accomplish this we will make modifications to the
 existing FLANNEL architecture by first pre-processing the CXR images by
 performing segmentation of the lung contours. Afterwards, we will then update
-the independent base learners in the ensemble to be patch-based classifiers. We
+the independent base models in the ensemble to be patch-based classifiers. We
 call this new architecture “Patched FLANNEL”. The network structure is shown in
 Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 
 
 \section{Method}
+
+\begin{figure*}[h]
+    \includegraphics[width=0.8\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
+    \caption{FLANNEL Improvement}
+    \label{fig:improve}
+\end{figure*}
 
 The primary objective was to improve the detection of COVID-19 in CXR images
 with a multi-classifier model that can detect Normal, Pneumonia Viral, Pneumonia
@@ -154,11 +160,12 @@ the types of images used to anteroposterior (AP) or posteroanterior (PA). The
 restricted images were then labelled into one of four categories; COVID-19,
 Viral Pneumonia, Bacterial Pneumonia and Normal.
 
+\subsection{Segmentation Training}
 The first major data pre-processing step that we performed on our dataset was
 segmentation. In order to accomplish this, we recreated the same segmentation
 network that Park et al. used for their patch-based classification;
 FC-DenseNet103 \cite{DBLP:journals/corr/JegouDVRB16}. We trained the
-FC-DenseNet103 model using PyTroch to produce a mask of the lung contours of a
+FC-DenseNet103 model using PyTorch to produce a mask of the lung contours of a
 CXR image. The datasets that were used to train the segmentation network were
 the Japanese Society of Radiological Technology (JSRT)
 \href{http://db.jsrt.or.jp/eng.php}{dataset} which contained 247 PA CXR images
@@ -189,26 +196,93 @@ test splits. To ensure reporting accurate performance on the base models, we
 used five fold cross validation while training. The detailed statistics are
 shown in Table \ref{table:datastats}.
 
+\subsection{Base model training}
 The next improvement that we produced was creating patch-based classifiers.
 Similar to the original global base models in FLANNEL, the patch base models
-used were pre-trained from ImageNet to account for the small size of the
-dataset. The pre-processed images were first resized to 1024x1024 to be as close
-to the original pixel distribution. The masks generated from the FC-DenseNet103
-segmentation model were also upsampled to 1024x1024 to match the new CXR image
-size.The resized images were then masked with the lung-contours and passed as
-input to the patch-based classifier. The patch-based classifier then produced k
-number crops/patches of size 224x224 from the CXR. To limit patches outside the
-lung area, the random points were forced to be within the lungs and the random
-point was used as the center of the patch. During inference, the k should be
-large enough to ensure that the lung pixels are covered multiple times. Each
-patch is then fed into a network to produce a prediction. The confidence score
-was calculated for each category by calculating the percentage of predictions
-for each class based on the k patches. The optimization algorithm used during
-training was the Adam optimizer with a learning rate of 0.00001. An early
-stopping strategy based on validation performance was applied and a weight decay
-and L1 regularization were used to prevent overfitting. The best model is
-selected among 200 epochs training. The overall algorithm is shown in Algorithm
-\ref{algo:flannel-improved}.
+used were pre-trained from
+ImageNet\footnote{http://www.image-net.org/challenges/LSVRC/index} to account
+for the small size of the dataset. The pre-processed images were first resized
+to 1024x1024 to be as close to the original pixel distribution. The masks
+generated from the FC-DenseNet103 segmentation model were also upsampled to
+1024x1024 to match the new CXR image size.The resized images were then masked
+with the lung-contours and passed as input to the patch-based classifier. The
+patch-based classifier then produced k number crops/patches of size 224x224 from
+the CXR. To limit patches outside the lung area, the random points were forced
+to be within the lungs and the random point was used as the center of the patch.
+During inference, the k should be large enough to ensure that the lung pixels
+are covered multiple times. Each patch is then fed into a network to produce a
+prediction. The confidence score was calculated for each category by calculating
+the percentage of predictions for each class based on the k patches. The
+optimization algorithm used during training was the Adam optimizer with a
+learning rate of 0.00001. An early stopping strategy based on validation
+performance was applied and a weight decay and L1 regularization were used to
+prevent overfitting. The best model is selected among 200 epochs training. 
+
+\subsection{Ensemble model learning}
+Ensemble model learning step is similar to baseline FLANNEL paper. We take
+N base models predictions and concatenate them as $f$ and feed them in neural
+weight module to learn base model weight.
+
+We calculate outer product $ff^t$ which is flattened and fed into dense neural
+network with TanH layer to map features into base models weights. Then we train
+ensemble model to learn optimal weight combination by feeding linear combination
+of predictions and weights of base models.
+
+The neural weight module uses a modified Focal loss function to handle multiclass
+classification. It downweighs the well classified classes, in-favor of
+poorly classified classes so the model can focus on learning imbalanced examples.
+
+\begin{align}
+    LossFunc &=FocalLoss(\hat{y},y) \\
+    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
+\end{align}
+
+Where $(1-\hat{y}_m)^\gamma$ is a modulating factor with tunable focusing
+parameters $\gamma$ and $\alpha_m$ \cite{10.1093/jamia/ocaa280}. $\alpha_m$
+is set to be inverse class frequency of each class.
+
+The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
+
+\begin{table}[h]
+    \caption{FC\-DenseNet103 Segmentation Training \& Validation Dataset}
+    \label{table:segdata}
+    \begin{tabular}{ll} \hline
+        Dataset    & Number of images \\ \hline
+        Training   & 197              \\
+        Validation & 50               \\
+        \hline
+    \end{tabular}
+
+\end{table}
+
+\begin{table*}[h]
+    \centering
+    \caption{Experimental data description}
+    \label{table:datastats}
+    \begin{tabular}{llrrrrr} \hline
+        Source                                 &           & Total  & COVID-19 &
+        Viral                                  & Bacterial & Normal              \\ \hline
+        \multirow{2}{*}{} Original data        & CCX data  & 554    & 478      &
+        16                                     & 42        & 18                  \\
+                                               & KCX data  & 5856   & 0        &
+        1493                                   & 2780      & 1583                \\
+        \hline
+        \multirow{2}{*}{} View Distribution    & AP view   & 6163   & 282      &
+        1501                                   & 2789      & 1591                \\
+                                               & PA view   & 247    & 196      &
+        8                                      & 33        & 10                  \\ \hline
+        \multirow{3}{*}{} Training/test splits & Training  & 5127   & 378      &
+        1509                                   & 2291      & 1288                \\
+                                               & Testing   & 1283   & 100      &
+        339                                    & 531       & 313                 \\
+                                               & Total     & 6410   & 478      &
+        1509                                   & 2822      & 1601                \\
+        \hline
+    \end{tabular}\par
+    \bigskip
+    AP: anteroposterior; CCX: COVID Chest X-ray; COVID-19: coronavirus disease
+    2019; KCX: Kaggle Chest X-ray; PA: posteroanterior.
+\end{table*}
 
 \setlength{\algomargin}{0pt}
 \begin{algorithm}
@@ -266,54 +340,11 @@ Here are our considerations discussed below -
 \end{itemize}
 
 
-\begin{figure*}[h]
-    \includegraphics[width=0.8\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
-    \caption{FLANNEL Improvement}
-    \label{fig:improve}
-\end{figure*}
 
 
 
-\begin{table}
-    \caption{FC\-DenseNet103 Segmentation Training \& Validation Dataset}
-    \label{table:segdata}
-    \begin{tabular}{ll} \hline
-        Dataset    & Number of images \\ \hline
-        Training   & 197              \\
-        Validation & 50               \\
-        \hline
-    \end{tabular}
 
-\end{table}
 
-\begin{table*}
-    \centering
-    \caption{Experimental data description}
-    \label{table:datastats}
-    \begin{tabular}{llrrrrr} \hline
-        Source                                 &           & Total  & COVID-19 &
-        Viral                                  & Bacterial & Normal              \\ \hline
-        \multirow{2}{*}{} Original data        & CCX data  & 554    & 478      &
-        16                                     & 42        & 18                  \\
-                                               & KCX data  & 5856   & 0        &
-        1493                                   & 2780      & 1583                \\
-        \hline
-        \multirow{2}{*}{} View Distribution    & AP view   & 6163   & 282      &
-        1501                                   & 2789      & 1591                \\
-                                               & PA view   & 247    & 196      &
-        8                                      & 33        & 10                  \\ \hline
-        \multirow{3}{*}{} Training/test splits & Training  & 5127   & 378      &
-        1509                                   & 2291      & 1288                \\
-                                               & Testing   & 1283   & 100      &
-        339                                    & 531       & 313                 \\
-                                               & Total     & 6410   & 478      &
-        1509                                   & 2822      & 1601                \\
-        \hline
-    \end{tabular}\par
-    \bigskip
-    AP: anteroposterior; CCX: COVID Chest X-ray; COVID-19: coronavirus disease
-    2019; KCX: Kaggle Chest X-ray; PA: posteroanterior.
-\end{table*}
 
 
 
@@ -346,14 +377,14 @@ Here are our considerations discussed below -
 
 \section{Results}
 
-We chose 5 base learners for FLANNEL framework, Densenet161, InceptionV3,
+We chose 5 base models for FLANNEL framework, Densenet161, InceptionV3,
 Resnet152, ResneXt101 and Vgg19\_bn. These models were fine-tuned using default
 parameter values, settings and by using the Adam optimizer. We compared FLANNEL
-with these 5 base learners of the framework.
+with these 5 base models of the framework.
 
-We are planning to create and train patch-based versions of the base learners
+We are planning to create and train patch-based versions of the base models
 that will use the masked version of the same images from the dataset. We will
-then re-run the FLANNEL with the patch-based learners and compare performance.
+then re-run the FLANNEL with the patch-based models and compare performance.
 In addition to the improvements, we are  also planning to compare 2 recent
 COVID-19 deep learning models, COVID-Net \cite{wang2020covidnet} and AI-COVID
 \cite{pmid32339081}.
@@ -369,8 +400,8 @@ For each class of image, we record precision and recall values for each fold.
 We calculate F1-score for each fold and then average them to calculate the mean
 F1 score.
 
-We are evaluating the global base learners independently, the global ensemble,
-the patch-based learners independently and the patch-based ensemble.
+We are evaluating the global base models independently, the global ensemble,
+the patch-based models independently and the patch-based ensemble.
 
 \subsection{Implementation Details}
 The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
@@ -391,26 +422,22 @@ Training the Segmentation Network on the JSRT/SCR dataset had a Jaccard Index
 (JI) score of 93.39\% for creating the lung contour masks. The figure \ref{fig:segtrain}
 shows the mask creation and applying the mask on the image.
 
-\begin{figure}[h]
-    \includegraphics[width=8cm]{../doc/images/segmentation_training.png}
+\begin{figure*}[h]
+    \includegraphics[width=0.8\textwidth]{../doc/images/segmentation_training.png}
     \caption{Segmentation Training}
     \label{fig:segtrain}
-\end{figure}
+\end{figure*}
 
 \subsubsection{FLANNEL}
 
-When reproducing the FLANNEL paper we used the same base models;  Densenet161,
-InceptionV3, Resnet152, ResneXt101 and Vgg19\_bn. These models were fine-tuned
-using the default parameter settings and by using the Adam optimizer. We
-compared FLANNEL ensemble performance with the independent performance for each
-of the base models. The overall accuracy is not the appropriate measure for
-evaluation of the model due to the fact that our dataset is imbalanced in favor
-of non-COVID-19 related pneumonia images. With this imbalance, even a
-significant increase in COVID-19 detection performance will not affect overall
-accuracy much. So, we leaned towards F1 score for COVID-19 vs the rest,
-comparing different models. As shown in the figure \ref{fig:f1score}, clearly
-FLANNEL outperformed the other state-of-the-art models in detecting COVID-19
-cases.
+In this section, We compared FLANNEL ensemble performance with the independent
+performance for each of the base models. Due to imbalance dataset, overall
+accuracy is not the appropriate measure for evaluation of the model. With this
+imbalance, even a significant increase in COVID-19 detection performance will
+not affect overall accuracy much. So, we will use F1 score for COVID-19 vs the
+rest comparing different models. As shown in the figure \ref{fig:f1score},
+clearly FLANNEL outperformed the other state-of-the-art models in detecting
+COVID-19 cases.
 
 In Table \ref{table:resultstats}, we also show F1-score for each classification
 and macro F1-score for all classes. In Table \ref{table:resultstats}, we can see
@@ -427,12 +454,11 @@ scores are better than when run with old dataset containing only 100 COVID-19 im
 
 
 We also provided the visual description of FLANNEL performance, via confusion
-matrix as shown in figure \ref{fig:cfmatrix}. As the matrix depicts, the cases
-predicted as pneumonia are mainly from the GroundTruth pneumonia-related cases
-and COVID-19 identification, FLANNEL has higher precision and recall than the
-other 2 types of pneumonia. This proves FLANNEL can distinguish pneumonia images
-from normal images and differentiate chest x-ray images of COVID-19 against
-other pneumonia images.
+matrix as shown in figure \ref{fig:cfmatrix}. As the matrix depicts, For
+COVID-19 identification, FLANNEL has higher precision and recall than the other
+2 types of pneumonia. This proves FLANNEL can distinguish pneumonia images from
+normal images and differentiate chest x-ray images of COVID-19 against other
+pneumonia images.
 
 \begin{figure}[h]
     \includegraphics[width=8cm]{../doc/images/confusion_matrix.png}
@@ -443,12 +469,14 @@ other pneumonia images.
 \section{Conclusion}
 As we are making progress, we have run the base models and FLANNEL on the new
 dataset. With the improved distribution of COVID-19 data we see FLANNEL
-outperforms the metrics as seen in the base flannel paper. We completed the
-Segmentation training and are able to feed that to base models. We still need to
-update the FLANNEL ensemble with patch-based models and compare the performance
-against the original FLANNEL. In addition to measuring classification
-performance, we will also measure timing performance to note how much of an
-impact the patch-based classification technique has on runtime.
+outperforms the metrics as seen in the base FLANNEL paper by 13\%. We created the
+Segmentation model that can produce mask of lung contours from Chest x-ray
+images. We are working on integrating the patch-based model in the FLANNEL
+ensemble model that would accept masked images as input. We will compare the
+performance of patched FLANNEL against the original FLANNEL. In addition to
+measuring classification performance, we will also measure timing performance to
+note how much of an impact the patch-based classification technique has on
+runtime.
 
 \section{Acknowledgement}
 GitHub source code for both FLANNEL and Patch-by-Patch classification
