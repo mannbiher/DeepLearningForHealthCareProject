@@ -111,20 +111,20 @@ the patch based model focuses on the lung area since it’s the primary region o
 interest used to perform analysis.  In general, standard biomarkers
 \cite{pmid32396075} from CXR images analyzed are the following
 \begin{enumerate}
-    \item Lung Morphology Mean Lung Intensity
+    \item Lung Morphology
+    \item Mean Lung Intensity
     \item Standard Deviation of Lung Intensity
     \item Cardiothoracic Ratio (CTR)
 \end{enumerate}
 
 Thus it could be observed that most of the initial diagnosis is carried out from
-CXR images by concentrating the lung area, that is our motivation to adopt this
-thought to have the patched method integrate with Flannel approach. We also find
-by doing this it makes the model less susceptible to noise happening outside the
-lung region. After the lungs have been segmented, patch-based classification is
-performed. Patch-based classification involves selecting random crops or patches
-across the image for a set number of times and then performing classification on
-each patch. Afterwards, the final prediction of the image is made by majority
-voting based on the prediction of each patch. From the graphs provided in the
+CXR images by concentrating on the lung area. We also find this strategy also
+makes the model less susceptible to noise happening outside the lung region.
+After the lungs have been segmented, patch-based classification is performed.
+Patch-based classification involves selecting random crops or patches across the
+image for a set number of times and then performing classification on each
+patch. Afterwards, the final prediction of the image is made by majority voting
+based on the prediction of each patch. Conclusion provided in the patch based
 paper \cite{pmid32396075} by Park and Ye, it is clear that the patch-based
 classification outperformed the models that used the whole image for a limited
 train set data. As we have an imbalanced dataset with limited COVID 19 CXR
