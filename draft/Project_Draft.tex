@@ -49,13 +49,14 @@
     the image and respective mask as their input. The patch-based classifiers
     will be used as the ensemble.
 
+    \textbf{Results:}
     We are able to reproduce FLANNEL and base models results using the updated
     datasets. We were also able to reproduce patch-based classification using
     X-ray images. We also created a segmentation network that can produce masks
     of the lung contours for CXR images. We successfully used this segmentation
     network to produce masks of the CXR images in the updated FLANNEL datasets.
 
-    \textbf{Results:}
+    \textbf{Discussion:}
     We saw improvement in metrics when training the base models and FLANNEL
     ensemble in detecting COVID-19 images. Since no parameters were changed, we
     suspect that this is due to the increase of COVID-19 images for the dataset
@@ -63,7 +64,7 @@
     of training the patch-based classifiers to use as the base models for the
     ensemble.
 
-    \textbf{Discussion:}
+    \textbf{Conclusion:}
     With the success of performing segmentation on the dataset and the increased
     performance of the original base models due to the increased dataset size,
     we are hoping that this will lead to a further improvement once we finalize
@@ -76,15 +77,15 @@
 \section{Introduction}
 Coronavirus disease 2019 (COVID-19) is a contagious disease caused by severe
 acute respiratory syndrome Coronavirus 2 (SARS-CoV-2). It has spread worldwide
-leading to ongoing pandemic. This pandemic has ravaged the world on an
-unprecedented scale. By April 2021, 141 million people have been infected with
-over 3 million deaths \cite{whocovid1920-apr-21}. Chest X-Ray (CXR) is one of
-the important, non-invasive clinical diagnosis tools that helps to detect
+leading to an ongoing pandemic. This pandemic has ravaged the world on an
+unprecedented scale. By April 2021, 141 million people have been infected and
+there are over 3 million deaths \cite{whocovid1920-apr-21}. Chest X-Ray (CXR) is
+one of the important, non-invasive clinical diagnosis tools that helps to detect
 COVID-19 and other pneumonia for affected patients.
 
 Using deep learning for X-ray classification is an ongoing research area and
 recently there have been promising models proposed for COVID-19 classification.
-The problem that all of these models face is an imbalance dataset due to the
+The problem that all of these models face is an imbalanced dataset due to the
 limited number of COVID CXR images available.
 
 FLANNEL is a COVID-19 CXR classification model proposed by Zhi Qiao et al.
@@ -93,14 +94,24 @@ even when trained with only 100 available COVID-19 x-ray images. There are two
 core components for the FLANNEL architecture, the first is that it uses an
 ensemble \cite{58871} of five independent base models that predict the
 classification of the CXR. Each of the predictions are then passed through
-another ensemble network to determine the final prediction classification. The
-goal of the ensemble is to increase the robustness and accuracy of the network
-since each base model should capture patterns in the images independently
-\cite{combine}. The second core component for the FLANNEL is its use of the
-special Focal Loss \cite{lin2018focal} function, a modification of the standard
-cross-entropy loss that places a focus on the imbalance negatives by applying
-down-weights to well-classified examples. Focal Loss has been known to improve
-performance for imbalanced datasets.
+another neural weight network to determine the final prediction classification.
+The goal of the ensemble is to increase the robustness and accuracy of the
+network since each base model should capture patterns in the images
+independently \cite{combine}. The second core component for the FLANNEL is its
+use of the special Focal Loss \cite{lin2018focal} function, a modification of
+the standard cross-entropy loss that places a focus on the imbalance negatives
+by applying down-weights to well-classified examples. Focal Loss \ref{eq:loss}
+has been known to improve performance for imbalanced datasets.
+
+\begin{align}
+    LossFunc &=FocalLoss(\hat{y},y) \\
+    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
+    \label{eq:loss}
+\end{align}
+
+Where $(1-\hat{y}_m)^\gamma$ is a modulating factor with tunable focusing
+parameters $\gamma$ and $\alpha_m$ \cite{10.1093/jamia/ocaa280}. $\alpha_m$
+is set to be inverse class frequency of each class.
 
 Park et. al \cite{pmid32396075} has also created a deep learning model that has
 been proven to be effective on detecting COVID-19 when trained with limited
@@ -226,20 +237,8 @@ weight module to learn base model weight.
 We calculate outer product $ff^t$ which is flattened and fed into dense neural
 network with TanH layer to map features into base models weights. Then we train
 ensemble model to learn optimal weight combination by feeding linear combination
-of predictions and weights of base models.
-
-The neural weight module uses a modified Focal loss function to handle multiclass
-classification. It downweighs the well classified classes, in-favor of
-poorly classified classes so the model can focus on learning imbalanced examples.
-
-\begin{align}
-    LossFunc &=FocalLoss(\hat{y},y) \\
-    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
-\end{align}
-
-Where $(1-\hat{y}_m)^\gamma$ is a modulating factor with tunable focusing
-parameters $\gamma$ and $\alpha_m$ \cite{10.1093/jamia/ocaa280}. $\alpha_m$
-is set to be inverse class frequency of each class.
+of predictions and weights of base models. The neural weight module uses a
+modified Focal loss function to handle multiclass classification.
 
 The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
 
