@@ -31,6 +31,7 @@
 \date{28 March 2021}
 \maketitle
 \begin{abstract}
+    \textbf{Objective:}
     Detecting COVID-19 using Chest X-Ray (CXR) images is becoming increasingly
     popular in deep learning research. When training deep neural networks, large
     and balanced datasets are preferred. However, since COVID-19 is new, there
@@ -42,7 +43,8 @@
     propose merging these two concepts together to improve performance of
     detecting COVID-19 in CXR images.
 
-    Use segmentation networks to create masks for the lungs as a pre-processing
+    \textbf{Materials and Methods:}
+    Using segmentation networks to create masks for the lungs as a pre-processing
     step. Replace base models in FLANNEL with patch-based classifiers that take
     the image and respective mask as their input. The patch-based classifiers
     will be used as the ensemble.
@@ -53,6 +55,7 @@
     of the lung contours for CXR images. We successfully used this segmentation
     network to produce masks of the CXR images in the updated FLANNEL datasets.
 
+    \textbf{Results:}
     We saw improvement in metrics when training the base models and FLANNEL
     ensemble in detecting COVID-19 images. Since no parameters were changed, we
     suspect that this is due to the increase of COVID-19 images for the dataset
@@ -60,6 +63,7 @@
     of training the patch-based classifiers to use as the base models for the
     ensemble.
 
+    \textbf{Discussion:}
     With the success of performing segmentation on the dataset and the increased
     performance of the original base models due to the increased dataset size,
     we are hoping that this will lead to a further improvement once we finalize
@@ -71,7 +75,7 @@
 
 \section{Introduction}
 The sudden outbreak of an unexplained pneumonia found in Wuhan, China was
-caused by a new coronavirus infection named nCOVID-19 (Novel CoronaVirus Disease
+caused by a new Coronavirus infection named nCOVID-19 (Novel CoronaVirus Disease
 2019). This pandemic has ravaged the world on an unprecedented scale. By April
 2021, 141 million people have been infected and there have been 3.01 million
 deaths. The related studies reveal that infected patients exhibit distinct
@@ -144,7 +148,7 @@ The primary objective was to improve the detection of COVID-19 in CXR images
 with a multi-classifier model that can detect Normal, Pneumonia Viral, Pneumonia
 Bacteria and COVID-19. The baseline we will be comparing against is the original
 FLANNEL architecture. We used the same datasets that were used in the FLANNEL
-paper, the COVID Chest X-ray Dataset from
+paper, the COVID Chest X-ray Dataset \cite{cohen2020covidProspective} from
 \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub} and the
 \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle
     Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
@@ -333,7 +337,7 @@ Here are our considerations discussed below -
         0.9046 (0.01) & 0.7852 (0.02)                                          \\
         Vgg19\_bn     & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
         0.8950 (0.00) & 0.7936 (0.00)                                          \\
-        FLANNEL\_old  & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
+        FLANNEL\_OldData  & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
         0.9144 (0.01) & 0.7910 (0.01)                                          \\
         FLANNEL       & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
         0.9322 (0.00) & 0.8385 (0.01)                                          \\ \hline
@@ -368,16 +372,6 @@ score is calculated to convey the balance between precision and recall.
 
 We are evaluating the global base learners independently, the global ensemble,
 the patch-based learners independently and the patch-based ensemble.
-
-
-
-Table 2. FC-DenseNet103 Segmentation Training \& Validation Dataset Dataset
-Number of Images Training 197 Validation 50
-
-
-
-
-
 
 \subsection{Implementation Details}
 The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
@@ -421,7 +415,10 @@ cases.
 
 In Table \ref{table:resultstats}, we also show F1-score for each classification
 and macro F1-score for all classes. In Table \ref{table:resultstats}, we can see
-FLANNEL performed better than base models.
+FLANNEL performed better than base models. We also see with improved data FLANNEL
+scores are better than when run with old dataset containing only 100 COVID-19 images
+\cite{10.1093/jamia/ocaa280}.
+
 
 \begin{figure}[H]
     \includegraphics[width=8cm]{../doc/images/F1Score_vs_rest.png}
@@ -454,12 +451,22 @@ against the original FLANNEL. In addition to measuring classification
 performance, we will also measure timing performance to note how much of an
 impact the patch-based classification technique has on runtime.
 
+\section{Acknowledgement}
+GitHub source code for both FLANNEL and Patch-by-Patch classification \cite{pmid32396075}
+paper are used as baseline for this improvement.
+\begin{itemize}
+    \item \href{https://github.com/qxiaobu/FLANNEL}{FLANNEL GitHub Repository}
+    \item \href{https://github.com/jongcye/Deep-Learning-COVID-19-on-CXR-using-Limited-Training-Data-Sets}
+    {Patch-by-Patch classification}
+\end{itemize}
+
+
+
 \clearpage
 %
 % The following two commands are all you need in the initial runs of your .tex
 % file to produce the bibliography for the citations in your paper.
 \bibliographystyle{abbrv}
 \bibliography{covid19}  % sigproc.bib is the name of the Bibliography in this
-case
 
 \end{document}
