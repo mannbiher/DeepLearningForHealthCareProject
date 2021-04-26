@@ -150,16 +150,17 @@ Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 \end{figure*}
 
 The primary objective was to improve the detection of COVID-19 in CXR images
-with a multi-classifier model that can detect Normal, Pneumonia Viral, Pneumonia
-Bacteria and COVID-19. The baseline we will be comparing against is the original
-FLANNEL architecture. We used the same datasets that were used in the FLANNEL
-paper, the COVID Chest X-ray Dataset \cite{cohen2020covidProspective} from
+with a multi-classifier model that can detect four categories: Normal, Pneumonia
+Viral, Pneumonia Bacteria and COVID-19. The baseline we will be comparing
+against is the original FLANNEL architecture. We used the same datasets that
+were used in the FLANNEL paper, the COVID Chest X-ray Dataset
+\cite{cohen2020covidProspective} from
 \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub} and the
 \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle
-    Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
+Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
 the types of images used to anteroposterior (AP) or posteroanterior (PA). The
-restricted images were then labelled into one of four categories; COVID-19,
-Viral Pneumonia, Bacterial Pneumonia and Normal.
+restricted images were then labelled appropriately into one of the four
+categories.
 
 \subsection{Segmentation Training}
 The first major data pre-processing step that we performed on our dataset was
@@ -226,7 +227,7 @@ weight module to learn base model weight.
 
 We calculate outer product $ff^t$ which is flattened and fed into dense neural
 network with TanH layer to map features into base models weights. Then we train
-ensemble model to learn optimal weight combination by feeding linear combination
+the ensemble model to learn optimal weight combination by feeding linear combination
 of predictions and weights of base models. The neural weight module uses a
 modified Focal loss function to handle multiclass classification.
 
