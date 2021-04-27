@@ -133,20 +133,6 @@ print ('AP_View_Count:', w0, w1, w2, w3)
 
 # print(data_dict)
 pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
-##pickle.dump(pa_list, open('pa_list.pkl','wb'))
-###saved_path = './data_preprocess/formal_covid_dict.pkl'
-###if os.path.exists(saved_path):
-###  os.remove(saved_path)
-###pickle.dump(data_dict, open(saved_path,'wb'))
-###print ('finish')
-##
-###             Xray	
-###新冠	          111	 
-###非新冠病毒肺炎	 11	  
-###细菌肺炎	        8	  
-###无症状	         1	 
-###总计	          131	  
-###158=23例CT图像+4例ARDS无法划分肺炎类别		
 for item, value in diseases.items():
   print(f'`{item}`:{value}')
 print('*********************')
