@@ -141,12 +141,6 @@ pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 ###print ('finish')
 ##
 ###             Xray	
-###新冠	          111	 
-###非新冠病毒肺炎	 11	  
-###细菌肺炎	        8	  
-###无症状	         1	 
-###总计	          131	  
-###158=23例CT图像+4例ARDS无法划分肺炎类别		
 for item, value in diseases.items():
   print('`{item}`:{value}')
 print('*********************')
