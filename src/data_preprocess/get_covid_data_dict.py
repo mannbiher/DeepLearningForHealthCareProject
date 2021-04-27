@@ -142,7 +142,7 @@ pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 ##
 ###             Xray	
 for item, value in diseases.items():
-  print('`{item}`:{value}')
+  print('{'"'"+item+"'"'}:{'+value+'}')
 print('*********************')
 for item, value in views.items():
-  print('`{item}`:{value}')
+  print('{'"'"+item+"'"'}:{'+value+'}')
