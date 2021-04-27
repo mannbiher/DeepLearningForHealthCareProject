@@ -2,8 +2,8 @@ import csv
 import os
 import pickle
 
-data_root_dir = os.path.expanduser('~/598dl4h-finalproject-data/covid-chestxray-dataset-master')
-image_root_dir = os.path.expanduser('~/598dl4h-finalproject-data/covid-chestxray-dataset-master/images')
+data_root_dir = os.path.expanduser('~/original_data/covid-chestxray-dataset-master')
+image_root_dir = os.path.expanduser('~/original_data/covid-chestxray-dataset-master/images')
 info_file_name = 'metadata.csv'
 
 info_path = os.path.join(data_root_dir, info_file_name)
