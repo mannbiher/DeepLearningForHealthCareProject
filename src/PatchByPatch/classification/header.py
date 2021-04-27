@@ -11,7 +11,8 @@ test_batch_size = 1
 num_classes = 4
 
 # Model
-model = 'resnet'
+#model = 'resnet'
+model = 'vgg'
 
 # Feature extract or train all parameters
 feature_extract = False
@@ -50,4 +51,4 @@ lr = 1e-5
 img_size = 224
 
 # ResNet layers
-resnet = 'resnet18'
+#resnet = 'resnet18'
