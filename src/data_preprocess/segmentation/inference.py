@@ -64,7 +64,7 @@ def main():
             net.eval()
 
             for i, data in enumerate(dataloader, 0):
-
+                print(data)
                 outputs = net(data['input'].to(device))
                 outputs = torch.argmax(outputs.detach(), dim=1)  
 
@@ -73,7 +73,7 @@ def main():
 
 
                 for k in range(len(data['input'])):
-
+                    print(k)
                     original_size, dir_case_id, dir_results = dataset.get_size_id(k, data['im_size'], data['ids'], header.net_label[1:])
 
                     post_output = [post_processing(outputs_max[k][j].numpy(), original_size) for j in range(1, header.num_masks)]
