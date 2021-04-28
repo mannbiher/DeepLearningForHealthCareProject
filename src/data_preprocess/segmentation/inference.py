@@ -64,7 +64,6 @@ def main():
             net.eval()
 
             for i, data in enumerate(dataloader, 0):
-                print(data)
                 outputs = net(data['input'].to(device))
                 outputs = torch.argmax(outputs.detach(), dim=1)  
 
@@ -73,7 +72,6 @@ def main():
 
 
                 for k in range(len(data['input'])):
-                    print(k)
                     original_size, dir_case_id, dir_results = dataset.get_size_id(k, data['im_size'], data['ids'], header.net_label[1:])
 
                     post_output = [post_processing(outputs_max[k][j].numpy(), original_size) for j in range(1, header.num_masks)]
@@ -87,8 +85,8 @@ def main():
                     np.save(img_npy_path, image_original)
                     np.save(img_msk_path, post_output[1] + post_output[2])
                     #save_dir = header.dir_save + img_name
-                    #np.save(save_dir + dir_case_id + '.image.npy', image_original)
-                    #np.save(save_dir + dir_case_id + '.mask.npy', post_output[1]+post_output[2])
+                    np.save(save_dir + '.image.npy', image_original)
+                    np.save(save_dir + '.mask.npy', post_output[1]+post_output[2])
                     formal_dict[img_id]['image_dict'][img_name]['numpy_image_path'] = img_npy_path
                     formal_dict[img_id]['image_dict'][img_name]['numpy_mask_path'] = img_msk_path
 
