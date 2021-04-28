@@ -132,7 +132,6 @@ print ('PA_View_Count:', v0, v1, v2, v3)
 print ('AP_View_Count:', w0, w1, w2, w3)
 
 # print(data_dict)
-print(data_dict)
 pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 ##pickle.dump(pa_list, open('pa_list.pkl','wb'))
 ###saved_path = './data_preprocess/formal_covid_dict.pkl'
