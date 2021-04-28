@@ -84,9 +84,10 @@ def main():
                     img_msk_path = img_data['path'] + '.mask.npy'
                     np.save(img_npy_path, image_original)
                     np.save(img_msk_path, post_output[1] + post_output[2])
-                    save_dir = header.dir_save
-                    np.save(save_dir + img_data['path'] + '.image.npy', image_original)
-                    np.save(save_dir + img_data['path'] + '.mask.npy', post_output[1]+post_output[2])
+                    save_dir = header.dir_save 
+                    dataset.create_folder(save_dir)
+                    np.save(save_dir  + img_name + '.image.npy', image_original)
+                    #np.save(save_dir + '.mask.npy', post_output[1]+post_output[2])
                     formal_dict[img_id]['image_dict'][img_name]['numpy_image_path'] = img_npy_path
                     formal_dict[img_id]['image_dict'][img_name]['numpy_mask_path'] = img_msk_path
 
