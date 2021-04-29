@@ -113,7 +113,9 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
 def make_weights_for_balanced_classes_customloader(images_dic, nclasses):
     print(images_dic)
     count = [0] * nclasses
+    print(count)
     for image in images_dic:
+        print(image_dic[image])
         count[images_dic[image]] += 1
     weight_per_class = [0.] * nclasses
     N = float(sum(count))
