@@ -42,11 +42,9 @@ class SegmentationDataset(Dataset):
             class_name = class_dict_keys[class_index]
         else:
             class_name = 'Uknown'
-        print(class_dict)
-        print(class_name)
         images = np.asarray(Image.fromarray(images).resize((header.resize_width, header.resize_height)))
 
-        return {'input':np.expand_dims(images, 0), 'ids':self.ids[index], 'im_size':original_image_size, 'im_name':img_name}
+        return {'input':np.expand_dims(images, 0), 'ids':self.ids[index], 'im_size':original_image_size, 'im_name':img_name, 'im_class':class_name}
 
     def get_original(self, index):
         og_id = self.ids[index]
