@@ -34,9 +34,13 @@ class SegmentationDataset(Dataset):
         original_image_size = np.asarray(images.shape)
         og_id = self.ids[index]
         img_name = list(self.formal_dict[og_id]['image_dict'].keys())[0]
-        print(img_name)
         class_dict = self.formal_dict[og_id]['class']
+        class_dict_keys = list(class_dict.keys())
+        class_dict_values = list(class_dict.values())
+        class_index = [x for x in range(len(lst)) if class_values[x] > 0]
+        class_name = class_dict_keys[class_index[0]]
         print(class_dict)
+        print(class_name)
         images = np.asarray(Image.fromarray(images).resize((header.resize_width, header.resize_height)))
 
         return {'input':np.expand_dims(images, 0), 'ids':self.ids[index], 'im_size':original_image_size, 'im_name':img_name}
