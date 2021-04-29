@@ -84,7 +84,8 @@ def main():
                     img_msk_path = img_data['path'] + '.mask.npy'
                     save_dir = header.dir_save 
                     dataset.create_folder(save_dir)
-                    np.save(save_dir  + img_name + '.image.npy', image_original)
+                    fileName = save_dir  + img_name + '.image.npy'
+                    np.save(fileName, image_original)
                     #np.save(save_dir + '.mask.npy', post_output[1]+post_output[2])
                     np.save(img_npy_path, image_original)
                     np.save(img_msk_path, post_output[1] + post_output[2])
