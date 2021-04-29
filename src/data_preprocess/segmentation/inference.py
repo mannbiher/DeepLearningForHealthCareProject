@@ -82,7 +82,7 @@ def main():
                     img_data = formal_dict[img_id]['image_dict'][img_name]
                     img_npy_path = img_data['path'] + '.image.npy'
                     img_msk_path = img_data['path'] + '.mask.npy'
-                    img_class_name = data['im_class'][0]
+                    img_class_name = data['im_class'][k]
                     print(data['im_class'])
                     print(img_class_name)
                     save_dir = header.dir_save + img_class_name + '/'
