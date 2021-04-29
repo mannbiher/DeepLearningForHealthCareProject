@@ -1,14 +1,14 @@
 from __future__ import print_function, division, absolute_import, unicode_literals
 import numpy as np
 import os, os.path
-from classification import header
+import header
 from PIL import Image
 from torch.utils import data
 import torch
 import glob
 import random
-from utils.utils import augmentation
-import utils.utils as utils
+from utils import augmentation
+import utils as utils
 
 
 class COVID_Dataset(data.Dataset):
