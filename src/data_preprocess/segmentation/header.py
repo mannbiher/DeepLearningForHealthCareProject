@@ -23,7 +23,7 @@ weight_bk = 0.5
 # Directory 
 dir_data_root = "~/598dl4h-finalproject-data/"
 dir_checkpoint = "../checkpoint/"
-dir_save = "../output/" 
+dir_save = "./data_preprocess/output/" 
 
 # Network
 num_masks = 4
