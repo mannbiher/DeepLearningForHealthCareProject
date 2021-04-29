@@ -1,6 +1,6 @@
 import splitfolders
 import header
-from data_preprocess.segmentation import header as seg_header
+from src.data_preprocess.segmentation import header as seg_header
 
 splitfolders.ratio(
     seg_header.dir_save,
