@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-from classification import header
+import header
 from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report
 from utils import initialize_model
