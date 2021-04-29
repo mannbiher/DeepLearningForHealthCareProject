@@ -37,8 +37,8 @@ class SegmentationDataset(Dataset):
         class_dict = self.formal_dict[og_id]['class']
         class_dict_keys = list(class_dict.keys())
         class_dict_values = list(class_dict.values())
-        class_index = list(filter(lambda i: i > 0, class_dict_values))[0]
-        if len(str(class_index)) > 0 :
+        class_index = list(filter(lambda i: i if i > 0 else -1, class_dict_values))[0]
+        if class_index > 0 :
             class_name = class_dict_keys[class_index]
         else:
             class_name = 'Uknown'
