@@ -116,7 +116,8 @@ def make_weights_for_balanced_classes_customloader(images_dic, nclasses):
         count[images_dic[image]] += 1
     weight_per_class = [0.] * nclasses
     N = float(sum(count))
-    print(N)
+    print(count)
+    print(nclasses)
     for i in range(nclasses):
         print(count[i])
         weight_per_class[i] = N/float(count[i])
