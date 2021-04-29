@@ -82,7 +82,7 @@ def main():
                     img_data = formal_dict[img_id]['image_dict'][img_name]
                     img_npy_path = img_data['path'] + '.image.npy'
                     img_msk_path = img_data['path'] + '.mask.npy'
-                    img_class_name = data['im_class']
+                    img_class_name = data['im_class'][0]
                     save_dir = header.dir_save + img_class_name
                     dataset.create_folder(save_dir)
                     fileName = save_dir  + img_name +  '.image.npy'
