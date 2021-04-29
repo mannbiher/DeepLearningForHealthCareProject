@@ -38,6 +38,7 @@ class SegmentationDataset(Dataset):
         class_dict_keys = list(class_dict.keys())
         class_dict_values = list(class_dict.values())
         class_index = [x for x in range(len(class_dict_values)) if class_dict_values[x] > 0 else 'Unknown']
+        class_name = class_dict_keys[class_index[0]]
         print(class_dict)
         print(class_name)
         images = np.asarray(Image.fromarray(images).resize((header.resize_width, header.resize_height)))
