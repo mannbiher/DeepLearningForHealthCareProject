@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 from torchvision import models, transforms
 import matplotlib.pyplot as plt
-from classification import header
+import header
 import itertools
 import torchvision.transforms.functional as functional
 import torch.nn.functional as F
