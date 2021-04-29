@@ -19,7 +19,6 @@ class SegmentationDataset(Dataset):
         self.formal_dict = formal_dict
         self.data_len = len(self.formal_dict)
         self.ids = list(self.formal_dict.keys())
-        print(self.ids)
 
         #if not os.path.isdir(image_path):
         #    raise RuntimeError("Dataset not found or corrupted. DIR: " + image_path)
@@ -31,13 +30,16 @@ class SegmentationDataset(Dataset):
         return self.data_len
 
     def __getitem__(self, index):
-        print(index)
         images = self.get_original(index).astype('float32')
         original_image_size = np.asarray(images.shape)
-
+        og_id = self.ids[index]
+        img_name = list(self.formal_dict[og_id]['image_dict'].keys())[0]
+        print(img_name)
+        class_dict = self.formal_dict[og_id]['class']
+        print(class_dict)
         images = np.asarray(Image.fromarray(images).resize((header.resize_width, header.resize_height)))
 
-        return {'input':np.expand_dims(images, 0), 'ids':self.ids[index], 'im_size':original_image_size}
+        return {'input':np.expand_dims(images, 0), 'ids':self.ids[index], 'im_size':original_image_size, 'im_name':img_name}
 
     def get_original(self, index):
         og_id = self.ids[index]
