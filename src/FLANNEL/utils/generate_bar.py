@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Update results home value
 results_home = '/Users/sreddyasi/CS598/pw/results/'
@@ -68,3 +69,17 @@ for base_learner in base_learners:
 
 all_f1_scores['Macro_F1_Score'] = f1_scores
 all_sd_scores['Macro_F1_Score'] = sd_scores
+
+scores = all_f1_scores['Covid-19'].tolist()
+errors = all_sd_scores['Covid-19'].tolist()
+
+
+def create_bar(scores, errors):
+    x_pos = [i for i,_ in enumerate(base_learners)]
+    plt.bar(x_pos, scores, color='bisque', yerr=errors)
+    plt.title("Illustration of COVID-19 F1 score vs rest - Error bars from 5-fold CV")
+    plt.xticks(x_pos, base_learners)
+    plt.show()
+
+
+create_bar(scores, errors)
