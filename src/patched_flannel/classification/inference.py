@@ -151,12 +151,12 @@ def main():
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(8, 8))
     plt.grid(b=False)
-    plot_confusion_matrix(cm, classes=['Normal', 'Bacteria', 'TB', 'Virus_or_COVID-19'], normalize=False,
+    plot_confusion_matrix(cm, classes=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19'], normalize=False,
                           title='Confusion matrix', cmap=plt.cm.Blues)
     plt.show()
 
     # Overall classification report
-    print(classification_report(y_true, y_pred, target_names=['Normal', 'Bacteria', 'TB', 'Virus_or_COVID-19']))
+    print(classification_report(y_true, y_pred, target_names=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19']))
     ACC = accuracy_score(y_true, y_pred)
     PREC = precision_score(y_true, y_pred, average='macro')
     REC = recall_score(y_true, y_pred, average='macro')

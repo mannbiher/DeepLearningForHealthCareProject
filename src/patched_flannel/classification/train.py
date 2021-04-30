@@ -251,16 +251,16 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             if phase == 'val':
-                report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=['normal', 'bacteria', 'TB', 'viral_and_COVID'])
+                report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19'])
 
                 normal_f1 = report_dict['normal']['f1-score']
-                bacteria_f1 = report_dict['bacteria']['f1-score']
-                TB_f1 = report_dict['TB']['f1-score']
-                COVID_f1 = report_dict['viral_and_COVID']['f1-score']
+                bacteria_f1 = report_dict['pneumonia_virus']['f1-score']
+                TB_f1 = report_dict['pneumonia_bacteria']['f1-score']
+                COVID_f1 = report_dict['COVID-19']['f1-score']
                 epoch_avg = (normal_f1 + bacteria_f1 + TB_f1 + COVID_f1)/4
 
                 print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f} avg: {:.4f}'.format(phase, epoch_loss, epoch_acc, epoch_f1, epoch_avg))
-                print(classification_report(y_true, y_pred, target_names=['normal', 'bacteria', 'TB', 'viral_and_COVID']))
+                print(classification_report(y_true, y_pred, target_names=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19']))
 
             else:
                 print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f}'.format(phase, epoch_loss, epoch_acc, epoch_f1))
