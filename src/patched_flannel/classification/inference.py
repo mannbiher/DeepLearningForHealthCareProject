@@ -133,8 +133,10 @@ def main():
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             print('{} Number: {:.1f} Loss: {:.4f} Acc: {:.4f} F1: {:.4f}'.format(phase, i, epoch_loss, epoch_acc, epoch_f1))
-
+            print(y_pred)
             for idx, item in enumerate(y_pred):
+                print(idx)
+                print(item)
                 y_pred_total[idx].append(item)
 
     y_pred = []
