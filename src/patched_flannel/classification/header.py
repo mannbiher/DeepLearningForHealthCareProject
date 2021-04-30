@@ -12,7 +12,7 @@ num_classes = 4
 
 # Model
 #model = 'resnet'
-model = 'resnet'
+model = 'squeezenet'
 
 # Feature extract or train all parameters
 feature_extract = False
@@ -51,4 +51,4 @@ lr = 1e-5
 img_size = 224
 
 # ResNet layers
-resnet = 'resnet34'
+#resnet = 'resnet34'
