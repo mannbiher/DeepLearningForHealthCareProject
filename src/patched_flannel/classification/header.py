@@ -24,7 +24,7 @@ epoch_max = 100
 data_dir = './patched_flannel/classification_data/'
 
 # Save dir
-save_dir = '../checkpoint/' + test_name
+save_dir = './patched_flannel/checkpoint/' + test_name
 
 # Test epoch: what epoch to load
 inference_epoch = 100
