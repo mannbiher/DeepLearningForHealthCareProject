@@ -141,7 +141,7 @@ def main():
 
     y_pred = []
 
-    for x in range(445):
+    for x in range(1231):
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
 
