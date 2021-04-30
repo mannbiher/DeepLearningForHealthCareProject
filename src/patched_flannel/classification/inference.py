@@ -77,7 +77,7 @@ def main():
     for phase in ['test']:
 
         y_pred_total = []
-        for x in range(445):
+        for x in range(1231):
             y_pred_total.append([])
 
         for i in range(repeat):
