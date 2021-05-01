@@ -76,7 +76,7 @@ errors = all_sd_scores['Covid-19'].tolist()
 
 def addlabels(x,y):
     for i in range(len(x)):
-        plt.text(i, y[i], str(round(y[i], 2)), ha='right', fontsize='small')
+        plt.text(i, y[i], str(round(y[i], 4)), ha='right', va='bottom', fontsize='small')
 
 
 def create_bar(scores, errors):
@@ -85,7 +85,7 @@ def create_bar(scores, errors):
               'resnext101_32x8d': 'moccasin', 'resnet152': 'navajowhite', 'ensemble': 'limegreen'}
     fig = plt.figure()
     fig.add_axes([0.1, 0.1, 0.6, 0.75])
-    plt.bar(x_pos, scores, color=colors.values(), yerr=errors, width=0.8, linewidth=0.1, figure=fig)
+    plt.bar(x_pos, scores, color=colors.values(), yerr=errors, width=0.6, linewidth=0.1, figure=fig)
     addlabels(x_pos, scores)
     plt.title("Illustration of COVID-19 F1 score vs rest - Error bars from 5-fold CV")
     labels = list(colors.keys())
