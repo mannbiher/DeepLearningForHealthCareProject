@@ -74,11 +74,24 @@ scores = all_f1_scores['Covid-19'].tolist()
 errors = all_sd_scores['Covid-19'].tolist()
 
 
+def addlabels(x,y):
+    for i in range(len(x)):
+        plt.text(i, y[i], str(round(y[i], 2)), ha='right', fontsize='small')
+
+
 def create_bar(scores, errors):
     x_pos = [i for i,_ in enumerate(base_learners)]
-    plt.bar(x_pos, scores, color='bisque', yerr=errors)
+    colors = {'densenet161': 'papayawhip', 'inception_v3': 'blanchedalmond', 'vgg19_bn': 'bisque',
+              'resnext101_32x8d': 'moccasin', 'resnet152': 'navajowhite', 'ensemble': 'limegreen'}
+    fig = plt.figure()
+    fig.add_axes([0.1, 0.1, 0.6, 0.75])
+    plt.bar(x_pos, scores, color=colors.values(), yerr=errors, width=0.8, linewidth=0.1, figure=fig)
+    addlabels(x_pos, scores)
     plt.title("Illustration of COVID-19 F1 score vs rest - Error bars from 5-fold CV")
-    plt.xticks(x_pos, base_learners)
+    labels = list(colors.keys())
+    handles = [plt.Rectangle((0, 0), 1, 1, color=colors[label]) for label in labels]
+    plt.legend(handles, labels, loc='upper right', bbox_to_anchor=(1.5, 1))
+    #plt.xticks(x_pos, base_learners)
     plt.show()
 
 
