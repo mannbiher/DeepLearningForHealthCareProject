@@ -12,7 +12,7 @@ num_classes = 4
 
 # Model
 #model = 'resnet'
-model = 'vgg'
+model = 'resnet'
 
 # Feature extract or train all parameters
 feature_extract = False
@@ -21,10 +21,10 @@ feature_extract = False
 epoch_max = 100
 
 # Folder image dir
-data_dir = 'classification_data' + '/'
+data_dir = './patched_flannel/classification_data/'
 
 # Save dir
-save_dir = 'checkpoint' + '/' + test_name
+save_dir = './patched_flannel/checkpoint/' + test_name
 
 # Test epoch: what epoch to load
 inference_epoch = 100
@@ -51,4 +51,4 @@ lr = 1e-5
 img_size = 224
 
 # ResNet layers
-#resnet = 'resnet18'
+resnet = 'resnet34'
