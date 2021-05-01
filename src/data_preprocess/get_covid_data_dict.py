@@ -2,8 +2,8 @@ import csv
 import os
 import pickle
 
-data_root_dir = os.path.expanduser('~/original_data/covid-chestxray-dataset-master')
-image_root_dir = os.path.expanduser('~/original_data/covid-chestxray-dataset-master/images')
+data_root_dir = os.path.expanduser('~/598dl4h-finalproject-data/covid-chestxray-dataset-master')
+image_root_dir = os.path.expanduser('~/598dl4h-finalproject-data/covid-chestxray-dataset-master/images')
 info_file_name = 'metadata.csv'
 
 info_path = os.path.join(data_root_dir, info_file_name)
@@ -141,8 +141,14 @@ pickle.dump(data_dict, open('./data_preprocess/formal_covid_dict_ap.pkl','wb'))
 ###print ('finish')
 ##
 ###             Xray	
+###新冠	          111	 
+###非新冠病毒肺炎	 11	  
+###细菌肺炎	        8	  
+###无症状	         1	 
+###总计	          131	  
+###158=23例CT图像+4例ARDS无法划分肺炎类别		
 for item, value in diseases.items():
-  print('{'"'"+item+"'"'}:{'+str(value)+'}')
+  print(f'`{item}`:{value}')
 print('*********************')
 for item, value in views.items():
-  print('{'"'"+item+"'"'}:{'+str(value)+'}')
+  print(f'`{item}`:{value}')
