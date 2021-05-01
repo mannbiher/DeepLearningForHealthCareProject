@@ -2,6 +2,7 @@
 from __future__ import print_function
 from __future__ import division
 import torch
+import argparse
 import torch.nn as nn
 import numpy as np
 from torch.utils.data import DataLoader
@@ -41,14 +42,15 @@ test_epoch = header.inference_epoch
 def main():
     # Initialize the model for this run
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
-
+    args = parser.parse_args()
+    cv = args.cv
     # Print the model we just instantiated
     print(model_ft)
 
     print("Initializing Datasets and Dataloaders...")
 
     # Create training and test datasets
-    test_dataset  = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='test')
+    test_dataset  = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='test', cv=cv)
 
     image_datasets = {'test': test_dataset}
 
