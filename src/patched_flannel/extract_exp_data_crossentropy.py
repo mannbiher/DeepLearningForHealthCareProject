@@ -111,12 +111,13 @@ exp_data_dir = os.path.join('./patched_flannel/classification_data', exp_data_id
 os.mkdir(exp_data_dir)
 #print(train_data)
 for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
-  print(train_list)
+  #print(train_list)
   print ('%d-th detailed information of exp data'%(index+1))
   train_s = [0,0,0,0]
   test_s = [0,0,0,0]
   valid_s = [0,0,0,0]
   for x in train_list:
+    print(x[3])
     train_s[x[3]] += 1
   for x in valid_list:
     valid_s[x[3]] += 1
