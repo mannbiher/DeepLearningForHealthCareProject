@@ -33,7 +33,7 @@ class COVID_Dataset(data.Dataset):
 
         self.total_images_dic = {}
         self.total_masks_dic = {}
-        tuples_list = pickle.load(open(self.read_pkl, ‘rb’))
+        tuples_list = pickle.load(open(self.read_pkl, 'rb'))
         for tuples in tuples_list:
             y_label = tuples[3]
             img_path = tuples[0]
