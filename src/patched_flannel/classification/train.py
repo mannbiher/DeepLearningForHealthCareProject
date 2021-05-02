@@ -41,9 +41,10 @@ feature_extract = header.feature_extract
 # default `log_dir` is "runs" - we'll be more specific here
 writer = SummaryWriter('runs/' + header.test_name)
 
-def main():
+def main(cv='cv1'):
     # Initialize the model for this run
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
+    
 
     # Print the model we just instantiated
     print(model_ft)
@@ -51,8 +52,8 @@ def main():
     print("Initializing Datasets and Dataloaders...")
 
     # Create training and validation datasets
-    train_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train')
-    val_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val')
+    train_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train',cv)
+    val_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val',cv)
 
     image_datasets = {'train': train_dataset, 'val': val_dataset}
 
