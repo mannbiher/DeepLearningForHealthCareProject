@@ -18,7 +18,7 @@ for key, value in formal_covid_segmented_dict.items():
  #         case_list.append((info['path'], key+'_'+image_name, 2))
  #     if value['class']['normal'] == 1:
  #         case_list.append((info['path'], key+'_'+image_name, 3))
-      case_list.append((value['path'][0], value['img_name_npy'][0],value['mask_name_npy'][0],value['class_name'][0]))
+      case_list.append((value['path'], value['img_name_npy'],value['mask_name_npy'],value['class_name']))
       z0 += 1
 print(len(case_list))
 
@@ -43,7 +43,7 @@ for key, value in formal_kaggle_segmented_dict.items():
   #    if value['class']['normal'] == 1:
   #        d += 1
   #        case_list.append((info['path'], key+'_'+image_name, 3))
-      case_list.append((value['path'][0], value['img_name_npy'][0],value['mask_name_npy'][0],value['class_name'][0]))
+      case_list.append((value['path'], value['img_name_npy'],value['mask_name_npy'],value['class_name']))
       z1 += 1
 print (len(case_list))
 print (a, b, c, d)
