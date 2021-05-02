@@ -18,14 +18,15 @@ for key, value in formal_covid_segmented_dict.items():
  #         case_list.append((info['path'], key+'_'+image_name, 2))
  #     if value['class']['normal'] == 1:
  #         case_list.append((info['path'], key+'_'+image_name, 3))
+      print(value['class_name'])
       class_label = ''
-      if value['class_name'] == 'COVID-19':
+      if value['class_name'] == "COVID-19":
         class_label = 0
-      elif value['class_name'] == 'pneumonia_virus':
+      elif value['class_name'] == "pneumonia_virus":
         class_label = 1
-      elif value['class_name'] == 'pneumonia_bacteria':
+      elif value['class_name'] == "pneumonia_bacteria":
         class_label = 2
-      elif value['class_name'] == 'normal':
+      elif value['class_name'] == "normal":
         class_label = 3
 
       case_list.append((value['path'], value['img_name_npy'],value['mask_name_npy'],class_label))
