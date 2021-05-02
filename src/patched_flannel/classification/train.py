@@ -41,7 +41,7 @@ feature_extract = header.feature_extract
 # default `log_dir` is "runs" - we'll be more specific here
 writer = SummaryWriter('runs/' + header.test_name)
 
-def main(cv='cv1'):
+def main(String cv):
     # Initialize the model for this run
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
     
