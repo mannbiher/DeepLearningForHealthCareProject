@@ -23,11 +23,11 @@ class COVID_Dataset(data.Dataset):
         self.mode = mode
         pkl_file_name = 'exp_'+mode+'_list_'+cv+'.pkl'
         if self.mode == 'train':
-            self.read_pkl = './classification_data//standard_data_multiclass_0922_crossentropy/'+pkl_file_name
+            self.read_pkl = './classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
         elif self.mode == 'val':
-            self.read_pkl = './classification_data//standard_data_multiclass_0922_crossentropy/'+pkl_file_name
+            self.read_pkl = './classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
         elif self.mode == 'test':
-            self.read_pkl = './classification_data//standard_data_multiclass_0922_crossentropy/'+pkl_file_name
+            self.read_pkl = './classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
 
         #self.labels = os.listdir(self.data_dir) # COVID-19, pneumonia_bacteria, pneumonia_virus, normal, Ignore Unknown?
 
