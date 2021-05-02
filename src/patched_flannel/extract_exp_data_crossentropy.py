@@ -95,7 +95,7 @@ train_data = [train_list_1, train_list_2, train_list_3, train_list_4, train_list
 valid_data = [valid_list_1, valid_list_2, valid_list_3, valid_list_4, valid_list_5]
 
 exp_data_id = 'standard_data_multiclass_0922_crossentropy'
-exp_data_dir = os.path.join('./classification_data', exp_data_id)
+exp_data_dir = os.path.join('./patched_flannel/classification_data', exp_data_id)
 os.mkdir(exp_data_dir)
 
 for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
