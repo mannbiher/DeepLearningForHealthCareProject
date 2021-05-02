@@ -5,6 +5,7 @@ import os
 import csv
 
 case_list = []
+print(case_list)
 z0 = 0
 formal_covid_segmented_dict = pickle.load(open('./data_preprocess/formal_covid_dict_ap.pkl.segmented.pkl','rb'))
 for key, value in formal_covid_segmented_dict.items():
