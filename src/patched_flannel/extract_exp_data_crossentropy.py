@@ -19,7 +19,7 @@ for key, value in formal_covid_segmented_dict.items():
  #         case_list.append((info['path'], key+'_'+image_name, 2))
  #     if value['class']['normal'] == 1:
  #         case_list.append((info['path'], key+'_'+image_name, 3))
-      print(value['class_name'])
+      #print(value['class_name'])
       class_label = ''
       if value['class_name'] == "COVID-19":
         class_label = 0
@@ -32,6 +32,7 @@ for key, value in formal_covid_segmented_dict.items():
 
       case_list.append((value['path'], value['img_name_npy'],value['mask_name_npy'],class_label))
       z0 += 1
+print(case_list)
 print(len(case_list))
 
 z1 = 0
