@@ -118,7 +118,7 @@ for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
   test_s = [0,0,0,0]
   valid_s = [0,0,0,0]
   for x in train_list:
-    print(x[3])
+    #print(x[3])
     train_s[x[3]] += 1
   for x in valid_list:
     valid_s[x[3]] += 1
