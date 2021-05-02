@@ -1,5 +1,6 @@
 from __future__ import print_function, division, absolute_import, unicode_literals
 import numpy as np
+import pickle
 import os, os.path
 import header
 from PIL import Image
@@ -14,40 +15,46 @@ import utils as utils
 class COVID_Dataset(data.Dataset):
     'Characterizes a dataset for PyTorch'
 
-    def __init__(self, dim=(224, 224), n_channels=3, n_classes=4, mode='train'):
+    def __init__(self, dim=(224, 224), n_channels=3, n_classes=4, mode='train', cv='cv1'):
         'Initialization'
         self.dim = dim
         self.n_channels = n_channels
         self.n_classes = n_classes
         self.mode = mode
-        if self.mode == 'train' or self.mode == 'val':
-            self.data_dir = header.data_dir + self.mode + '/'
+        pkl_file_name = 'exp_'+mode+'_list_'+cv+'.pkl'
+        if self.mode == 'train':
+            self.read_pkl = './patched_flannel/classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
+        elif self.mode == 'val':
+            self.read_pkl = './patched_flannel/classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
         elif self.mode == 'test':
-            self.data_dir = header.data_dir + self.mode + '/'
+            self.read_pkl = './patched_flannel/classification_data/standard_data_multiclass_0922_crossentropy/'+pkl_file_name
 
-        self.labels = os.listdir(self.data_dir) # COVID-19, pneumonia_bacteria, pneumonia_virus, normal, Ignore Unknown?
+        #self.labels = os.listdir(self.data_dir) # COVID-19, pneumonia_bacteria, pneumonia_virus, normal, Ignore Unknown?
 
         self.total_images_dic = {}
         self.total_masks_dic = {}
+        tuples_list = pickle.load(open(self.read_pkl, 'rb'))
+        for tuples in tuples_list:
+            y_label = tuples[3]
+            img_path = tuples[0]
+        #for label in self.labels:
 
-        for label in self.labels:
+        #    npy_dir = self.data_dir + label
 
-            npy_dir = self.data_dir + label
+        #    if label == 'normal':
+        #        y_label = 0
+        #    elif label == 'pneumonia_virus':
+        #        y_label = 1
+        #    elif label == 'pneumonia_bacteria':
+        #        y_label = 2
+        #    elif label == 'COVID-19':
+        #        y_label = 3
 
-            if label == 'normal':
-                y_label = 0
-            elif label == 'pneumonia_virus':
-                y_label = 1
-            elif label == 'pneumonia_bacteria':
-                y_label = 2
-            elif label == 'COVID-19':
-                y_label = 3
-
-            images_list = glob.glob(npy_dir + '/*.image.npy')
+            images_list = glob.glob(img_path + '/*.image.npy')
             for image in images_list:
                 self.total_images_dic[image] = y_label
 
-            masks_list = glob.glob(npy_dir + '/*.mask.npy')
+            masks_list = glob.glob(img_path + '/*.mask.npy')
             for mask in masks_list:
                 self.total_masks_dic[mask] = y_label
 
