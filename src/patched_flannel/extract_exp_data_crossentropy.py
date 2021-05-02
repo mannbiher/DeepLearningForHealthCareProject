@@ -33,7 +33,6 @@ for key, value in formal_covid_segmented_dict.items():
       if class_name in ['COVID-19','pneumonia_virus','pneumonia_bacteria','normal'] :
         case_list.append((value['path'], value['img_name_npy'],value['mask_name_npy'],class_label))
         z0 += 1
-print(case_list)
 print(len(case_list))
 
 z1 = 0
@@ -114,7 +113,7 @@ exp_data_dir = os.path.join('./patched_flannel/classification_data', exp_data_id
 os.mkdir(exp_data_dir)
 #print(train_data)
 for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
-  #print(train_list)
+  print(train_list)
   print ('%d-th detailed information of exp data'%(index+1))
   train_s = [0,0,0,0]
   test_s = [0,0,0,0]
