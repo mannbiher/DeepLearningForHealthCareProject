@@ -51,7 +51,7 @@ def main():
 
     # Create training and test datasets
     test_dataset  = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='test', cv=cv)
-
+    length_dataset = COVID_Dataset.__len__()
     image_datasets = {'test': test_dataset}
 
     batch_size = {'test': header.test_batch_size}
@@ -79,7 +79,7 @@ def main():
     for phase in ['test']:
 
         y_pred_total = []
-        for x in range(1231):
+        for x in range(length_dataset):
             y_pred_total.append([])
 
         for i in range(repeat):
@@ -140,7 +140,7 @@ def main():
 
     y_pred = []
 
-    for x in range(1231):
+    for x in range(length_dataset):
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
 
