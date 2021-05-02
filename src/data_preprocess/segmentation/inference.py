@@ -93,10 +93,10 @@ def main():
                     np.save(img_msk_path, post_output[1] + post_output[2])
                     formal_dict[img_id]['image_dict'][img_name]['numpy_image_path'] = img_npy_path
                     formal_dict[img_id]['image_dict'][img_name]['numpy_mask_path'] = img_msk_path
-                    formal_dict['path'] = save_dir
-                    formal_dict['img_name_npy'] = img_name + '.image.npy'
-                    formal_dict['mask_name_npy'] = img_name + '.mask.npy'
-                    formal_dict['class_name'] = img_class_name
+                    formal_dict[img_id]['path'] = save_dir
+                    formal_dict[img_id]['img_name_npy'] = img_name + '.image.npy'
+                    formal_dict[img_id]['mask_name_npy'] = img_name + '.mask.npy'
+                    formal_dict[img_id]['class_name'] = img_class_name
 
                     if flag_save_JPG:
                         jpg_img = img_data['path'] + '.image.visualize.jpg'

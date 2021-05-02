@@ -8,16 +8,17 @@ case_list = []
 z0 = 0
 formal_covid_segmented_dict = pickle.load(open('./data_preprocess/formal_covid_dict_ap.pkl.segmented.pkl','rb'))
 for key, value in formal_covid_segmented_dict.items():
-  for image_name, info in value['image_dict'].items():
-    if 'PA' in info['type'] or 'AP' in info['type']:
-      if value['class']['COVID-19'] == 1:
-          case_list.append((info['path'], key+'_'+image_name, 0))
-      if value['class']['pneumonia_virus'] == 1:
-          case_list.append((info['path'], key+'_'+image_name, 1))
-      if value['class']['pneumonia_bacteria'] == 1:
-          case_list.append((info['path'], key+'_'+image_name, 2))
-      if value['class']['normal'] == 1:
-          case_list.append((info['path'], key+'_'+image_name, 3))
+ #for image_name, info in value['image_dict'].items():
+ #   if 'PA' in info['type'] or 'AP' in info['type']:
+ #     if value['class']['COVID-19'] == 1:
+ #         case_list.append((info['path'], key+'_'+image_name, 0))
+ #     if value['class']['pneumonia_virus'] == 1:
+ #         case_list.append((info['path'], key+'_'+image_name, 1))
+ #     if value['class']['pneumonia_bacteria'] == 1:
+ #         case_list.append((info['path'], key+'_'+image_name, 2))
+ #     if value['class']['normal'] == 1:
+ #         case_list.append((info['path'], key+'_'+image_name, 3))
+      case_list.append((value['path'][0], value['img_name_npy'][0],value['mask_name_npy'][0],value['class_name'][0]))
       z0 += 1
 print(len(case_list))
 
@@ -28,20 +29,21 @@ c=0
 d=0
 formal_kaggle_segmented_dict = pickle.load(open('./data_preprocess/formal_kaggle_dict.pkl.segmented.pkl','rb'))
 for key, value in formal_kaggle_segmented_dict.items():
-  for image_name, info in value['image_dict'].items():
-    if 'PA' in info['type'] or 'AP' in info['type']:
-      if value['class']['COVID-19'] == 1:
-          a += 1
-          case_list.append((info['path'], key+'_'+image_name, 0))
-      if value['class']['pneumonia_virus'] == 1:
-          b += 1
-          case_list.append((info['path'], key+'_'+image_name, 1))
-      if value['class']['pneumonia_bacteria'] == 1:
-          case_list.append((info['path'], key+'_'+image_name, 2))
-          c += 1
-      if value['class']['normal'] == 1:
-          d += 1
-          case_list.append((info['path'], key+'_'+image_name, 3))
+  #for image_name, info in value['image_dict'].items():
+  #  if 'PA' in info['type'] or 'AP' in info['type']:
+  #    if value['class']['COVID-19'] == 1:
+  #        a += 1
+  #        case_list.append((info['path'], key+'_'+image_name, 0))
+  #    if value['class']['pneumonia_virus'] == 1:
+  #        b += 1
+  #        case_list.append((info['path'], key+'_'+image_name, 1))
+  #    if value['class']['pneumonia_bacteria'] == 1:
+  #        case_list.append((info['path'], key+'_'+image_name, 2))
+  #        c += 1
+  #    if value['class']['normal'] == 1:
+  #        d += 1
+  #        case_list.append((info['path'], key+'_'+image_name, 3))
+      case_list.append((value['path'][0], value['img_name_npy'][0],value['mask_name_npy'][0],value['class_name'][0]))
       z1 += 1
 print (len(case_list))
 print (a, b, c, d)
