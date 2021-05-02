@@ -79,6 +79,7 @@ valid_list_5 = case_list[p1:p2]
 
 test_list = case_list[p2:]
 
+
 random.shuffle(train_list_1)
 random.shuffle(train_list_2)
 random.shuffle(train_list_3)
@@ -97,7 +98,7 @@ valid_data = [valid_list_1, valid_list_2, valid_list_3, valid_list_4, valid_list
 exp_data_id = 'standard_data_multiclass_0922_crossentropy'
 exp_data_dir = os.path.join('./patched_flannel/classification_data', exp_data_id)
 os.mkdir(exp_data_dir)
-
+print(train_list)
 for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
   print ('%d-th detailed information of exp data'%(index+1))
   train_s = [0,0,0,0]
