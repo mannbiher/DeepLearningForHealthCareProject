@@ -105,11 +105,11 @@ for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
   test_s = [0,0,0,0]
   valid_s = [0,0,0,0]
   for x in train_list:
-    train_s[x[2]] += 1
+    train_s[x[3]] += 1
   for x in valid_list:
-    valid_s[x[2]] += 1
+    valid_s[x[3]] += 1
   for x in test_list:
-    test_s[x[2]] += 1
+    test_s[x[3]] += 1
   print (train_s)
   print ('N of Train', len(train_list), 'covid:%d'%train_s[0], 'pneumonia_virus:%d'%train_s[1], 'pneumonia_bacteria:%d'%train_s[2], 'normal:%d'%train_s[3])
   print ('N of Valid', len(valid_list), 'covid:%d'%valid_s[0], 'pneumonia_virus:%d'%valid_s[1], 'pneumonia_bacteria:%d'%valid_s[2], 'normal:%d'%valid_s[3])
