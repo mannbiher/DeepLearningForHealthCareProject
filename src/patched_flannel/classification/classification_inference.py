@@ -1,4 +1,9 @@
 import inference
+import argparse
 
 if __name__ == '__main__':
-    inference.main()
+    parser = argparse.ArgumentParser()  
+    parser.add_argument("cv", help = "Cross Validation") 
+    args = parser.parse_args()
+    cv = args.cv
+    inference.main(cv)

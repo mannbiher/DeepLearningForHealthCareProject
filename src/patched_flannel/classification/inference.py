@@ -2,7 +2,6 @@
 from __future__ import print_function
 from __future__ import division
 import torch
-import argparse
 import torch.nn as nn
 import numpy as np
 from torch.utils.data import DataLoader
@@ -39,11 +38,9 @@ feature_extract = header.feature_extract
 # Test epoch
 test_epoch = header.inference_epoch
 
-def main():
+def main(cv):
     # Initialize the model for this run
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
-    args = parser.parse_args()
-    cv = args.cv
     # Print the model we just instantiated
     print(model_ft)
 
