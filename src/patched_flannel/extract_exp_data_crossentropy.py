@@ -147,7 +147,7 @@ for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
     csv_writer.writerow(['N of Test', len(test_list), 'covid:%d'%test_s[0], 'pneumonia_virus:%d'%test_s[1], 'pneumonia_bacteria:%d'%test_s[2], 'normal:%d'%test_s[3]])
 
     train_path = os.path.join(exp_data_dir, 'exp_train_list_cv%d.pkl'%(index+1))
-    valid_path = os.path.join(exp_data_dir, 'exp_valid_list_cv%d.pkl'%(index+1))
+    valid_path = os.path.join(exp_data_dir, 'exp_val_list_cv%d.pkl'%(index+1))
     test_path = os.path.join(exp_data_dir, 'exp_test_list_cv%d.pkl'%(index+1))
 
     if os.path.exists(train_path):
