@@ -141,6 +141,11 @@ def main():
     y_pred = []
 
     for x in range(length_dataset):
+        # test_loss, test_acc, pred_d, real_d = test(func[0], model, criterion, start_epoch, use_cuda)
+        # [0.0,0,0,0, [])
+        # change here => calculate probability of each class + true labels
+        # calculate the probability => for each patch what is the prediction => 
+        # repeat =>
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
 
