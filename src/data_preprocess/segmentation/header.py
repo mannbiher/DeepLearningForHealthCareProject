@@ -26,7 +26,7 @@ dir_checkpoint = "../checkpoint/"
 dir_save = "~/segmentation/output/" 
 
 # Network
-num_masks = 6
+num_masks = 4
 num_network = 1
 net = model.FCDenseNet(num_channel, num_masks, ratio_dropout) 
 net_label = ['BG', 'Cardiac', 'Thorax(L)', 'Thorax(R)']
@@ -39,7 +39,7 @@ resize_width = 256
 rescale_bit = 8 
 
 # CPU
-num_worker = 2
+num_worker = 6
 
 # Test schedule
 num_batch_test = 8
