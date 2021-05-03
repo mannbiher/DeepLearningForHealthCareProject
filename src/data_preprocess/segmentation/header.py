@@ -21,12 +21,12 @@ ratio_dropout = 0.2
 weight_bk = 0.5
 
 # Directory 
-dir_data_root = "~/598dl4h-finalproject-data/"
+dir_data_root = "~/original_data/"
 dir_checkpoint = "../checkpoint/"
-dir_save = "./data_preprocess/output/" 
+dir_save = "~/segmentation/output/" 
 
 # Network
-num_masks = 4
+num_masks = 6
 num_network = 1
 net = model.FCDenseNet(num_channel, num_masks, ratio_dropout) 
 net_label = ['BG', 'Cardiac', 'Thorax(L)', 'Thorax(R)']
