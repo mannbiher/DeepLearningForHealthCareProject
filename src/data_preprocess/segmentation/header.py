@@ -3,7 +3,7 @@
 Created on Mon Feb 17 2020
 @author: Yujin Oh (yujin.oh@kaist.ac.kr)
 """
-
+import os
 import model
 import torch
 
@@ -23,7 +23,7 @@ weight_bk = 0.5
 # Directory 
 dir_data_root = "~/original_data/"
 dir_checkpoint = "../checkpoint/"
-dir_save = "~/segmentation/output/" 
+dir_save = os.path.expanduser("~/segmentation/output/")
 
 # Network
 num_masks = 4
