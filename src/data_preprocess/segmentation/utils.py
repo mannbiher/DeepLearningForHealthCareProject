@@ -9,14 +9,16 @@ CLASSES = ['COVID-19', 'pneumonia_virus', 'pneumonia_bacteria', 'normal']
 
 def save_datadict(out_data, path):
     data_dict = {}
-    for (id_, class_, outfile) in out_data:
+    for (id_, class_, outfile, type_) in out_data:
         filename = outfile.rsplit('/',1)[-1]
         if id_ in data_dict:
-            raise ValueError(f'Duplicate entry in outdata id_')
+            print(id_, class_, outfile)
+            print(data_dict[id_])
+            raise ValueError(f'Duplicate entry in outdata {id_}')
         class_dict = {k: 0 for k in CLASSES}
         class_dict[CLASSES[class_]] = 1
         data_dict[id_] = {
-            'image_dict': {filename: {'path': outfile,type: 'AP' }},
+            'image_dict': {filename: {'path': outfile,'type': type_ }},
             'class': class_dict
         }
     pickle.dump(data_dict, open(path, 'wb'))

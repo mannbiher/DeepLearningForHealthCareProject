@@ -129,7 +129,7 @@ def main():
                     id_, image = utils.get_id_image(dir_case_id)
                     outfile = save_dir + '/'+ image + '.npz'
                     utils.save_masked(image_original, post_output[1]+post_output[2], outfile)
-                    out_data.append((id_, class_, outfile))
+                    out_data.append((id_, class_, outfile, data['types'][k]))
 
                     # save mask/pre-processed image
                     if flag_save_JPG:
