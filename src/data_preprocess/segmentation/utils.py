@@ -12,11 +12,11 @@ def save_datadict(out_data, path):
     for (id_, class_, outfile, type_) in out_data:
         filename = outfile.rsplit('/',1)[-1]
         if id_ in data_dict:
-            class_var = [k for k, v in data_dict[id_]['class'].items()
-                    if v==1][0]
-            old_class = CLASSES.index(class_var)
-            if (class_ == old_class
-                    and filename not in data_dict[id_]['image_dict'].keys()):
+#            class_var = [k for k, v in data_dict[id_]['class'].items()
+ #                   if v==1][0]
+ #           old_class = CLASSES.index(class_var)
+            if filename not in data_dict[id_]['image_dict'].keys():
+                data_dict[id_]['class'][class_] = 1
                 data_dict[id_]['image_dict'][filename] = {
                         'path': outfile,
                         'type':type_}
