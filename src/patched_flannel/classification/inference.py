@@ -48,7 +48,7 @@ def main(cv):
 
     # Create training and test datasets
     test_dataset  = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='test', cv=cv)
-    length_dataset = COVID_Dataset.__len__()
+    length_dataset = len(test_dataset)
     image_datasets = {'test': test_dataset}
 
     batch_size = {'test': header.test_batch_size}

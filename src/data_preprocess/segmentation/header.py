@@ -22,7 +22,7 @@ weight_bk = 0.5
 
 # Directory 
 dir_data_root = "~/original_data/"
-dir_checkpoint = "../checkpoint/"
+dir_checkpoint = "."
 dir_save = os.path.expanduser("~/segmentation/output/")
 
 # Network
@@ -37,6 +37,8 @@ orig_width = 2048
 resize_height = 256 
 resize_width = 256 
 rescale_bit = 8 
+# Resize image
+post_resize = 1024
 
 # CPU
 num_worker = 6
