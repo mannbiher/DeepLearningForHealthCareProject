@@ -16,12 +16,11 @@ def save_datadict(out_data, path):
                     if v==1][0]
             old_class = CLASSES.index(class_var)
             if (class_ == old_class
-                    and filename not in data_dict[id_].keys()):
-                data_dict['image_dict'][filename] = {
+                    and filename not in data_dict[id_]['image_dict'].keys()):
+                data_dict[id_]['image_dict'][filename] = {
                         'path': outfile,
                         'type':type_}
             else:
-                   
                 print(id_, class_, outfile,type_)
                 print(data_dict[id_])
                 raise ValueError(f'Duplicate entry in outdata {id_}')
