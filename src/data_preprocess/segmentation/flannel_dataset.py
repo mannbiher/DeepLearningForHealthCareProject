@@ -1,3 +1,4 @@
+import pickle
 from mydataset import MyInferenceClass
 
 
@@ -35,4 +36,5 @@ class SegmentationDataset(MyInferenceClass):
 
     def __getitem__(self, index):
         old_data = super().__getitem__(index)
-        old_data['class'] = self.classes[index]
+        old_data['classes'] = self.classes[index]
+        return old_data

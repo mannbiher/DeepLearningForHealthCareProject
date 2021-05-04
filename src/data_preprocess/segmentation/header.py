@@ -22,7 +22,7 @@ weight_bk = 0.5
 
 # Directory 
 dir_data_root = "~/original_data/"
-dir_checkpoint = "./data_preprocess/segmentation"
+dir_checkpoint = "./data_preprocess/segmentation/"
 dir_save = os.path.expanduser("~/segmentation/output/")
 
 # Network

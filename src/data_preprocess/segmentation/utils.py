@@ -1,3 +1,5 @@
+import pickle
+from PIL import Image
 import numpy as np
 import torch
 
@@ -44,4 +46,4 @@ def apply_mask(original_image, mask_image):
 
 def save_masked(original_image, mask_image, path):
     out = apply_mask(original_image, mask_image)
-    np.savez_compressed(out, image=out)
+    np.savez_compressed(path, image=out)

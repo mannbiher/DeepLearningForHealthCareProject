@@ -122,12 +122,12 @@ def main():
                         ji_test.append(ji)
                     
                     # original image processings
-                    folder = folder_list[class_]
+                    folder = utils.CLASSES[class_]
                     save_dir = header.dir_save + folder
                     mydataset.create_folder(save_dir)
                     image_original = testset.get_original(i*header.num_batch_test+k)
                     id_, image = utils.get_id_image(dir_case_id)
-                    outfile = save_dir + image + '.npz'
+                    outfile = save_dir + '/'+ image + '.npz'
                     utils.save_masked(image_original, post_output[1]+post_output[2], outfile)
                     out_data.append((id_, class_, outfile))
 
