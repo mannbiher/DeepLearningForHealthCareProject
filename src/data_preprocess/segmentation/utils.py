@@ -11,6 +11,7 @@ CLASSES = ['COVID-19', 'pneumonia_virus', 'pneumonia_bacteria', 'normal']
 def save_datadict(out_data, path):
     data_dict = {}
     for (id_, class_, outfile, type_) in out_data:
+        class_ = class_.item()
         filename = outfile.rsplit('/', 1)[-1]
         if id_ in data_dict:
             print('duplicate_new', id_, class_, outfile, type_)
@@ -19,12 +20,12 @@ def save_datadict(out_data, path):
                          if v == 1][0]
             old_class = CLASSES.index(class_var)
             if filename not in data_dict[id_]['image_dict'].keys():
-                data_dict[id_]['class'][class_] = 1
+                data_dict[id_]['class'][CLASSES[class_]] = 1
                 data_dict[id_]['image_dict'][filename] = {
                     'path': outfile,
                     'type': type_}
             elif class_ != old_class:
-                data_dict[id_]['class'][class_] = 1
+                data_dict[id_]['class'][CLASSES[class_]] = 1
         else:
             class_dict = {k: 0 for k in CLASSES}
             class_dict[CLASSES[class_]] = 1
