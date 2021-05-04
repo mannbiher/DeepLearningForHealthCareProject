@@ -1,11 +1,6 @@
 from mydataset import MyInferenceClass
 
 
-def create_data_dict():
-    pass
-
-
-
 def parse_data_dict(data_path):
     images = []
     ids = []
@@ -41,13 +36,3 @@ class SegmentationDataset(MyInferenceClass):
     def __getitem__(self, index):
         old_data = super().__getitem__(index)
         old_data['class'] = self.classes[index]
-
-
-
-def get_size_id(idx, size, case_id, classes):
-
-    original_size_w_h = (size[idx][1].item(), size[idx][0].item())
-    case_id = case_id[idx]
-    class_ = classes[idx]
-
-    return original_size_w_h, case_id, class_
