@@ -22,7 +22,7 @@ weight_bk = 0.5
 
 # Directory 
 dir_data_root = "~/original_data/"
-dir_checkpoint = "."
+dir_checkpoint = "./data_preprocess/segmentation"
 dir_save = os.path.expanduser("~/segmentation/output/")
 
 # Network
@@ -41,7 +41,7 @@ rescale_bit = 8
 post_resize = 1024
 
 # CPU
-num_worker = 6
+num_worker = 8
 
 # Test schedule
 num_batch_test = 8
