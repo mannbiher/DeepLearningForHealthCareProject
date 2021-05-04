@@ -13,6 +13,8 @@ def save_datadict(out_data, path):
     for (id_, class_, outfile, type_) in out_data:
         filename = outfile.rsplit('/', 1)[-1]
         if id_ in data_dict:
+            print('duplicate_new', id_, class_, outfile, type_)
+            print('duplicate_old', data_dict[id_])
             class_var = [k for k, v in data_dict[id_]['class'].items()
                          if v == 1][0]
             old_class = CLASSES.index(class_var)
@@ -22,17 +24,13 @@ def save_datadict(out_data, path):
                     'path': outfile,
                     'type': type_}
             elif class_ != old_class:
-                print('duplicate_new', id_, class_, outfile, type_)
-                print('duplicate_old', data_dict[id_])
                 data_dict[id_]['class'][class_] = 1
-
-                # raise ValueError(f'Duplicate entry in outdata {id_}')
-        class_dict = {k: 0 for k in CLASSES}
-        class_dict[CLASSES[class_]] = 1
-        data_dict[id_] = {
-            'image_dict': {filename: {'path': outfile, 'type': type_}},
-            'class': class_dict
-        }
+        else:
+            class_dict = {k: 0 for k in CLASSES}
+            class_dict[CLASSES[class_]] = 1
+            data_dict[id_] = {
+                'image_dict': {filename: {'path': outfile, 'type': type_}},
+                'class': class_dict}
     pickle.dump(data_dict, open(path, 'wb'))
 
 
