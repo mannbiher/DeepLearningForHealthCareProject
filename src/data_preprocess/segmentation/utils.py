@@ -12,9 +12,19 @@ def save_datadict(out_data, path):
     for (id_, class_, outfile, type_) in out_data:
         filename = outfile.rsplit('/',1)[-1]
         if id_ in data_dict:
-            print(id_, class_, outfile)
-            print(data_dict[id_])
-            raise ValueError(f'Duplicate entry in outdata {id_}')
+            class_var = [k for k, v in data_dict[id_]['class'].items()
+                    if v==1][0]
+            old_class = CLASSES.index(class_var)
+            if (class_ == old_class
+                    and filename not in data_dict[id_].keys()):
+                data_dict['image_dict'][filename] = {
+                        'path': outfile,
+                        'type':type_}
+            else:
+                   
+                print(id_, class_, outfile,type_)
+                print(data_dict[id_])
+                raise ValueError(f'Duplicate entry in outdata {id_}')
         class_dict = {k: 0 for k in CLASSES}
         class_dict[CLASSES[class_]] = 1
         data_dict[id_] = {
