@@ -38,7 +38,7 @@ class Logger(object):
                 for numbers in self.file:
                     numbers = numbers.rstrip().split('\t')
                     for i in range(0, len(numbers)):
-                        self.numbers[self.names[i]].append(numbers[i])
+                        self.numbers[self.names[i]].append(float(numbers[i]))
                 self.file.close()
                 self.file = open(fpath, 'a')  
             else:

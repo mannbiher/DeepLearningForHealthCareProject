@@ -219,9 +219,34 @@ def main():
 #    criterion = focalloss(label_distri = train_distri, model_name = args.arch)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    title = args.arch
-    logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
-    logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+    # title = args.arch
+    # logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
+    # logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+
+
+    if args.test is False:
+      # Resume
+      title = args.arch
+      if args.resume:
+          # Load checkpoint.
+          print('==> Resuming from checkpoint..')
+          checkpoint_path = os.path.join(checkpoint_dir,args.resume+'.checkpoint.pth.tar')
+          print (checkpoint_path)
+          if not os.path.isfile(checkpoint_path):
+              print('Error: no checkpoint directory found! Trying best model.')
+              checkpoint_path = os.path.join(checkpoint_dir,'model_best.pth.tar')
+          checkpoint = torch.load(checkpoint_path)
+          best_acc = checkpoint['best_acc']
+          start_epoch = checkpoint['epoch']
+          assert start_epoch == int(args.resume), f"Checkpoint epoch {start_epoch} doesn't match args.resume {args.resume}."
+          model.load_state_dict(checkpoint['state_dict'])
+          optimizer.load_state_dict(checkpoint['optimizer'])
+          logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title, resume=True)
+      else:
+          logger = Logger(os.path.join(checkpoint_dir, 'log.txt'), title=title)
+          logger.set_names(['Learning Rate', 'Train Loss', 'Valid Loss', 'Train Acc.', 'Valid Acc.'])
+
+
 
     if args.test:
         print('Test only')
@@ -278,7 +303,7 @@ def main():
         print('test vs best accuracy', test_acc.item(), best_acc, is_best)
         best_acc = max(test_acc.item(), best_acc)
         print(epoch, epoch%args.checkpoint_saved_n)
-        if is_best or epoch%args.checkpoint_saved_n == 0:
+        if is_best or epoch%args.checkpoint_saved_n == 0 or epoch==args.epochs-1:
           save_checkpoint({
                   'epoch': epoch,
                   'state_dict': model.state_dict(),
@@ -286,12 +311,12 @@ def main():
                   'best_acc': best_acc,
                   'optimizer' : optimizer.state_dict(),
               }, epoch, is_best, checkpoint=checkpoint_dir)
-          #try:
-          #    print("Saving checkpoint to s3 ...")
-          #    os.system("aws s3 sync {} {}".format(checkpoint_dir, checkpoint_s3))
-          #    print("Saving checkpoint to S3 is completed")
-          #except:
-          #    print("AWS-Sync failed")
+          try:
+              print("Saving checkpoint to s3 ...")
+              os.system("aws s3 sync {} {}".format(args.checkpoint, checkpoint_s3))
+              print("Saving checkpoint to S3 is completed")
+          except:
+              print("AWS-Sync failed")
 
     logger.close()
     logger.plot()
@@ -426,6 +451,8 @@ def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename=
     if is_best:
         # shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
         torch.save(state, os.path.join(checkpoint, 'model_best.pth.tar'))
+    else:
+        torch.save(state, filepath)
 
 
 def adjust_learning_rate(optimizer, epoch):

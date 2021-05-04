@@ -40,6 +40,7 @@ class XrayDataset(BaseDataset):
         """
         # read a image given a random integer index
         xray_path = self.image_paths[index]
+        xray_path = os.path.expanduser('~/' + xray_path.split('/',3)[-1])
         xray = Image.open(xray_path).convert('L')
         label = self.label_list[index]
         info = self.info_list[index]
