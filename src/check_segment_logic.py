@@ -59,8 +59,8 @@ if __name__ == '__main__':
     print('kaggle segmented', count_numbers(k_sg))
     print('covid segmented', count_numbers(c_sg))
     # json.dump(k, open('kaggle.json','w'), sort_keys=True, indent=4)
-    # json.dump(k_sg, open('kaggle_segmented.json','w'), sort_keys=True, indent=4)
-    json.dump(c, open('covid.json', 'w'), sort_keys=True, indent=4)
+    json.dump(k_sg, open('kaggle_segmented.json','w'), sort_keys=True, indent=4)
+    # json.dump(c, open('covid.json', 'w'), sort_keys=True, indent=4)
     json.dump(c_sg, open('covid_segmented.json', 'w'),
               sort_keys=True, indent=4)
 
