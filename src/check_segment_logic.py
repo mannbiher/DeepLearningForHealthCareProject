@@ -24,7 +24,7 @@ if __name__ == '__main__':
     other_count = 0
     some_count = 0
     for i, val in a.items():
-        if i=='101_':
+        if i=='325_':
             print(val)
         if test_index(a, i) == -1:
             count += 1
