@@ -8,6 +8,9 @@ positive_case_list = []
 negative_case_list_covid = []
 negative_case_list_xray = []
 
+#
+# Generating negative (Non-Covid) and positive (Covid) case list from AP & PA views from Covid-Xray list
+#
 formal_covid_dict = pickle.load(open('./data_preprocess/formal_covid_dict.pkl','rb'))
 
 for key, value in formal_covid_dict.items():
@@ -17,7 +20,10 @@ for key, value in formal_covid_dict.items():
           positive_case_list.append((info['path'], key+'_'+image_name, 1))
       else:
           negative_case_list_covid.append((info['path'], key+'_'+image_name, 0))
-      
+
+#
+# Generating Negative case list from the list
+#
 formal_xray_dict = pickle.load(open('./data_preprocess/formal_xray_dict.pkl','rb'))
 for key, value in formal_xray_dict.items():
   for image_name, info in value['image_dict'].items():

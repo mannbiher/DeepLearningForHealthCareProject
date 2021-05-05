@@ -1,6 +1,12 @@
 import os
 import pickle
 
+"""
+This function prints the numbers of Kaggle dataset with detailed information of:
+  AP or PA View (number of images)
+  and Number of images for each class, i.e., Covid, Non-Covid (Bacteria/Virus) etc..
+"""
+
 data_dir = os.path.expanduser('~/original_data/chest_xray')
 data_type = ['train','val','test']
 statistic_dict = {}

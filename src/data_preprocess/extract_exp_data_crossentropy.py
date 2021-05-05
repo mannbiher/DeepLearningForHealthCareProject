@@ -6,6 +6,23 @@ import sys
 
 import numpy as np
 
+"""
+Function that divides the data into K-folds (5 folds)
+Each fold consisting of train, Valid and Test datasets
+ with each of these datasets consisting of all 4 classes of images (Covid Virus, Non-Covid Pneumonia Virus, 
+ Pneumonia Bacteria and Normal)
+ 
+ The function prints the metrics and numbers of these 5 folds X 3 sets X 4 Classes of datasets
+ 
+ Ex: 
+    1-th detailed information of exp data
+    1234 Train: Covid: 34 Pneumonia: 100 Pneumonia Bacteria: 400 Normal: 700
+    312 Valid:  Covid: 12 Pneumonia: 50 Pneumonia Bacteria: 70 Normal 150
+    345 Test:   Covid: 33 Pneumonia: 54 Pneumonia Bacteria: 80 Normal 178  
+    
+    2-th information of exp data
+    ...
+"""
 case_list = []
 
 def process_covid_metadata(path):
