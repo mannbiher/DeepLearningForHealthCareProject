@@ -23,15 +23,6 @@ from torch.utils.tensorboard import SummaryWriter
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def main(opts):
-
-    # Save data
-save_dir = header.save_dir
-
-
-# Model name
-model_name = header.model
-
 # Number of classes
 num_classes = header.num_classes
 
@@ -41,23 +32,34 @@ feature_extract = header.feature_extract
 # default `log_dir` is "runs" - we'll be more specific here
 writer = SummaryWriter('runs/' + header.test_name)
 
-# Initialize the model for this run
-model_ft, input_size = initialize_model(
-    model_name, num_classes, feature_extract, use_pretrained=True)
 
-# Print the model we just instantiated
-print(model_ft)
+def main(opts):
+    # Save data
+    save_dir = opts.checkpoint
 
-print("Initializing Datasets and Dataloaders...")
+    # Model name
+    model_name = opts.arch
 
-# Create training and validation datasets
-train_dataset = COVID_Dataset(
-     (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train', cv=cv)
- val_dataset = COVID_Dataset(
-      (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', cv=cv)
+    input_size = opts.crop_size
+
+    # Initialize the model for this run
+    model_ft, _ = initialize_model(
+        model_name, num_classes, feature_extract, use_pretrained=True)
+
+    # Print the model we just instantiated
+    print(model_ft)
+
+    print("Initializing Datasets and Dataloaders...")
+
+    # Create training and validation datasets
+    train_dataset = COVID_Dataset(
+        (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train', opts=opts)
+    val_dataset = COVID_Dataset(
+        (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', opts=opts)
 
   image_datasets = {'train': train_dataset, 'val': val_dataset}
 
+   # TODO No oversampling
    if header.sampling_option == 'oversampling':
         train_weights = make_weights_for_balanced_classes_customloader(image_datasets['train'].imgs,
                                                                        len(image_datasets['train'].classes))
@@ -113,35 +115,11 @@ train_dataset = COVID_Dataset(
         num_epochs=header.epoch_max,
         is_inception=(model_name.startswith("inception"))
 
-    # Plot loss and accuracy
-    vhist = [h.cpu().numpy() for h in hist_v]
-    thist = [h.cpu().numpy() for h in hist_t]
-
-    vhist_f1 = [np.asarray(h) for h in hist_f1_v]
-    thist_f1 = [np.asarray(h) for h in hist_f1_t]
-
-    plt.subplot(2, 1, 1)
-    plt.title("Accuracy vs. Number of Training Epochs")
-    plt.xlabel("Epochs")
-    plt.ylabel("Accuracy")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1),
-             vhist, label="Validation")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), thist, label="Training")
-
-    plt.subplot(2, 1, 2)
-    plt.title("F1 vs. Number of Training Epochs")
-    plt.xlabel("Epochs")
-    plt.ylabel("F1")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1),
-             vhist_f1, label="Validation")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1),
-             thist_f1, label="Training")
-
-    plt.show()
+    
 
 
 # Define training and validation_model
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoch_max, is_inception=False):
+def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoch_max, is_inception=False, opts=opts):
 
     print('')
     print('Training for single best model started..')
@@ -158,6 +136,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
     best_avg = 0.0
 
     count_ES = 0
+
+    # TODO: put resume from checkpoint
 
     # Load model and optimizer, saved epoch if 'resume' training.
     if os.path.isfile(os.path.join(save_dir, str(header.continue_epoch) + '.pth')):
@@ -214,14 +194,13 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
                         loss = loss1 + 0.4 * loss2
                     else:
                         outputs = model(inputs)
-
-                        # Add L1 or L2 regularization
-                        l1_regularization = torch.tensor(
-                            0).to(device, dtype=float)
-                        for param in model.parameters():
-                            l1_regularization += torch.norm(param, 1)
-                        loss = criterion(outputs, labels) + \
-                            header.lambda_l1 * l1_regularization
+                        # # Add L1 or L2 regularization
+                        # l1_regularization = torch.tensor(
+                        #     0).to(device, dtype=float)
+                        # for param in model.parameters():
+                        #     l1_regularization += torch.norm(param, 1)
+                        loss = criterion(outputs, labels) # + \
+                            # header.lambda_l1 * l1_regularization
 
                     _, preds = torch.max(outputs, 1)
 
@@ -333,6 +312,35 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
     model.load_state_dict(best_model_wts)
 
     return model, val_acc_history, train_acc_history, val_f1_history, train_f1_history, trained_epoch, num_epochs
+
+
+def plot_train():
+    # Plot loss and accuracy
+    vhist = [h.cpu().numpy() for h in hist_v]
+    thist = [h.cpu().numpy() for h in hist_t]
+
+    vhist_f1 = [np.asarray(h) for h in hist_f1_v]
+    thist_f1 = [np.asarray(h) for h in hist_f1_t]
+
+    plt.subplot(2, 1, 1)
+    plt.title("Accuracy vs. Number of Training Epochs")
+    plt.xlabel("Epochs")
+    plt.ylabel("Accuracy")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             vhist, label="Validation")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1), thist, label="Training")
+
+    plt.subplot(2, 1, 2)
+    plt.title("F1 vs. Number of Training Epochs")
+    plt.xlabel("Epochs")
+    plt.ylabel("F1")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             vhist_f1, label="Validation")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             thist_f1, label="Training")
+
+    plt.show()
+
 
 
 if __name__ == '__main__':
