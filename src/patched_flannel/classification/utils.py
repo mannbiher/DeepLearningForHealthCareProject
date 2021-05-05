@@ -221,3 +221,20 @@ def most_common_top_1(candidates):
     assert isinstance(candidates, list), 'Must be a list type'
     if len(candidates) == 0: return None
     return Counter(candidates).most_common(n=1)[0][0]
+
+
+def parse_data_dict(path):
+    """FLANNEL dataset util helper."""
+    print (path)
+    image_data_list = pickle.load(open(path, 'rb'))
+    path_list = []
+    label_list = []
+    info_list = []
+    for x in image_data_list:
+      path_list.append(x[0])
+      label_list.append(x[2])
+      if len(x) == 4:
+        info_list.append((x[1], x[3]))
+      else:
+        info_list.append(x[1])
+    return path_list, label_list, info_list
