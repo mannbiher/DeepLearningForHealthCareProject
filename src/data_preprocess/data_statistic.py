@@ -25,6 +25,10 @@
 import os
 import pickle
 
+"""
+Function to print number of images from both Kaggle and covid-xray datasets
+"""
+
 p_set = set([])
 kd = pickle.load(open('./data_preprocess/formal_kaggle_dict.pkl','rb'))
 for key in kd.keys():
