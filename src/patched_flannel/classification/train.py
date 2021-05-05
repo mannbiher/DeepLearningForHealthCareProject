@@ -82,8 +82,10 @@ def main(opts):
                   'val': header.val_batch_size}
 
     # Create training and validation dataloaders
-    dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size[x], sampler=sampler[x], num_workers=4,
-                                                       pin_memory=True) for x in ['train', 'val']}
+    dataloaders_dict = {x: torch.utils.data.DataLoader(
+        image_datasets[x], batch_size=batch_size[x], 
+        sampler=sampler[x], num_workers=opts.workers,
+        pin_memory=True) for x in ['train', 'val']}
 
     # Send the model to GPU
     model_ft = model_ft.to(device)
@@ -267,15 +269,13 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
             # Early stopping
             if phase == 'val':
                 if epoch_avg > best_avg - 0.05:
-                    print('Current avg score: %f, Best avg score %f, model saved.' % (
-                        epoch_avg, best_avg))
-                    if epoch_avg > best_avg:
-                        best_avg = epoch_avg
-                    else:
-                        pass
-                    best_model_wts = copy.deepcopy(model.state_dict())
                     count_ES = 0
-                    torch.save({'epoch': epoch + 1, 'model_state_dict': best_model_wts,
+                    if epoch_avg > best_avg:
+                        print('Current avg score: %f, Best avg score %f, model saved.' % (
+                        epoch_avg, best_avg))
+                        best_avg = epoch_avg
+                        best_model_wts = copy.deepcopy(model.state_dict())
+                        torch.save({'epoch': epoch + 1, 'model_state_dict': best_model_wts,
                                 'optimizer_state_dict': optimizer.state_dict()},
                                os.path.join(save_dir, '{}'.format(epoch + 1) + '.pth'))
 

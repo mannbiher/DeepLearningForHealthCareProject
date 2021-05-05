@@ -1,6 +1,7 @@
 # Test name
 test_name = 'classifier_newset'
-sampling_option = 'oversampling'
+# sampling_option = 'oversampling'
+sampling_option = None
 
 # Batch size
 train_batch_size = 16
