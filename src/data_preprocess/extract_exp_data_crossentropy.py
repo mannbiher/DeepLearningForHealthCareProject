@@ -2,7 +2,7 @@ import pickle
 import random
 import os
 import csv
-import sys
+import argparse
 
 import numpy as np
 
@@ -23,12 +23,11 @@ Each fold consisting of train, Valid and Test datasets
     2-th information of exp data
     ...
 """
-case_list = []
-
-def process_covid_metadata(path):
-    z0 = 0
+def process_metadata(path):
+    case_list = []
+    count = 0
     covid_19, virus, bacteria, normal = 0, 0, 0, 0
-    formal_covid_dict = pickle.load(open('./data_preprocess/formal_covid_dict_ap.pkl','rb'))
+    formal_covid_dict = pickle.load(open(path,'rb'))
     for key, value in formal_covid_dict.items():
         for image_name, info in value['image_dict'].items():
             if 'PA' in info['type'] or 'AP' in info['type']:
@@ -44,41 +43,13 @@ def process_covid_metadata(path):
                 if value['class']['normal'] == 1:
                     case_list.append((info['path'], key+'_'+image_name, 3))
                     normal += 1
-            z0 += 1
-    print(len(case_list))
-    pass
+                count += 1
+    print('All Images:', count) 
+    print('Split:', len(case_list), covid_19, virus, bacteria, normal)
+    return case_list
 
 
-def process_kaggle_metadata(path):
-    z1 = 0
-    a=0
-    b=0
-    c=0
-    d=0
-    formal_kaggle_dict = pickle.load(open('./data_preprocess/formal_kaggle_dict.pkl','rb'))
-    for key, value in formal_kaggle_dict.items():
-        for image_name, info in value['image_dict'].items():
-            if 'PA' in info['type'] or 'AP' in info['type']:
-                if value['class']['COVID-19'] == 1:
-                    a += 1
-                    case_list.append((info['path'], key+'_'+image_name, 0))
-                if value['class']['pneumonia_virus'] == 1:
-                    b += 1
-                    case_list.append((info['path'], key+'_'+image_name, 1))
-                if value['class']['pneumonia_bacteria'] == 1:
-                    case_list.append((info['path'], key+'_'+image_name, 2))
-                    c += 1
-                if value['class']['normal'] == 1:
-                    d += 1
-                    case_list.append((info['path'], key+'_'+image_name, 3))
-                z1 += 1
-    print (len(case_list))
-    print (a, b, c, d)
-    print (z0, z1)
-    pass
-
-
-def shuffle_five_folds():
+def shuffle_five_folds(case_list):
     random.shuffle(case_list)
     np = len(case_list)
     
@@ -132,14 +103,8 @@ def shuffle_five_folds():
     return train_data, valid_data, test_list
 
 
-def create_output_dir():
-    exp_data_id = 'standard_data_multiclass_0922_crossentropy'
-    exp_data_dir = os.path.join('./data_preprocess', exp_data_id)
-    os.mkdir(exp_data_dir)
 
-
-def write_five_folds():
-    create_output_dir()
+def write_five_folds(train_data, valid_data, test_list, out_dir):
     for index, (train_list, valid_list) in enumerate(zip(train_data,valid_data)):
         print ('%d-th detailed information of exp data'%(index+1))
         train_s = [0,0,0,0]
@@ -156,15 +121,15 @@ def write_five_folds():
         print ('N of Valid', len(valid_list), 'covid:%d'%valid_s[0], 'pneumonia_virus:%d'%valid_s[1], 'pneumonia_bacteria:%d'%valid_s[2], 'normal:%d'%valid_s[3])
         print ('N of Test', len(test_list), 'covid:%d'%test_s[0], 'pneumonia_virus:%d'%test_s[1], 'pneumonia_bacteria:%d'%test_s[2], 'normal:%d'%test_s[3])
 
-        with open(os.path.join(exp_data_dir, 'data_statistic.csv'),'w') as f:
+        with open(os.path.join(out_dir, f'data_statistic{index+1}.csv'),'w') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(['N of Train', len(train_list), 'covid:%d'%train_s[0], 'pneumonia_virus:%d'%train_s[1], 'pneumonia_bacteria:%d'%train_s[2], 'normal:%d'%train_s[3]])
             csv_writer.writerow(['N of Valid', len(valid_list), 'covid:%d'%valid_s[0], 'pneumonia_virus:%d'%valid_s[1], 'pneumonia_bacteria:%d'%valid_s[2], 'normal:%d'%valid_s[3]])
             csv_writer.writerow(['N of Test', len(test_list), 'covid:%d'%test_s[0], 'pneumonia_virus:%d'%test_s[1], 'pneumonia_bacteria:%d'%test_s[2], 'normal:%d'%test_s[3]])
 
-            train_path = os.path.join(exp_data_dir, 'exp_train_list_cv%d.pkl'%(index+1))
-            valid_path = os.path.join(exp_data_dir, 'exp_valid_list_cv%d.pkl'%(index+1))
-            test_path = os.path.join(exp_data_dir, 'exp_test_list_cv%d.pkl'%(index+1))
+            train_path = os.path.join(out_dir, 'exp_train_list_cv%d.pkl'%(index+1))
+            valid_path = os.path.join(out_dir, 'exp_valid_list_cv%d.pkl'%(index+1))
+            test_path = os.path.join(out_dir, 'exp_test_list_cv%d.pkl'%(index+1))
 
             if os.path.exists(train_path):
                 os.remove(train_path)
@@ -181,39 +146,39 @@ def write_five_folds():
 
 
 
-def parse_args():
+def setup_cli():
     parser = argparse.ArgumentParser(description='Create five folds for CV')
     
-    # Experiment ID
-    parser.add_argument('--out-dir',type=str, help='output directory')
-    parser.add_argument('--kaggle', type=str, help='Kaggle pickle file')
-    parser.add_argument('--covid', type=str, help='Covid pickle file')
+    parser.add_argument('--out-dir',type=str, help='output directory',required=True)
+    parser.add_argument('--kaggle', type=str, help='Kaggle pickle file',required=True)
+    parser.add_argument('--covid', type=str, help='Covid pickle file', required=True)
     # Datasets
+    return parser.parse_args()
     
 
+def main():
+    args = setup_cli()
+    print(args)
+    case_list = []
+    case_list += process_metadata(args.covid)
+    case_list += process_metadata(args.kaggle)
+    train, valid, test = shuffle_five_folds(case_list)
+    try:
+        os.mkdir(args.out_dir)
+    except FileExistsError:
+        print(args.out_dir, 'already exists. skipping creation.')
+        pass
+    write_five_folds(train, valid, test, args.out_dir)
 
 
 if __name__ == '__main__':
-    # out_dir
-    # kaggle pickle
-    # covid pickle
-    out_dir = 
-    covid_pickle = 
-    kaggle_pickle = 
-
-
-    exp_data_id = 
-    if len(sys.argv) > 1:
-        exp_data_id = sys.argv[1]
+    """Usage:
     
+    python extract_exp_data_crossentropy \
+    --out-dir ./data_preprocess/standard_data_multiclass_0922_crossentropy \
+    --covid ./data_preprocess/formal_covid_dict_ap.pkl \
+    --kaggle ./data_preprocess/formal_kaggle_dict.pkl
+    """
     
-        
-
-
-
-
-
-
-
-
+    main()
     print ('finished')
