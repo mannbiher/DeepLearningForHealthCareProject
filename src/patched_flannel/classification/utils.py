@@ -53,6 +53,13 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
 
         input_size = header.img_size
 
+    elif model_name == 'restnet152':
+        model_ft = models.resnet152(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+
+    
     elif model_name == "alexnet":
         """ Alexnet
         """
@@ -71,6 +78,15 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
         input_size = header.img_size
 
+    elif model_name == "vgg19_bn":
+        """ VGG11_bn
+        """
+        model_ft = models.vgg19_bn(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.classifier[6].in_features
+        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        input_size = header.img_size
+
     elif model_name == "squeezenet":
         """ Squeezenet
         """
@@ -80,16 +96,16 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft.num_classes = num_classes
         input_size = header.img_size
 
-    elif model_name == "densenet":
+    elif model_name == "densenet161":
         """ Densenet
         """
-        model_ft = models.densenet121(pretrained=use_pretrained)
+        model_ft = models.densenet161(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier.in_features
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
-    elif model_name == "inception":
+    elif model_name == "inception_v3":
         """ Inception v3
         Be careful, expects (299,299) sized images and has auxiliary output
         """
@@ -102,6 +118,14 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs,num_classes)
         input_size = header.img_size
+
+    elif model_name == "resnext101_32x8d":
+        model_ft = models.resnext101_32x8d(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_extract)
+        num_ftrs = model_ft.classifier.in_features
+        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        input_size = header.img_size
+
 
     else:
         print("Error: Invalid model name, exiting...")

@@ -19,15 +19,15 @@ from utils import plot_classes_preds_single
 from customloader import COVID_Dataset
 from torch.utils.tensorboard import SummaryWriter
 
-## Detect if we have a GPU available
+# Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# Save data
+
+def main(opts):
+
+    # Save data
 save_dir = header.save_dir
 
-# Make directory to save
-if not os.path.exists(save_dir):
-    os.makedirs(save_dir)
 
 # Model name
 model_name = header.model
@@ -41,43 +41,47 @@ feature_extract = header.feature_extract
 # default `log_dir` is "runs" - we'll be more specific here
 writer = SummaryWriter('runs/' + header.test_name)
 
-def main(cv):
-    # Initialize the model for this run
-    model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
-    
+# Initialize the model for this run
+model_ft, input_size = initialize_model(
+    model_name, num_classes, feature_extract, use_pretrained=True)
 
-    # Print the model we just instantiated
-    print(model_ft)
+# Print the model we just instantiated
+print(model_ft)
 
-    print("Initializing Datasets and Dataloaders...")
+print("Initializing Datasets and Dataloaders...")
 
-    # Create training and validation datasets
-    train_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train', cv=cv)
-    val_dataset = COVID_Dataset((header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', cv=cv)
+# Create training and validation datasets
+train_dataset = COVID_Dataset(
+     (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train', cv=cv)
+ val_dataset = COVID_Dataset(
+      (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', cv=cv)
 
-    image_datasets = {'train': train_dataset, 'val': val_dataset}
+  image_datasets = {'train': train_dataset, 'val': val_dataset}
 
-    if header.sampling_option == 'oversampling':
+   if header.sampling_option == 'oversampling':
         train_weights = make_weights_for_balanced_classes_customloader(image_datasets['train'].imgs,
                                                                        len(image_datasets['train'].classes))
         train_weights = torch.DoubleTensor(train_weights)
-        train_sampler = torch.utils.data.sampler.WeightedRandomSampler(train_weights, len(train_weights), replacement=True)
+        train_sampler = torch.utils.data.sampler.WeightedRandomSampler(
+            train_weights, len(train_weights), replacement=True)
 
         val_weights = make_weights_for_balanced_classes_customloader(image_datasets['val'].imgs,
                                                                      len(image_datasets['val'].classes))
         val_weights = torch.DoubleTensor(val_weights)
-        val_sampler = torch.utils.data.sampler.WeightedRandomSampler(val_weights, len(val_weights), replacement=True)
+        val_sampler = torch.utils.data.sampler.WeightedRandomSampler(
+            val_weights, len(val_weights), replacement=True)
 
         sampler = {'train': train_sampler, 'val': val_sampler}
 
     else:
         sampler = {'train': None, 'val': None}
 
-    batch_size = {'train': header.train_batch_size, 'val': header.val_batch_size}
+    batch_size = {'train': header.train_batch_size,
+                  'val': header.val_batch_size}
 
     # Create training and validation dataloaders
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size[x], sampler=sampler[x], num_workers=4,
-                                       pin_memory=True) for x in ['train', 'val']}
+                                                       pin_memory=True) for x in ['train', 'val']}
 
     # Send the model to GPU
     model_ft = model_ft.to(device)
@@ -103,11 +107,11 @@ def main(cv):
     criterion = nn.CrossEntropyLoss()
 
     # Train and evaluate
-    model_ft, hist_v, hist_t, hist_f1_v, hist_f1_t, epoch_trained, num_epochs = train_model(model_ft, dataloaders_dict,
-                                                                                            criterion, optimizer_ft,
-                                                                                            num_epochs=header.epoch_max,
-                                                                                            is_inception=(
-                                                                                                        model_name == "inception"))
+    model_ft, hist_v, hist_t, hist_f1_v, hist_f1_t, epoch_trained, num_epochs = train_model(
+        model_ft, dataloaders_dict,
+        criterion, optimizer_ft,
+        num_epochs=header.epoch_max,
+        is_inception=(model_name.startswith("inception"))
 
     # Plot loss and accuracy
     vhist = [h.cpu().numpy() for h in hist_v]
@@ -120,20 +124,23 @@ def main(cv):
     plt.title("Accuracy vs. Number of Training Epochs")
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), vhist, label="Validation")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             vhist, label="Validation")
     plt.plot(range(epoch_trained + 1, num_epochs + 1), thist, label="Training")
 
     plt.subplot(2, 1, 2)
     plt.title("F1 vs. Number of Training Epochs")
     plt.xlabel("Epochs")
     plt.ylabel("F1")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), vhist_f1, label="Validation")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), thist_f1, label="Training")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             vhist_f1, label="Validation")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             thist_f1, label="Training")
 
     plt.show()
 
 
-## Define training and validation_model
+# Define training and validation_model
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoch_max, is_inception=False):
 
     print('')
@@ -142,7 +149,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
     since = time.time()
 
     val_acc_history = []
-    train_acc_history =[]
+    train_acc_history = []
 
     val_f1_history = []
     train_f1_history = []
@@ -154,11 +161,13 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
 
     # Load model and optimizer, saved epoch if 'resume' training.
     if os.path.isfile(os.path.join(save_dir, str(header.continue_epoch) + '.pth')):
-        checkpoint = torch.load(os.path.join(save_dir, str(header.continue_epoch) + '.pth'))
+        checkpoint = torch.load(os.path.join(
+            save_dir, str(header.continue_epoch) + '.pth'))
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         trained_epoch = checkpoint['epoch']
-        print('Previous model saved at %d epoch was loaded and continue training.' % trained_epoch)
+        print('Previous model saved at %d epoch was loaded and continue training.' %
+              trained_epoch)
     else:
         trained_epoch = 0
 
@@ -207,10 +216,12 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
                         outputs = model(inputs)
 
                         # Add L1 or L2 regularization
-                        l1_regularization = torch.tensor(0).to(device, dtype=float)
+                        l1_regularization = torch.tensor(
+                            0).to(device, dtype=float)
                         for param in model.parameters():
                             l1_regularization += torch.norm(param, 1)
-                        loss = criterion(outputs, labels) + header.lambda_l1 * l1_regularization
+                        loss = criterion(outputs, labels) + \
+                            header.lambda_l1 * l1_regularization
 
                     _, preds = torch.max(outputs, 1)
 
@@ -242,35 +253,43 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
 
                 if i == 0 and phase == 'val':
                     writer.add_figure(phase + '_predictions vs. actuals',
-                                      plot_classes_preds_single(model, inputs, labels),
+                                      plot_classes_preds_single(
+                                          model, inputs, labels),
                                       global_step=epoch + 1)
 
                 i += 1
 
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
-            epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
+            epoch_acc = running_corrects.double(
+            ) / len(dataloaders[phase].dataset)
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             if phase == 'val':
-                report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19'])
+                report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=[
+                                                    'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19'])
 
                 normal_f1 = report_dict['normal']['f1-score']
                 pneumonia_virus_f1 = report_dict['pneumonia_virus']['f1-score']
                 pneumonia_bacteria_f1 = report_dict['pneumonia_bacteria']['f1-score']
                 covid19_f1 = report_dict['COVID-19']['f1-score']
-                epoch_avg = (normal_f1 + pneumonia_virus_f1 + pneumonia_bacteria_f1 + covid19_f1)/4
-                
-                print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f} avg: {:.4f}'.format(phase, epoch_loss, epoch_acc, epoch_f1, epoch_avg))
-                print(classification_report(y_true, y_pred, target_names=['normal','pneumonia_virus','pneumonia_bacteria','COVID-19']))
+                epoch_avg = (normal_f1 + pneumonia_virus_f1 +
+                             pneumonia_bacteria_f1 + covid19_f1)/4
+
+                print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f} avg: {:.4f}'.format(
+                    phase, epoch_loss, epoch_acc, epoch_f1, epoch_avg))
+                print(classification_report(y_true, y_pred, target_names=[
+                      'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19']))
                 # here
             else:
                 # save file
-                print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f}'.format(phase, epoch_loss, epoch_acc, epoch_f1))
+                print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f}'.format(
+                    phase, epoch_loss, epoch_acc, epoch_f1))
 
             # Early stopping
             if phase == 'val':
                 if epoch_avg > best_avg - 0.05:
-                    print('Current avg score: %f, Best avg score %f, model saved.' % (epoch_avg, best_avg))
+                    print('Current avg score: %f, Best avg score %f, model saved.' % (
+                        epoch_avg, best_avg))
                     if epoch_avg > best_avg:
                         best_avg = epoch_avg
                     else:
@@ -302,18 +321,19 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
 
         if count_ES == header.patience:
             num_epochs = epoch + 1
-            print('Early stopping at.. %d epoch.' %num_epochs)
+            print('Early stopping at.. %d epoch.' % num_epochs)
             break
         print()
 
     time_elapsed = time.time() - since
-    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    print('Training complete in {:.0f}m {:.0f}s'.format(
+        time_elapsed // 60, time_elapsed % 60))
 
     # load best model weights
     model.load_state_dict(best_model_wts)
 
     return model, val_acc_history, train_acc_history, val_f1_history, train_f1_history, trained_epoch, num_epochs
 
-if __name__=='__main__':
-    main()
 
+if __name__ == '__main__':
+    main()
