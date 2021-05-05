@@ -91,7 +91,7 @@ class COVID_Dataset(data.Dataset):
                                                                                                                                        header.resize, header.resize))
         X_whole_mask = np.round(np.asarray(X_whole_mask))
 
-        X_masked = np.load()['image']
+        X_masked = np.multiply(X_whole, X_whole_mask)
 
         non_zero_list = np.nonzero(X_masked)
 
