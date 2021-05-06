@@ -143,7 +143,7 @@ resource "aws_launch_template" "spot_deep_learning" {
     ebs {
       delete_on_termination = true
       volume_type           = "gp2"
-      volume_size           = 80
+      volume_size           = 200
     }
   }
 
@@ -208,7 +208,7 @@ resource "aws_launch_template" "ondemand_deep_learning" {
     ebs {
       delete_on_termination = true
       volume_type           = "gp2"
-      volume_size           = 80
+      volume_size           = 200
     }
   }
 

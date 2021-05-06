@@ -262,3 +262,12 @@ def parse_data_dict(path):
       else:
         info_list.append(x[1])
     return path_list, label_list, info_list
+
+def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
+    filepath = os.path.join(checkpoint, str(epoch_id)+'.'+filename)
+    # torch.save(state, filepath)
+    if is_best:
+        # shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
+        torch.save(state, os.path.join(checkpoint, 'model_best.pth.tar'))
+    else:
+        torch.save(state, filepath)

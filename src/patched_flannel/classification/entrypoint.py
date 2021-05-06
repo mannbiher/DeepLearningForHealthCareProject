@@ -3,6 +3,7 @@ import torchvision.models as models
 
 import train
 
+
 class Settings(dict):
     """Dict to map args."""
     __getattr__ = dict.get
@@ -25,6 +26,14 @@ def get_default_models():
 def setup_cli(model_names):
     parser = argparse.ArgumentParser(
         description='Train and Test patch based model')
+    parser.add_argument(
+        '--experimentID', default='%s_20200407_patched_%s', type=str, metavar='E_ID',
+        help='ID of Current experiment')
+    parser.add_argument(
+        '-d', '--data',
+        default='./data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_%s.pkl',
+        type=str)
+
     parser.add_argument('--arch', '-a', metavar='ARCH', default='vgg19_bn',
                         choices=model_names,
                         help='model architecture: ' +
@@ -64,16 +73,20 @@ def create_dir(path):
 def map_options(args):
     opts = Settings()
     for k, v in args:
-        if k not in ()
+        pass
 
 
 def main():
     model_names = get_default_models()
     args = setup_cli(model_names)
 
+    experimentID = args.experimentID % (args.arch, args.cv)
+    args.data = args.data % ('%s', args.cv)
+    args.checkpoint_dir = os.path.join(args.checkpoint, experimentID)
+
     # create checkpoint directory
-    create_dir(args.checkpoint)
+    create_dir(args.checkpoint_dir)
     create_dir(args.results)
 
-    create_dir(args.)
-    train.main()
+    
+    train.main(args)

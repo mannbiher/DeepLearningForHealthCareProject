@@ -16,6 +16,7 @@ from sklearn.metrics import classification_report
 from utils import initialize_model
 from utils import make_weights_for_balanced_classes_customloader
 from utils import plot_classes_preds_single
+from utils import save_checkpoint
 from customloader import COVID_Dataset
 from torch.utils.tensorboard import SummaryWriter
 
@@ -57,10 +58,10 @@ def main(opts):
     val_dataset = COVID_Dataset(
         (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', opts=opts)
 
-  image_datasets = {'train': train_dataset, 'val': val_dataset}
+    image_datasets = {'train': train_dataset, 'val': val_dataset}
 
-   # TODO No oversampling
-   if header.sampling_option == 'oversampling':
+    # TODO No oversampling
+    if header.sampling_option == 'oversampling':
         train_weights = make_weights_for_balanced_classes_customloader(image_datasets['train'].imgs,
                                                                        len(image_datasets['train'].classes))
         train_weights = torch.DoubleTensor(train_weights)
@@ -83,7 +84,7 @@ def main(opts):
 
     # Create training and validation dataloaders
     dataloaders_dict = {x: torch.utils.data.DataLoader(
-        image_datasets[x], batch_size=batch_size[x], 
+        image_datasets[x], batch_size=batch_size[x],
         sampler=sampler[x], num_workers=opts.workers,
         pin_memory=True) for x in ['train', 'val']}
 
@@ -115,13 +116,13 @@ def main(opts):
         model_ft, dataloaders_dict,
         criterion, optimizer_ft,
         num_epochs=header.epoch_max,
-        is_inception=(model_name.startswith("inception"))
-
-    
+        is_inception=(model_name.startswith("inception")),
+        opts=opts)
 
 
 # Define training and validation_model
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoch_max, is_inception=False, opts=opts):
+def train_model(model, dataloaders, criterion, optimizer,
+                num_epochs=header.epoch_max, is_inception=False, opts=None):
 
     print('')
     print('Training for single best model started..')
@@ -140,11 +141,11 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
     count_ES = 0
 
     # TODO: put resume from checkpoint
-
     # Load model and optimizer, saved epoch if 'resume' training.
-    if os.path.isfile(os.path.join(save_dir, str(header.continue_epoch) + '.pth')):
+    if opts.resume and os.path.isfile(os.path.join(
+            opts.checkpoint_dir, opts.resume+'.checkpoint.pth.tar')):
         checkpoint = torch.load(os.path.join(
-            save_dir, str(header.continue_epoch) + '.pth'))
+            opts.checkpoint_dir, opts.resume+'.checkpoint.pth.tar'))
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         trained_epoch = checkpoint['epoch']
@@ -201,8 +202,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
                         #     0).to(device, dtype=float)
                         # for param in model.parameters():
                         #     l1_regularization += torch.norm(param, 1)
-                        loss = criterion(outputs, labels) # + \
-                            # header.lambda_l1 * l1_regularization
+                        loss = criterion(outputs, labels)  # + \
+                        # header.lambda_l1 * l1_regularization
 
                     _, preds = torch.max(outputs, 1)
 
@@ -247,7 +248,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
 
             if phase == 'val':
                 report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=[
-                                                    'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19'])
+                    'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19'])
 
                 normal_f1 = report_dict['normal']['f1-score']
                 pneumonia_virus_f1 = report_dict['pneumonia_virus']['f1-score']
@@ -270,18 +271,20 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=header.epoc
             if phase == 'val':
                 if epoch_avg > best_avg - 0.05:
                     count_ES = 0
-                    if epoch_avg > best_avg:
-                        print('Current avg score: %f, Best avg score %f, model saved.' % (
+                else:
+                    count_ES += 1
+
+                if epoch_avg > best_avg or not epoch % opts.checkpoint_saved_n or epoch == num_epochs-1:
+                    print('Current avg score: %f, Best avg score %f, model saved.' % (
                         epoch_avg, best_avg))
-                        best_avg = epoch_avg
-                        best_model_wts = copy.deepcopy(model.state_dict())
-                        torch.save({'epoch': epoch + 1, 'model_state_dict': best_model_wts,
+                    best_avg = epoch_avg
+                    best_model_wts = copy.deepcopy(model.state_dict())
+                    torch.save({'epoch': epoch + 1, 'model_state_dict': best_model_wts,
                                 'optimizer_state_dict': optimizer.state_dict()},
                                os.path.join(save_dir, '{}'.format(epoch + 1) + '.pth'))
 
                 else:
                     print('Model not saved.')
-                    count_ES += 1
 
             # Train and validation accuracy
             if phase == 'val':
@@ -340,7 +343,6 @@ def plot_train():
              thist_f1, label="Training")
 
     plt.show()
-
 
 
 if __name__ == '__main__':
