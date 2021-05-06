@@ -34,8 +34,9 @@ class COVID_Dataset(data.Dataset):
         self.total_images_dic = {}
         self.total_masks_dic = {}
         tuples_list = pickle.load(open(self.read_pkl, 'rb'))
+        #import code; code.interact(local=dict(globals(), **locals()))
         for tuples in tuples_list:
-            y_label = tuples[3]
+            y_label = tuples[2]
             img_path = tuples[0]
         #for label in self.labels:
 
@@ -50,13 +51,14 @@ class COVID_Dataset(data.Dataset):
         #    elif label == 'COVID-19':
         #        y_label = 3
 
-            images_list = glob.glob(img_path + '/*.image.npy')
-            for image in images_list:
-                self.total_images_dic[image] = y_label
+            self.total_images_dic[img_path] = y_label
+            #images_list = glob.glob(img_path + '/*.image.npy')
+            #for image in images_list:
+            #    self.total_images_dic[image] = y_label
 
-            masks_list = glob.glob(img_path + '/*.mask.npy')
-            for mask in masks_list:
-                self.total_masks_dic[mask] = y_label
+            #masks_list = glob.glob(img_path + '/*.mask.npy')
+            #for mask in masks_list:
+            #    self.total_masks_dic[mask] = y_label
 
         print('Generator: %s' %self.mode)
         print('A total of %d image data were generated.' %len(self.total_images_dic))
@@ -83,6 +85,7 @@ class COVID_Dataset(data.Dataset):
         # Generate data & Store sample
         # Assign probablity and parameters
 
+        #import code; code.interact(local=dict(globals(), **locals()))
         rand_p = random.random()
 
         # X_img
