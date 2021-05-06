@@ -19,6 +19,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
+import argparse
 
 ## Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -143,6 +144,7 @@ def main(cv):
         # change here => calculate probability of each class + true labels
         # calculate the probability => for each patch what is the prediction => 
         # repeat =>
+        import code; code.interact(local=dict(globals(), **locals()))
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
 
@@ -171,4 +173,8 @@ def main(cv):
     print('Inference complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 
 if __name__=='__main__':
-    main()
+    parser = argparse.ArgumentParser()  
+    parser.add_argument("cv", help = "Cross Validation", default='cv1') 
+    args = parser.parse_args()
+    cv = args.cv
+    main(cv)
