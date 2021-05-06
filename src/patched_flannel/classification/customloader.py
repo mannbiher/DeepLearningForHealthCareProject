@@ -8,7 +8,7 @@ from torch.utils import data
 import torch
 import glob
 import random
-from utils import augmentation
+from utils import augmentation, parse_data_dict
 import utils as utils
 
 
@@ -34,7 +34,6 @@ class COVID_Dataset(data.Dataset):
         self.total_images_dic = {}
         self.total_masks_dic = {}
         tuples_list = pickle.load(open(self.read_pkl, 'rb'))
-        #import code; code.interact(local=dict(globals(), **locals()))
         for tuples in tuples_list:
             y_label = tuples[2]
             img_path = tuples[0]
@@ -68,6 +67,7 @@ class COVID_Dataset(data.Dataset):
         self.n_data = len(self.total_images_dic)
         self.classes = [i for i in range(n_classes)]
         self.imgs = self.total_images_dic
+        #import code; code.interact(local=dict(globals(), **locals()))
 
     def __len__(self):
         'Denotes the total number of samples'
@@ -89,17 +89,17 @@ class COVID_Dataset(data.Dataset):
         rand_p = random.random()
 
         # X_img
-        X_whole = Image.fromarray(np.load(list(self.total_images_dic.keys())[index])).resize((header.resize, header.resize))
-        X_whole = np.asarray(X_whole)
+        #X_whole = Image.fromarray(np.load(list(self.total_images_dic.keys())[index])).resize((header.resize, header.resize))
+        #X_whole = np.asarray(X_whole)
 
-        h_whole = X_whole.shape[0] # original w
-        w_whole = X_whole.shape[1] # original h
 
-        X_whole_mask = Image.fromarray(np.load(list(self.total_images_dic.keys())[index].split('.image.npy')[0] + '.mask.npy')).resize((
-                                                                                                                                       header.resize, header.resize))
-        X_whole_mask = np.round(np.asarray(X_whole_mask))
+        #X_whole_mask = Image.fromarray(np.load(list(self.total_images_dic.keys())[index].split('.image.npy')[0] + '.mask.npy')).resize((
+        #                                                                                                                               header.resize, header.resize))
+        #X_whole_mask = np.round(np.asarray(X_whole_mask))
 
-        X_masked = np.multiply(X_whole, X_whole_mask)
+        X_masked = np.load(list(self.total_images_dic.keys())[index])['image']
+        h_whole = X_masked.shape[0] # original w
+        w_whole = X_masked.shape[1] # original h
 
         non_zero_list = np.nonzero(X_masked)
 

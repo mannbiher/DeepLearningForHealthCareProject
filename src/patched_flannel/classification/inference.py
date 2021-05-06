@@ -77,8 +77,10 @@ def main(cv):
     for phase in ['test']:
 
         y_pred_total = []
+        y_prob_total = []
         for x in range(length_dataset):
             y_pred_total.append([])
+            y_prob_total.append([])
 
         for i in range(repeat):
 
@@ -136,6 +138,9 @@ def main(cv):
             for idx, item in enumerate(y_pred):
                 y_pred_total[idx].append(item)
 
+            for idx, item in enumerate(y_prob):
+                y_prob_total[idx].append(item)
+
     y_pred = []
 
     for x in range(length_dataset):
@@ -149,6 +154,10 @@ def main(cv):
         y_pred.append(final_predict)
 
     y_pred = list(filter(lambda x: x != None, y_pred))
+
+    # confidence scores
+    y_prob_total_np = np.array(y_prob_total)
+    y_prob = np.mean(y_prob_total_np, axis=1)
 
     print()
 
