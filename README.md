@@ -67,6 +67,10 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 		pytorch
 		matplotlib
 		opencsv
+		torchvision
+		scikit-learn
+		tensorboard
+		seaborn
 #### Infrastructure
 		Terraform
 		Linux Bash
@@ -75,10 +79,11 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 
 	flannel
 		data_preprocess
+			segmentation
 		FLANNEL
 
-	PatchByPatch
-	Patched_flannel
+	patched_flannel
+		classification
 
 #### Usage
     git pull https://github.com/mannbiher/DeepLearningForHealthCareProject.git
@@ -96,18 +101,17 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 | Development | AWS p2.xlarge | 1   | 4    | 12 GB      |
 | Training | AWS p3.2xlarge | 1 | 8   | 16 GB      |
 
-<!--					            GPU		vCPU		GPU Memory
-    Training -	AWS p2.xlarge 	1		4			12 GB 
-			    AWS p3.2xlarge	1		8			16 GB-->
 
+#### Known Issues
 
-#### Knows Issues
-<!--[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=srasi1&layout=compact)](https://github.com/mannbiher/DeepLearningForHealthCareProject)-->
+<!-- Can we update google doc with all the known issues -->
 
 #### Troubleshooting
-<!--![GitHub stats](https://github-readme-stats.vercel.app/api?username=srasi1&show_icons=true&theme=radical)-->
+
+<!-- Can we update google doc with all the known issues -->
 
 #### Technical challenges
+<!-- Can we update google doc with all the known issues -->
 #### References
 #### Collaborators
 * [Maneesh] (mailto:msingh4@illinois.edu)
@@ -115,5 +119,3 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 * [Satish] (mailto:sasi2@illinois.edu)
 * [Srikanth] (mailto:sbs7@illinois.edu)
 
-
-<!--![](https://img.shields.io/badge/Maneesh_Kumar_Singh-Maneesh%20Kumar%20Singh-informational?style=flat&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)-->
