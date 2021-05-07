@@ -3,7 +3,7 @@ import argparse
 
 import torchvision.models as models
 
-from classification import train
+from classification import train, inference
 
 
 class Settings(dict):
@@ -49,6 +49,10 @@ def setup_cli(model_names):
 
     parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
                         help='number of data loading workers (default: 4)')
+
+    parser.add_argument('-k', '--patches', default=50, type=int, metavar='K',
+                        help='number of patches for inference')
+
 
     parser.add_argument('-c', '--checkpoint', default='./patched/checkpoint', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
@@ -97,10 +101,11 @@ def main():
     create_dir(args.results)
     args.in_memory = True
 
-    # print(args)
-    # return
-    if args.test is False:
+    if args.test:
+        inference.main(args)
+    else:
         train.main(args)
+    
 
 if __name__ == '__main__':
     main()
