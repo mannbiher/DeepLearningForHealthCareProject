@@ -149,6 +149,7 @@ dmypy.json
 standard_data_multiclass_0922_crossentropy/
 standard_data_patched_0922_crossentropy/
 explore_version_03/
+patched/
 
 # tensorflow board
 classifier_newset/

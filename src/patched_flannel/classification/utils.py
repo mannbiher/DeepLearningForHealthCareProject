@@ -14,6 +14,7 @@ from collections import Counter
 import random
 from sync_checkpoints import s3_sync
 import pickle
+import os
 
 
 # Define classes
@@ -238,9 +239,9 @@ def plot_classes_preds_single(net, images, labels):
         ax = fig.add_subplot(1, 4, idx+1, xticks=[], yticks=[])
         matplotlib_imshow(images[idx], one_channel=True)
         ax.set_title("{0}, {1:.1f}%\n(label: {2})".format(
-            classes[preds[idx]],
+            CLASSES[preds[idx]],
             probs[idx] * 100.0,
-            classes[labels[idx]]),
+            CLASSES[labels[idx]]),
             color=("green" if preds[idx] == labels[idx].item() else "red"))
     return fig
 
@@ -284,4 +285,5 @@ def save_checkpoint(state, epoch_id, is_best,
     torch.save(state, filepath)
     if cloud_sync:
         # sync whole directory
-        cloud_sync(checkpoint)
+        sync_dir = os.path.dirname(checkpoint)
+        cloud_sync(sync_dir)
