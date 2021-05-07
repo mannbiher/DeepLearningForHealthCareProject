@@ -32,8 +32,6 @@ num_classes = header.num_classes
 # Feature extract
 feature_extract = header.feature_extract
 
-# Test epoch
-test_epoch = header.inference_epoch
 
 
 def main(opts):
