@@ -33,8 +33,7 @@ num_classes = header.num_classes
 feature_extract = header.feature_extract
 
 
-
-def main(opts):
+def main(opts, data_loader=None):
     # Initialize the model for this run
     # Load data
     data_dir = opts.results
@@ -49,19 +48,22 @@ def main(opts):
 
     print("Initializing Datasets and Dataloaders...")
 
-    # Create training and test datasets
-    test_dataset = COVID_Dataset(
-        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='test', opts=opts)
-    length_dataset = len(test_dataset)
-    image_datasets = {'test': test_dataset}
+    if not data_loader:
+        test_dataset = COVID_Dataset(
+            (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='test', opts=opts)
 
-    batch_size = {'test': header.test_batch_size}
+        image_datasets = {'test': test_dataset}
 
-    # Create training and validation dataloaders
-    dataloaders_dict = {
-        x: torch.utils.data.DataLoader(
-            image_datasets[x], batch_size=batch_size[x], num_workers=opts.workers, pin_memory=True)
-        for x in ['test']}
+        batch_size = {'test': header.test_batch_size}
+
+        # Create training and validation dataloaders
+        dataloaders_dict = {
+            x: torch.utils.data.DataLoader(
+                image_datasets[x],
+                batch_size=batch_size[x], num_workers=opts.workers, pin_memory=True)
+            for x in ['test']}
+    else:
+        dataloaders_dict = {'test': data_loader}
 
     # Send the model to GPU
     model_ft = model_ft.to(device)
@@ -88,13 +90,16 @@ def main(opts):
     model.load_state_dict(checkpoint['model_state_dict'])
 
     repeat = opts.patches
+    data_len = len(dataloaders_dict['test'].dataset)
 
     # Each epoch has a training and validation phase
     for phase in ['test']:
 
         y_pred_total = []
         y_prob_total = []
-        for x in range(length_dataset):
+        accuracy_total = []
+        loss_total = []
+        for x in range(data_len):
             y_pred_total.append([])
             y_prob_total.append([])
 
@@ -149,6 +154,8 @@ def main(opts):
             epoch_loss = running_loss / len(dataloaders_dict[phase].dataset)
             epoch_acc = running_corrects.double(
             ) / len(dataloaders_dict[phase].dataset)
+            accuracy_total.append(epoch_acc)
+            loss_total.append(epoch_loss)
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             print('{} Number: {:.1f} Loss: {:.4f} Acc: {:.4f} F1: {:.4f}'.format(
@@ -159,26 +166,18 @@ def main(opts):
             for idx, item in enumerate(y_prob):
                 y_prob_total[idx].append(item)
 
+
+    import code
+    code.interact(local=dict(globals(), **locals()))
     y_pred = []
 
-    for x in range(length_dataset):
-        # test_loss, test_acc, pred_d, real_d = test(func[0], model, criterion, start_epoch, use_cuda)
-        # [0.0,0,0,0, [])
-        # change here => calculate probability of each class + true labels
-        # calculate the probability => for each patch what is the prediction =>
-        # repeat =>
-        import code
-        code.interact(local=dict(globals(), **locals()))
+    for x in range(data_len):
         final_predict = most_common_top_1(y_pred_total[x])
         y_pred.append(final_predict)
-
-    y_pred = list(filter(lambda x: x != None, y_pred))
 
     # confidence scores
     y_prob_total_np = np.array(y_prob_total)
     y_prob = np.mean(y_prob_total_np, axis=1)
-
-    print()
 
     # Plot confusion matrix
     cm = confusion_matrix(y_true, y_pred)
@@ -190,14 +189,18 @@ def main(opts):
 
     # Overall classification report
     print(classification_report(y_true, y_pred, target_names=CLASSES))
-    ACC= accuracy_score(y_true, y_pred)
-    PREC= precision_score(y_true, y_pred, average='macro')
-    REC= recall_score(y_true, y_pred, average='macro')
-    F1= f1_score(y_true, y_pred, average='macro')
+    ACC = accuracy_score(y_true, y_pred)
+    PREC = precision_score(y_true, y_pred, average='macro')
+    REC = recall_score(y_true, y_pred, average='macro')
+    F1 = f1_score(y_true, y_pred, average='macro')
 
     print('Accuracy: {:.4f} Precision: {:.4f} Recall: {:.4f} F1: {:.4f}'.format(
         ACC, PREC, REC, F1))
 
-    time_elapsed= time.time() - since
+    time_elapsed = time.time() - since
     print('Inference complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
+
+    return (np.mean(loss_total)
+        np.mean(accuracy_total),
+        

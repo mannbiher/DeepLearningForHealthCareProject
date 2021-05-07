@@ -2,15 +2,14 @@ import os
 import argparse
 
 import torchvision.models as models
+from torch.utils.data import DataLoader
 
-from classification import train, inference
-
-
-class Settings(dict):
-    """Dict to map args."""
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
+from classification import (
+    train,
+    inference,
+    header)
+from classification.measure import MeasureR
+from classification.customloader import COVID_Dataset
 
 
 def setup_cuda():
@@ -33,13 +32,13 @@ def setup_cli(model_names):
         '--experimentID', default='%s_20200407_patched_%s', type=str, metavar='E_ID',
         help='ID of Current experiment')
     parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
-                    help='Cross Validation Fold')
+                        help='Cross Validation Fold')
     parser.add_argument(
         '-d', '--data',
         default='./data_preprocess/standard_data_patched_0922_crossentropy/exp_%s_list_%s.pkl',
         type=str)
     parser.add_argument('--epochs', default=200, type=int, metavar='N',
-                    help='number of total epochs to run')
+                        help='number of total epochs to run')
 
     parser.add_argument('--arch', '-a', metavar='ARCH', default='vgg19_bn',
                         choices=model_names,
@@ -52,7 +51,6 @@ def setup_cli(model_names):
 
     parser.add_argument('-k', '--patches', default=50, type=int, metavar='K',
                         help='number of patches for inference')
-
 
     parser.add_argument('-c', '--checkpoint', default='./patched/checkpoint', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
@@ -87,6 +85,30 @@ def map_options(args):
         pass
 
 
+def get_data_loaders(opts):
+    train_dataset = COVID_Dataset(
+        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='train', opts=opts)
+
+    val_dataset = COVID_Dataset(
+        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='val', opts=opts)
+
+    test_dataset = COVID_Dataset(
+        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='test', opts=opts)
+
+    image_datasets = {'train': train_dataset,
+                      'val': val_dataset,
+                      'test': test_dataset}
+
+    batch_size = {'train': header.train_batch_size,
+                  'val': header.val_batch_size,
+                  'test': header.test_batch_size}
+    return {
+        x: DataLoader(
+            image_datasets[x],
+            batch_size=batch_size[x], num_workers=opts.workers, pin_memory=True)
+        for x in ['train', 'val', 'test']}
+
+
 def main():
     model_names = get_default_models()
     args = setup_cli(model_names)
@@ -102,11 +124,30 @@ def main():
     args.in_memory = True
 
     if args.test:
-        inference.main(args)
+        dataloaders_dict = get_data_loaders(args)
+        for phase, dataloader in dataloaders_dict.items():
+            test_loss, test_acc, pred_d, real_d = inference.main(
+                args, dataloader)
+            detail_file = 'result_detail_%s_%s_%s.csv' % (
+                args.arch, phase, args.cv)
+            with open(os.path.join(opts.results, detail_file), 'w') as f:
+                csv_writer = csv.writer(f)
+                for i in range(len(real_d)):
+                    x = np.zeros(len(pred_d[i]))
+                    x[real_d[i]] = 1
+#                  y = np.exp(pred_d[i])/np.sum(np.exp(pred_d[i]))
+                    csv_writer.writerow(list(np.array(pred_d[i])) + list(x))
+
+            meaure_file = 'measure_detail_%s_%s_%s.csv' % (
+                args.arch, phase, args.cv)
+            mr = MeasureR(results_dir, test_loss, test_acc,
+                          infile=detail_file, outfile=meaure_file)
+            mr.output()
+            print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))
+
     else:
         train.main(args)
-    
+
 
 if __name__ == '__main__':
     main()
-    
