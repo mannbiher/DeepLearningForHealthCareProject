@@ -1,5 +1,6 @@
 import os
 import argparse
+import csv
 
 import torchvision.models as models
 from torch.utils.data import DataLoader
@@ -130,7 +131,7 @@ def main():
                 args, dataloader)
             detail_file = 'result_detail_%s_%s_%s.csv' % (
                 args.arch, phase, args.cv)
-            with open(os.path.join(opts.results, detail_file), 'w') as f:
+            with open(os.path.join(args.results, detail_file), 'w') as f:
                 csv_writer = csv.writer(f)
                 for i in range(len(real_d)):
                     x = np.zeros(len(pred_d[i]))

@@ -154,7 +154,7 @@ def main(opts, data_loader=None):
             epoch_loss = running_loss / len(dataloaders_dict[phase].dataset)
             epoch_acc = running_corrects.double(
             ) / len(dataloaders_dict[phase].dataset)
-            accuracy_total.append(epoch_acc)
+            accuracy_total.append(epoch_acc.item())
             loss_total.append(epoch_loss)
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
