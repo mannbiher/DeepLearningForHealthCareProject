@@ -24,22 +24,21 @@ import argparse
 ## Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# Load data
-data_dir = header.data_dir
-
-# Model name
-model_name = header.model
-
 # Number of classes
 num_classes = header.num_classes
 
 # Feature extract
 feature_extract = header.feature_extract
 
-# Test epoch
-test_epoch = header.inference_epoch
 
-def main(cv):
+def main(opts):
+
+    # Load data
+    #data_dir = header.data_dir
+
+    # Model name
+    model_name = opts.arch
+
     # Initialize the model for this run
     model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
     # Print the model we just instantiated

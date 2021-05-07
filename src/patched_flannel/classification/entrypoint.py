@@ -92,4 +92,6 @@ def main():
 
     if not opts.test:
         train.main(args)
+    elif opts.test:
+        inference.main(args)
     
