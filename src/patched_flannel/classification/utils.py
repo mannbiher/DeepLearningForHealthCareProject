@@ -12,6 +12,7 @@ import torchvision.transforms.functional as functional
 import torch.nn.functional as F
 from collections import Counter
 import random
+from sync_checkpoints import s3_sync
 
 
 # Define classes
@@ -19,17 +20,19 @@ classes = ('normal', 'bacteria', 'TB', 'viral_and_COVID')
 
 # Define data_transforms
 data_transforms = transforms.Compose([
-        transforms.Resize((header.img_size, header.img_size)),
-        transforms.ToTensor()])
+    transforms.Resize((header.img_size, header.img_size)),
+    transforms.ToTensor()])
 
-## Set model's parameter require_grad attribute
+# Set model's parameter require_grad attribute
+
+
 def set_parameter_requires_grad(model, feature_extracting=header.feature_extract):
     if feature_extracting:
         for param in model.parameters():
             param.requires_grad = False
 
 
-## Define models
+# Define models
 def initialize_model(model_name, num_classes, feature_extract, use_pretrained=True):
     # Initialize these variables which will be set in this if statement.
     model_ft = None
@@ -59,14 +62,14 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
-    
+
     elif model_name == "alexnet":
         """ Alexnet
         """
         model_ft = models.alexnet(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
-        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        model_ft.classifier[6] = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
     elif model_name == "vgg":
@@ -75,7 +78,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft = models.vgg11_bn(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
-        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        model_ft.classifier[6] = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
     elif model_name == "vgg19_bn":
@@ -84,7 +87,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft = models.vgg19_bn(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
-        model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
+        model_ft.classifier[6] = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
     elif model_name == "squeezenet":
@@ -92,7 +95,8 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         """
         model_ft = models.squeezenet1_0(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
-        model_ft.classifier[1] = nn.Conv2d(512, num_classes, kernel_size=(1,1), stride=(1,1))
+        model_ft.classifier[1] = nn.Conv2d(
+            512, num_classes, kernel_size=(1, 1), stride=(1, 1))
         model_ft.num_classes = num_classes
         input_size = header.img_size
 
@@ -116,7 +120,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         model_ft.AuxLogits.fc = nn.Linear(num_ftrs, num_classes)
         # Handle the primary net
         num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs,num_classes)
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
     elif model_name == "resnext101_32x8d":
@@ -125,7 +129,6 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
         num_ftrs = model_ft.classifier.in_features
         model_ft.classifier = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
-
 
     else:
         print("Error: Invalid model name, exiting...")
@@ -237,37 +240,44 @@ def plot_classes_preds_single(net, images, labels):
             classes[preds[idx]],
             probs[idx] * 100.0,
             classes[labels[idx]]),
-                    color=("green" if preds[idx]==labels[idx].item() else "red"))
+            color=("green" if preds[idx] == labels[idx].item() else "red"))
     return fig
 
 
 def most_common_top_1(candidates):
     assert isinstance(candidates, list), 'Must be a list type'
-    if len(candidates) == 0: return None
+    if len(candidates) == 0:
+        return None
     return Counter(candidates).most_common(n=1)[0][0]
 
 
 def parse_data_dict(path):
     """FLANNEL dataset util helper."""
-    print (path)
+    print(path)
     image_data_list = pickle.load(open(path, 'rb'))
     path_list = []
     label_list = []
     info_list = []
     for x in image_data_list:
-      path_list.append(x[0])
-      label_list.append(x[2])
-      if len(x) == 4:
-        info_list.append((x[1], x[3]))
-      else:
-        info_list.append(x[1])
+        path_list.append(x[0])
+        label_list.append(x[2])
+        if len(x) == 4:
+            info_list.append((x[1], x[3]))
+        else:
+            info_list.append(x[1])
     return path_list, label_list, info_list
 
-def save_checkpoint(state, epoch_id, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar'):
+
+def save_checkpoint(state, epoch_id, is_best,
+                    checkpoint='checkpoint',
+                    filename='checkpoint.pth.tar',
+                    cloud_sync=s3_sync):
     filepath = os.path.join(checkpoint, str(epoch_id)+'.'+filename)
     # torch.save(state, filepath)
     if is_best:
         # shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
-        torch.save(state, os.path.join(checkpoint, 'model_best.pth.tar'))
-    else:
-        torch.save(state, filepath)
+        filepath = os.path.join(checkpoint, 'model_best.pth.tar')
+    torch.save(state, filepath)
+    if cloud_sync:
+        # sync whole directory
+        cloud_sync(checkpoint)

@@ -19,6 +19,7 @@ from utils import plot_classes_preds_single
 from utils import save_checkpoint
 from customloader import COVID_Dataset
 from torch.utils.tensorboard import SummaryWriter
+import constants
 
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -149,6 +150,7 @@ def train_model(model, dataloaders, criterion, optimizer,
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         trained_epoch = checkpoint['epoch']
+        best_avg = checkpoint['best_acc']
         print('Previous model saved at %d epoch was loaded and continue training.' %
               trained_epoch)
     else:
@@ -247,20 +249,21 @@ def train_model(model, dataloaders, criterion, optimizer,
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             if phase == 'val':
-                report_dict = classification_report(y_true, y_pred, output_dict=True, target_names=[
-                    'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19'])
+                report_dict = classification_report(y_true,
+                                                    y_pred, output_dict=True, target_names=constants.CLASSES)
 
-                normal_f1 = report_dict['normal']['f1-score']
+                covid19_f1 = report_dict['COVID-19']['f1-score']
                 pneumonia_virus_f1 = report_dict['pneumonia_virus']['f1-score']
                 pneumonia_bacteria_f1 = report_dict['pneumonia_bacteria']['f1-score']
-                covid19_f1 = report_dict['COVID-19']['f1-score']
+                normal_f1 = report_dict['normal']['f1-score']
+
                 epoch_avg = (normal_f1 + pneumonia_virus_f1 +
                              pneumonia_bacteria_f1 + covid19_f1)/4
 
                 print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f} avg: {:.4f}'.format(
                     phase, epoch_loss, epoch_acc, epoch_f1, epoch_avg))
-                print(classification_report(y_true, y_pred, target_names=[
-                      'normal', 'pneumonia_virus', 'pneumonia_bacteria', 'COVID-19']))
+                print(classification_report(y_true, y_pred,
+                                            target_names=constants.CLASSES))
                 # here
             else:
                 # save file
@@ -279,10 +282,12 @@ def train_model(model, dataloaders, criterion, optimizer,
                         epoch_avg, best_avg))
                     best_avg = epoch_avg
                     best_model_wts = copy.deepcopy(model.state_dict())
-                    torch.save({'epoch': epoch + 1, 'model_state_dict': best_model_wts,
-                                'optimizer_state_dict': optimizer.state_dict()},
-                               os.path.join(save_dir, '{}'.format(epoch + 1) + '.pth'))
-
+                    save_checkpoint({
+                        'epoch': epoch+1,
+                        'best_acc': best_avg,
+                        'model_state_dict': best_model_wts,
+                        'optimizer_state_dict': optimizer.state_dict(),
+                    }, epoch, epoch_avg > best_avg, opts.checkpoint_dir)
                 else:
                     print('Model not saved.')
 
@@ -317,7 +322,9 @@ def train_model(model, dataloaders, criterion, optimizer,
     return model, val_acc_history, train_acc_history, val_f1_history, train_f1_history, trained_epoch, num_epochs
 
 
-def plot_train():
+def plot_train(hist_t, hist_v,
+               hist_f1_t, hist_f1_v,
+               epoch_trained, num_epochs):
     # Plot loss and accuracy
     vhist = [h.cpu().numpy() for h in hist_v]
     thist = [h.cpu().numpy() for h in hist_t]
