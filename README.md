@@ -93,12 +93,12 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 
 | Purpose  | Instance Type | GPU | vCPU | GPU Memory |
 |----------|---------------|-----|------|------------|
-| Training | AWS p2.xlarge | 1   | 4    | 12 GB      |
-| Development| AWS p3.2xlarge | 1 | 8   | 16 GB      |
+| Development | AWS p2.xlarge | 1   | 4    | 12 GB      |
+| Training | AWS p3.2xlarge | 1 | 8   | 16 GB      |
 
-					            GPU		vCPU		GPU Memory
+<!--					            GPU		vCPU		GPU Memory
     Training -	AWS p2.xlarge 	1		4			12 GB 
-			    AWS p3.2xlarge	1		8			16 GB
+			    AWS p3.2xlarge	1		8			16 GB-->
 
 
 #### Knows Issues
@@ -109,6 +109,11 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 
 #### Technical challenges
 #### References
-#### Team Members
+#### Collaborators
+* [Maneesh] (mailto:msingh4@illinois.edu)
+* [Raman] (mailto:rsw2@illinois.edu)
+* [Satish] (mailto:sasi2@illinois.edu)
+* [Srikanth] (mailto:sbs7@illinois.edu)
 
-![](https://img.shields.io/badge/Maneesh_Kumar_Singh-Maneesh%20Kumar%20Singh-informational?style=flat&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)
+
+<!--![](https://img.shields.io/badge/Maneesh_Kumar_Singh-Maneesh%20Kumar%20Singh-informational?style=flat&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)-->
