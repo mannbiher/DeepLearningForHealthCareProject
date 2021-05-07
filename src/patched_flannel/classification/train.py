@@ -116,7 +116,7 @@ def main(opts):
     model_ft, hist_v, hist_t, hist_f1_v, hist_f1_t, epoch_trained, num_epochs = train_model(
         model_ft, dataloaders_dict,
         criterion, optimizer_ft,
-        num_epochs=header.epoch_max,
+        num_epochs=opts.epochs,
         is_inception=(model_name.startswith("inception")),
         opts=opts)
 

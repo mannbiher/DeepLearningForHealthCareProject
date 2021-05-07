@@ -33,6 +33,8 @@ def setup_cli(model_names):
         '-d', '--data',
         default='./data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_%s.pkl',
         type=str)
+    parser.add_argument('--epochs', default=200, type=int, metavar='N',
+                    help='number of total epochs to run')
 
     parser.add_argument('--arch', '-a', metavar='ARCH', default='vgg19_bn',
                         choices=model_names,

@@ -1,13 +1,8 @@
-cd /home/ubuntu/original_data -> For test data
-cd /home/ubuntu/DeepLearningForHealthCareProject/src -> For git src from master branch
-git pull
-git checkout patched-flannel
-python3 data_preprocess/get_covid_data_dict.py
-python3 data_preprocess/get_kaggle_data_dict.py
-pip3 install torch
-pip3 install torchvision
-python3 data_preprocess/segmentation/inference.py
-python3 patched_flannel/extract_exp_data_crossentropy.py
-python3 patched_flannel/classification/prep_classification_dataset.py
-python3 patched_flannel/classification/classification_train.py 'cv1'
-python3 patched_flannel/classification/classification_inference.py 'cv1'
+set -x
+epochs=100
+ck_n=50
+workers=8
+for i in $(seq 1 5); do
+    python patched_flannel/classification/train.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$worker
+done
+aws s3 sync explore_version_03/checkpoint s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_flannel_1/checkpoint/
