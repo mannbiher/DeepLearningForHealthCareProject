@@ -166,9 +166,8 @@ def main(opts, data_loader=None):
             for idx, item in enumerate(y_prob):
                 y_prob_total[idx].append(item)
 
-
-    import code
-    code.interact(local=dict(globals(), **locals()))
+    # import code
+    # code.interact(local=dict(globals(), **locals()))
     y_pred = []
 
     for x in range(data_len):
@@ -201,9 +200,7 @@ def main(opts, data_loader=None):
     print('Inference complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
 
-    return (np.mean(loss_total)
-        np.mean(accuracy_total),
-        y_prob,
-        y_true)
-
-
+    return (np.mean(loss_total),
+            np.mean(accuracy_total),
+            y_prob,
+            y_true)
