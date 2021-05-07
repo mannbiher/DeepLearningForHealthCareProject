@@ -6,17 +6,18 @@ import torch.nn as nn
 import numpy as np
 from torchvision import models, transforms
 import matplotlib.pyplot as plt
-import header
+from classification import header
 import itertools
 import torchvision.transforms.functional as functional
 import torch.nn.functional as F
 from collections import Counter
 import random
 from sync_checkpoints import s3_sync
+import pickle
 
 
 # Define classes
-classes = ('COVID-19', 'pneumonia_virus', 'pneumonia_bacteria', 'normal')
+CLASSES = ('COVID-19', 'pneumonia_virus', 'pneumonia_bacteria', 'normal')
 
 # Define data_transforms
 data_transforms = transforms.Compose([
@@ -251,7 +252,7 @@ def most_common_top_1(candidates):
     return Counter(candidates).most_common(n=1)[0][0]
 
 
-def parse_data_dict(path):
+def parse_data_dict(path, in_memory):
     """FLANNEL dataset util helper."""
     print(path)
     image_data_list = pickle.load(open(path, 'rb'))
@@ -259,7 +260,10 @@ def parse_data_dict(path):
     label_list = []
     info_list = []
     for x in image_data_list:
-        path_list.append(x[0])
+        path = x[0]
+        if in_memory:
+            path =  '/dev/shm/' + path.split('/',3)[-1]
+        path_list.append(path)
         label_list.append(x[2])
         if len(x) == 4:
             info_list.append((x[1], x[3]))

@@ -10,16 +10,18 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-import header
+from classification import header
 from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report
-from utils import initialize_model
-from utils import make_weights_for_balanced_classes_customloader
-from utils import plot_classes_preds_single
-from utils import save_checkpoint
-from customloader import COVID_Dataset
+from classification.utils import (
+    initialize_model,
+    make_weights_for_balanced_classes_customloader,
+    plot_classes_preds_single,
+    save_checkpoint,
+    CLASSES)
+from classification.customloader import COVID_Dataset
 from torch.utils.tensorboard import SummaryWriter
-import constants
+
 
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -55,9 +57,9 @@ def main(opts):
 
     # Create training and validation datasets
     train_dataset = COVID_Dataset(
-        (opts.crop_siz, opts.crop_size), n_channels=3, n_classes=4, mode='train', opts=opts)
+        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='train', opts=opts)
     val_dataset = COVID_Dataset(
-        (opts.crop_siz, opts.crop_size), n_channels=3, n_classes=4, mode='val', opts=opts)
+        (opts.crop_size, opts.crop_size), n_channels=3, n_classes=4, mode='val', opts=opts)
 
     image_datasets = {'train': train_dataset, 'val': val_dataset}
 
@@ -156,7 +158,7 @@ def train_model(model, dataloaders, criterion, optimizer,
     else:
         trained_epoch = 0
 
-    print('Model name:', model_name)
+    print('Model name:', opts.arch)
 
     for epoch in range(trained_epoch, num_epochs):
 
@@ -249,8 +251,8 @@ def train_model(model, dataloaders, criterion, optimizer,
             epoch_f1 = f1_score(y_true, y_pred, average='macro')
 
             if phase == 'val':
-                report_dict = classification_report(y_true,
-                                                    y_pred, output_dict=True, target_names=constants.CLASSES)
+                report_dict = classification_report(
+                    y_true, y_pred, output_dict=True, target_names=CLASSES)
 
                 covid19_f1 = report_dict['COVID-19']['f1-score']
                 pneumonia_virus_f1 = report_dict['pneumonia_virus']['f1-score']
@@ -262,8 +264,8 @@ def train_model(model, dataloaders, criterion, optimizer,
 
                 print('{} Loss: {:.4f} Acc: {:.4f} F1: {:.4f} avg: {:.4f}'.format(
                     phase, epoch_loss, epoch_acc, epoch_f1, epoch_avg))
-                print(classification_report(y_true, y_pred,
-                                            target_names=constants.CLASSES))
+                print(classification_report(
+                    y_true, y_pred, target_names=CLASSES))
                 # here
             else:
                 # save file
