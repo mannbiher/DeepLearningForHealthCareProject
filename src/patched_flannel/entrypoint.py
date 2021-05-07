@@ -1,7 +1,9 @@
 import os
+import argparse
+
 import torchvision.models as models
 
-import train
+from classification import train
 
 
 class Settings(dict):
@@ -17,21 +19,24 @@ def setup_cuda():
 
 
 def get_default_models():
-    model_names = sorted(
+    return sorted(
         name for name in models.__dict__
         if name.islower() and not name.startswith("__")
         and callable(models.__dict__[name]))
 
 
 def setup_cli(model_names):
+    print(type(model_names))
     parser = argparse.ArgumentParser(
         description='Train and Test patch based model')
     parser.add_argument(
         '--experimentID', default='%s_20200407_patched_%s', type=str, metavar='E_ID',
         help='ID of Current experiment')
+    parser.add_argument('--cv', default='cv5', type=str, metavar='CV_ID',
+                    help='Cross Validation Fold')
     parser.add_argument(
         '-d', '--data',
-        default='./data_preprocess/standard_data_multiclass_0922_crossentropy/exp_%s_list_%s.pkl',
+        default='./data_preprocess/standard_data_patched_0922_crossentropy/exp_%s_list_%s.pkl',
         type=str)
     parser.add_argument('--epochs', default=200, type=int, metavar='N',
                     help='number of total epochs to run')
@@ -84,14 +89,21 @@ def main():
 
     experimentID = args.experimentID % (args.arch, args.cv)
     args.data = args.data % ('%s', args.cv)
+    print(args.data)
     args.checkpoint_dir = os.path.join(args.checkpoint, experimentID)
 
     # create checkpoint directory
     create_dir(args.checkpoint_dir)
     create_dir(args.results)
+    args.in_memory = True
 
-    if not opts.test:
+    # print(args)
+    # return
+    if args.test is False:
         train.main(args)
     elif opts.test:
         inference.main(args)
+
+if __name__ == '__main__':
+    main()
     
