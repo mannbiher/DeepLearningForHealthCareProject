@@ -203,4 +203,7 @@ def main(opts, data_loader=None):
 
     return (np.mean(loss_total)
         np.mean(accuracy_total),
-        
+        y_prob,
+        y_true)
+
+
