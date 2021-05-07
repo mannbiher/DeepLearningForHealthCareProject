@@ -16,7 +16,7 @@ from sync_checkpoints import s3_sync
 
 
 # Define classes
-classes = ('normal', 'bacteria', 'TB', 'viral_and_COVID')
+classes = ('COVID-19', 'pneumonia_virus', 'pneumonia_bacteria', 'normal')
 
 # Define data_transforms
 data_transforms = transforms.Compose([

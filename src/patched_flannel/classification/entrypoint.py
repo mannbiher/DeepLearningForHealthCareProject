@@ -88,5 +88,6 @@ def main():
     create_dir(args.checkpoint_dir)
     create_dir(args.results)
 
+    if not opts.test:
+        train.main(args)
     
-    train.main(args)

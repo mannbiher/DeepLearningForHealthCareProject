@@ -55,9 +55,9 @@ def main(opts):
 
     # Create training and validation datasets
     train_dataset = COVID_Dataset(
-        (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='train', opts=opts)
+        (opts.crop_siz, opts.crop_size), n_channels=3, n_classes=4, mode='train', opts=opts)
     val_dataset = COVID_Dataset(
-        (header.img_size, header.img_size), n_channels=3, n_classes=4, mode='val', opts=opts)
+        (opts.crop_siz, opts.crop_size), n_channels=3, n_classes=4, mode='val', opts=opts)
 
     image_datasets = {'train': train_dataset, 'val': val_dataset}
 
