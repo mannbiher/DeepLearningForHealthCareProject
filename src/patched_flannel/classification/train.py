@@ -282,7 +282,6 @@ def train_model(model, dataloaders, criterion, optimizer,
                 if epoch_avg > best_avg or not epoch % opts.checkpoint_saved_n or epoch == num_epochs-1:
                     print('Current avg score: %f, Best avg score %f, model saved.' % (
                         epoch_avg, best_avg))
-                    best_avg = epoch_avg
                     best_model_wts = copy.deepcopy(model.state_dict())
                     save_checkpoint({
                         'epoch': epoch+1,
@@ -290,6 +289,7 @@ def train_model(model, dataloaders, criterion, optimizer,
                         'model_state_dict': best_model_wts,
                         'optimizer_state_dict': optimizer.state_dict(),
                     }, epoch, epoch_avg > best_avg, opts.checkpoint_dir)
+                    best_avg = epoch_avg
                 else:
                     print('Model not saved.')
 
