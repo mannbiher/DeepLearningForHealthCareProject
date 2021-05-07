@@ -1,3 +1,9 @@
+"""Download checkpoint model from S3
+
+This module allows to download checkpoint model from S3. This allows to resume
+the training run from the earlier checkpoint.
+"""
+
 from collections import defaultdict
 import sys
 import os
@@ -5,10 +11,7 @@ import os
 import boto3
 from tabulate import tabulate
 
-"""
-This is util to resume the training run from the last checkpoint status 
-when the job needs to start from previous checkpoint
-"""
+
 client = boto3.client('s3')
 S3_BUCKET = 'alchemists-uiuc-dlh-spring2021-us-east-2'
 S3_PREFIX = 'flannel/checkpoint/'

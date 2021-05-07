@@ -1,3 +1,10 @@
+"""Saves model checkpoint to S3
+
+This module saves the checkpoint data to S3 bucket when a new file is created.
+FLANNEL has in-built checkpoint function that saves data that acts as restore point
+after each epoch to resume from in case of any crash of machine
+"""
+
 import time
 import logging
 import os
@@ -5,11 +12,6 @@ import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import boto3
-
-""" This utility is to save the checkpoint data to S3 bucket when a new file is created.
-    FLANNEL has in-built checkpoint function that saves data that acts as restore point
-    after each epoch to resume from in case of any crash of machine
-"""
 
 S3_CLIENT = boto3.client('s3')
 S3_BUCKET = 'alchemists-uiuc-dlh-spring2021-us-east-2'
