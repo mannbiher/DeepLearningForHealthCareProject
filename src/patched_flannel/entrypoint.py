@@ -73,7 +73,7 @@ def setup_cli(model_names):
     parser.add_argument('--gpu-id', default='0', type=str,
                         help='id(s) for CUDA_VISIBLE_DEVICES')
 
-    parser.add_argument('--in_memory', default=False, dest='in_memory', action='store_true'
+    parser.add_argument('--in_memory', default=False, dest='in_memory', action='store_true',
                         help='Load images from /dev/shm')
     return parser.parse_args()
 
