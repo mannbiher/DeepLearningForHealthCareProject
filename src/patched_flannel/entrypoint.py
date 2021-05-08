@@ -72,6 +72,9 @@ def setup_cli(model_names):
 
     parser.add_argument('--gpu-id', default='0', type=str,
                         help='id(s) for CUDA_VISIBLE_DEVICES')
+
+    parser.add_argument('--in_memory', default=False, dest='in_memory', action='store_true'
+                        help='Load images from /dev/shm')
     return parser.parse_args()
 
 
@@ -122,7 +125,7 @@ def main():
     # create checkpoint directory
     create_dir(args.checkpoint_dir)
     create_dir(args.results)
-    args.in_memory = True
+    # args.in_memory = True
 
     if args.test:
         dataloaders_dict = get_data_loaders(args)
