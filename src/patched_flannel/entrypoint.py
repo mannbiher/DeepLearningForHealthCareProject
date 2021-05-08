@@ -2,6 +2,7 @@ import os
 import argparse
 import csv
 
+import numpy as np
 import torchvision.models as models
 from torch.utils.data import DataLoader
 
@@ -53,7 +54,7 @@ def setup_cli(model_names):
     parser.add_argument('-k', '--patches', default=50, type=int, metavar='K',
                         help='number of patches for inference')
 
-    parser.add_argument('-c', '--checkpoint', default='./patched/checkpoint', type=str, metavar='PATH',
+    parser.add_argument('-c', '--checkpoint', default='./patched_results/checkpoint', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
     parser.add_argument('-ck_n', '--checkpoint_saved_n', default=2, type=int, metavar='saved_N',
                         help='each N epoch to save model')
@@ -118,7 +119,6 @@ def main():
     args.data = args.data % ('%s', args.cv)
     print(args.data)
     args.checkpoint_dir = os.path.join(args.checkpoint, experimentID)
-
     # create checkpoint directory
     create_dir(args.checkpoint_dir)
     create_dir(args.results)
@@ -127,6 +127,9 @@ def main():
     if args.test:
         dataloaders_dict = get_data_loaders(args)
         for phase, dataloader in dataloaders_dict.items():
+            plot_file = 'cf_%s_%s_%s.png' % (
+                args.arch, phase, args.cv)
+            args.cf_plot = os.path.join(args.results, plot_file)
             test_loss, test_acc, pred_d, real_d = inference.main(
                 args, dataloader)
             detail_file = 'result_detail_%s_%s_%s.csv' % (
@@ -141,7 +144,7 @@ def main():
 
             meaure_file = 'measure_detail_%s_%s_%s.csv' % (
                 args.arch, phase, args.cv)
-            mr = MeasureR(results_dir, test_loss, test_acc,
+            mr = MeasureR(args.results, test_loss, test_acc,
                           infile=detail_file, outfile=meaure_file)
             mr.output()
             print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))

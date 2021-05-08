@@ -184,7 +184,8 @@ def main(opts, data_loader=None):
     plt.grid(b=False)
     plot_confusion_matrix(cm, classes=CLASSES, normalize=False,
                           title='Confusion matrix', cmap=plt.cm.Blues)
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(opts.cf_plot)
 
     # Overall classification report
     print(classification_report(y_true, y_pred, target_names=CLASSES))
@@ -201,6 +202,6 @@ def main(opts, data_loader=None):
         time_elapsed // 60, time_elapsed % 60))
 
     return (np.mean(loss_total),
-            np.mean(accuracy_total),
+            ACC,
             y_prob,
             y_true)
