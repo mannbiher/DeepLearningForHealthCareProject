@@ -5,12 +5,12 @@ set -x
 #     --out-dir $data_dir \
 #     --covid ./data_preprocess/formal_covid_dict_ap.pkl.segmented.pkl \
 #     --kaggle ./data_preprocess/formal_kaggle_dict.pkl.segmented.pkl
-epochs=100
+epochs=2
 ck_n=50
 workers=8
-patches=100
-for i in $(seq 1 1); do
-    # python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers --in_memory
+patches=2
+for i in $(seq 2 2); do
+    #python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers --in_memory
     python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test
     #python patched_flannel/entrypoint.py --arch resnext101_32x8d --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers
     #python patched_flannel/entrypoint.py --arch resnext101_32x8d --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test

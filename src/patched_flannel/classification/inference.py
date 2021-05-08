@@ -44,7 +44,7 @@ def main(opts, data_loader=None):
     model_ft, _ = initialize_model(
         model_name, num_classes, feature_extract, use_pretrained=True)
     # Print the model we just instantiated
-    print(model_ft)
+    # print(model_ft)
 
     print("Initializing Datasets and Dataloaders...")
 
@@ -184,6 +184,7 @@ def main(opts, data_loader=None):
     plt.grid(b=False)
     plot_confusion_matrix(cm, classes=CLASSES, normalize=False,
                           title='Confusion matrix', cmap=plt.cm.Blues)
+
     plt.tight_layout()
     plt.savefig(opts.cf_plot)
 
@@ -204,4 +205,4 @@ def main(opts, data_loader=None):
     return (np.mean(loss_total),
             ACC,
             y_prob,
-            np.array(y_true,dtype=int))
+            y_true)

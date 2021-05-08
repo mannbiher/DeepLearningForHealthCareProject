@@ -51,7 +51,7 @@ def main(opts):
         model_name, num_classes, feature_extract, use_pretrained=True)
 
     # Print the model we just instantiated
-    print(model_ft)
+    # print(model_ft)
 
     print("Initializing Datasets and Dataloaders...")
 
@@ -347,7 +347,9 @@ def plot_train(hist_t, hist_v,
     plt.ylabel("Accuracy")
     plt.plot(range(epoch_trained + 1, num_epochs + 1),
              vhist, label="Validation")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), thist, label="Training")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             thist, label="Training")
+    plt.legend(loc='upper left', frameon=False)
 
     plt.subplot(2, 1, 2)
     plt.title("F1 vs. Number of Training Epochs")
@@ -357,6 +359,7 @@ def plot_train(hist_t, hist_v,
              vhist_f1, label="Validation")
     plt.plot(range(epoch_trained + 1, num_epochs + 1),
              thist_f1, label="Training")
+    plt.legend(loc='upper left', frameon=False)
 
     plt.tight_layout()
     plt.savefig(plot_file)
