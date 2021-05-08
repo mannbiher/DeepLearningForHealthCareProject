@@ -153,3 +153,7 @@ patched_results/
 
 # tensorflow board
 classifier_newset/
+
+# Extra region
+ec2_us_east_1/
+network_us_east_1/
