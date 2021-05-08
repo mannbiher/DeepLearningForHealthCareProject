@@ -284,11 +284,11 @@ def train_model(model, dataloaders, criterion, optimizer,
                     count_ES += 1
 
                 is_best = epoch_avg > best_avg
-                best_avg = max(best_avg, epoch_avg)
 
                 if is_best or epoch % opts.checkpoint_saved_n == 0 or epoch == num_epochs-1:
                     print('Current avg score: %f, Best avg score %f, model saved.' % (
                         epoch_avg, best_avg))
+                    best_avg = max(best_avg, epoch_avg)
                     best_model_wts = copy.deepcopy(model.state_dict())
                     save_checkpoint({
                         'epoch': epoch+1,
