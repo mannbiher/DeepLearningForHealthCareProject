@@ -11,10 +11,10 @@ workers=8
 patches=2
 for i in $(seq 2 2); do
     #python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers --in_memory
-    python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test
+    #python patched_flannel/entrypoint.py --arch inception_v3 --epochs=$epochs --crop_size=299 -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test
     #python patched_flannel/entrypoint.py --arch resnext101_32x8d --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers
-    #python patched_flannel/entrypoint.py --arch resnext101_32x8d --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test
-    #python patched_flannel/entrypoint.py --arch resnet152 --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers
+    # python patched_flannel/entrypoint.py --arch resnext101_32x8d --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test --in_memory
+    python patched_flannel/entrypoint.py --arch resnet152 --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers
     #python patched_flannel/entrypoint.py --arch resnet152 --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test
     #python patched_flannel/entrypoint.py --arch densenet161 --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers
     #python patched_flannel/entrypoint.py --arch densenet161 --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test

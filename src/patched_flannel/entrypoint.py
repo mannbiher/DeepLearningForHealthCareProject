@@ -27,7 +27,7 @@ def get_default_models():
 
 
 def setup_cli(model_names):
-    print(type(model_names))
+    print(model_names)
     parser = argparse.ArgumentParser(
         description='Train and Test patch based model')
     parser.add_argument(
