@@ -7,7 +7,7 @@ This requires AWS CLI to be setup with AWS S3 credentials/IAM role.
 import os
 
 S3_BUCKET = 'alchemists-uiuc-dlh-spring2021-us-east-2'
-S3_PREFIX = 'patched_results_v2'
+S3_PREFIX = 'patched_results_v3'
 
 def s3_sync(checkpoint_dir, s3_prefix=S3_PREFIX):
     os.system(f"aws s3 sync {checkpoint_dir} s3://{S3_BUCKET}/{s3_prefix}/ --acl bucket-owner-full-control")
