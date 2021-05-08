@@ -204,4 +204,4 @@ def main(opts, data_loader=None):
     return (np.mean(loss_total),
             ACC,
             y_prob,
-            y_true)
+            np.array(y_true,dtype=int))
