@@ -6,6 +6,18 @@ Final project for UIUC graduate course CS598 Deep Learning for Healthcare
 [Patch by Patch paper](https://ieeexplore.ieee.org/document/9090149)
 
 
+## Authors
+
+### Team Alchemists
+
+| Name                | NetId                 |
+| ------------------- | --------------------- |
+| Maneesh Kumar Singh | mksingh4@illinois.edu |
+| Raman Walwyn-Venugopal        | rsw2@illinois.edu  |
+| Satish Reddy Asi   | sasi2@illinois.edu |
+|Srikanth Bharadwaz Samudrala|sbs7@illinois.edu|
+
+
 ## Changes
 
 To view changes from original source
