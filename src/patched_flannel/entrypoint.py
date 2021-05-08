@@ -65,7 +65,7 @@ def setup_cli(model_names):
     # Test Outputs
     parser.add_argument('--test', default=False, dest='test', action='store_true',
                         help='evaluate model on test set')
-    parser.add_argument('--results', default='./patched/results', type=str, metavar='PATH',
+    parser.add_argument('--results', default='./patched_results/results', type=str, metavar='PATH',
                         help='path to save experiment results (default: results)')
     parser.add_argument('-r', '--resume', default='', type=str, metavar='PATH',
                         help='saved model ID for loading checkpoint (default: none)')
