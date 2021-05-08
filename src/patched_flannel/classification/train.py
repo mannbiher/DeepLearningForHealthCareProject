@@ -121,6 +121,10 @@ def main(opts):
         num_epochs=opts.epochs,
         is_inception=(model_name.startswith("inception")),
         opts=opts)
+    plot_train(
+        hist_t, hist_v,
+        hist_f1_t, hist_f1_v, epoch_trained, num_epochs,
+        opts.train_plot)
 
 
 # Define training and validation_model
@@ -328,7 +332,8 @@ def train_model(model, dataloaders, criterion, optimizer,
 
 def plot_train(hist_t, hist_v,
                hist_f1_t, hist_f1_v,
-               epoch_trained, num_epochs):
+               epoch_trained, num_epochs,
+               plot_file):
     # Plot loss and accuracy
     vhist = [h.cpu().numpy() for h in hist_v]
     thist = [h.cpu().numpy() for h in hist_t]
@@ -353,7 +358,8 @@ def plot_train(hist_t, hist_v,
     plt.plot(range(epoch_trained + 1, num_epochs + 1),
              thist_f1, label="Training")
 
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(plot_file)
 
 
 if __name__ == '__main__':

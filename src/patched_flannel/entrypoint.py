@@ -153,6 +153,8 @@ def main():
             print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))
 
     else:
+        plot_file = 'f1_%s_train_%s.png' % (args.arch, args.cv)
+        args.train_plot = os.path.join(args.checkpoint_dir, plot_file)
         train.main(args)
 
 
