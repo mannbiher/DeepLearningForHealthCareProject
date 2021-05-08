@@ -285,5 +285,5 @@ def save_checkpoint(state, epoch_id, is_best,
     torch.save(state, filepath)
     if cloud_sync:
         # sync whole directory
-        sync_dir = os.path.dirname(checkpoint)
+        sync_dir = os.path.dirname(os.path.dirname(checkpoint))
         cloud_sync(sync_dir)
