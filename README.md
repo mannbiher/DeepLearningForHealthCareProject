@@ -103,12 +103,15 @@ python FLANNEL/utils/result_plots.py patched_results/results togglecolor
 
 ##### data_preprocess
 
+Responsible for organizing data into different classes and extracting lung contours from CXR images
+
 ##### FLANNEL
 
-##### PatchByPatch
+The original FLANNEL code that was the foundation of our improvements
 
 ##### patched_flannel
 
+The patch-based models that we've developed to be used in the patched_flannel
 
 #### Usage
 
