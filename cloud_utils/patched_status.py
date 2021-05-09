@@ -91,6 +91,8 @@ def create_download_script(path, folder_pattern="{}_20200407_patched_{}"):
     for response in get_response_iterator(S3_RESULT):
         for content in response['Contents']:
             folder, filename = content['Key'].rsplit('/', 1)
+            if '20200407_patched' in folder:
+                continue
             if (filename.startswith(suffix)
                     and filename.endswith('.csv')):
                 model, _, fold = filename[len(
@@ -100,6 +102,7 @@ def create_download_script(path, folder_pattern="{}_20200407_patched_{}"):
                 copy_path = os.path.join(path, folder, filename)
                 commands.append(s3_cmd.format(
                     S3_BUCKET, content['Key'], copy_path))
+    #print(commands)
     write_script(commands, 'patched_download.sh')
 
 

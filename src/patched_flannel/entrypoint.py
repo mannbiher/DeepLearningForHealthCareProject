@@ -131,13 +131,17 @@ def main():
     if args.test:
         dataloaders_dict = get_data_loaders(args)
         for phase, dataloader in dataloaders_dict.items():
+            if phase == val:
+                run_type = 'valid'
+            else:
+                run_type = phase
             plot_file = 'cf_%s_%s_%s.png' % (
-                args.arch, phase, args.cv)
+                args.arch, run_type, args.cv)
             args.cf_plot = os.path.join(args.results_dir, plot_file)
             test_loss, test_acc, pred_d, real_d = inference.main(
                 args, dataloader)
             detail_file = 'result_detail_%s_%s_%s.csv' % (
-                args.arch, phase, args.cv)
+                args.arch, run_type, args.cv)
             with open(os.path.join(args.results_dir, detail_file), 'w') as f:
                 csv_writer = csv.writer(f)
                 for i in range(len(real_d)):
@@ -147,7 +151,7 @@ def main():
                     csv_writer.writerow(list(np.array(pred_d[i])) + list(x))
 
             meaure_file = 'measure_detail_%s_%s_%s.csv' % (
-                args.arch, phase, args.cv)
+                args.arch, run_type, args.cv)
             mr = MeasureR(args.results_dir, test_loss, test_acc,
                           infile=detail_file, outfile=meaure_file)
             mr.output()
