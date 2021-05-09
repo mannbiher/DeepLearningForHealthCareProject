@@ -87,15 +87,16 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 		Terraform
 		Linux Bash
 
-#### Technical Modules 
+#### Project Modules 
 
-	flannel
-		data_preprocess
-			segmentation
-		FLANNEL
+##### data_preprocess
 
-	patched_flannel
-		classification
+##### FLANNEL
+
+##### PatchByPatch
+
+##### patched_flannel
+
 
 #### Usage
 
@@ -131,8 +132,7 @@ chmod +x trainmodel.sh
 <!-- Can we update google doc with all the known issues -->
 #### References
 #### Collaborators
-* [Maneesh] (mailto:msingh4@illinois.edu)
-* [Raman] (mailto:rsw2@illinois.edu)
-* [Satish] (mailto:sasi2@illinois.edu)
-* [Srikanth] (mailto:sbs7@illinois.edu)
-
+* [Maneesh](mailto:msingh4@illinois.edu)
+* [Raman](mailto:rsw2@illinois.edu)
+* [Satish](mailto:sasi2@illinois.edu)
+* [Srikanth](mailto:sbs7@illinois.edu)
