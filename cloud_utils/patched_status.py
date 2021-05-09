@@ -96,6 +96,7 @@ def create_download_script(path, folder_pattern="{}_20200407_patched_{}"):
                 model, _, fold = filename[len(
                     suffix):-len('.csv')].rsplit('_', 2)
                 folder = folder_pattern.format(model, fold)
+                filename = filename.replace('_val_','_valid_')
                 copy_path = os.path.join(path, folder, filename)
                 commands.append(s3_cmd.format(
                     S3_BUCKET, content['Key'], copy_path))
