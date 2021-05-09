@@ -6,6 +6,18 @@ Final project for UIUC graduate course CS598 Deep Learning for Healthcare
 [Patch by Patch paper](https://ieeexplore.ieee.org/document/9090149)
 
 
+## Authors
+
+### Team Alchemists
+
+| Name                | NetId                 |
+| ------------------- | --------------------- |
+| Maneesh Kumar Singh | mksingh4@illinois.edu |
+| Raman Walwyn-Venugopal        | rsw2@illinois.edu  |
+| Satish Reddy Asi   | sasi2@illinois.edu |
+|Srikanth Bharadwaz Samudrala|sbs7@illinois.edu|
+
+
 ## Changes
 
 To view changes from original source
@@ -75,24 +87,30 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 		Terraform
 		Linux Bash
 
-#### Technical Modules 
+#### Project Modules 
 
-	flannel
-		data_preprocess
-			segmentation
-		FLANNEL
+##### data_preprocess
 
-	patched_flannel
-		classification
+##### FLANNEL
+
+##### PatchByPatch
+
+##### patched_flannel
+
 
 #### Usage
-    git pull https://github.com/mannbiher/DeepLearningForHealthCareProject.git
-    cd DeepLearningForHealthCareProject
-    git pull
-    source ../env
-    workon flannel
-    chmod +x trainmodel.sh
-    ./trainmodel.sh
+
+```shell script:
+git pull https://github.com/mannbiher/DeepLearningForHealthCareProject.git
+source ./env
+workon flannel
+cd DeepLearningForHealthCareProject
+git pull
+cd src
+pip install -r requirements.txt
+chmod +x trainmodel.sh
+./trainmodel.sh
+```
 
 #### Configuration (Infrastructure)
 
@@ -114,8 +132,7 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 <!-- Can we update google doc with all the known issues -->
 #### References
 #### Collaborators
-* [Maneesh] (mailto:msingh4@illinois.edu)
-* [Raman] (mailto:rsw2@illinois.edu)
-* [Satish] (mailto:sasi2@illinois.edu)
-* [Srikanth] (mailto:sbs7@illinois.edu)
-
+* [Maneesh](mailto:msingh4@illinois.edu)
+* [Raman](mailto:rsw2@illinois.edu)
+* [Satish](mailto:sasi2@illinois.edu)
+* [Srikanth](mailto:sbs7@illinois.edu)

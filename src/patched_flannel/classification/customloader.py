@@ -84,7 +84,6 @@ class COVID_Dataset(data.Dataset):
                            int(min(w_whole, non_zero_col + (self.img_size / 2)))]
 
         # print('size', X_patch.shape)
-
         X_patch_img = self.data_transforms(augmentation(
             Image.fromarray(X_patch), rand_p=rand_p, mode=self.mode))
         X_patch_img_ = np.squeeze(np.asarray(X_patch_img))

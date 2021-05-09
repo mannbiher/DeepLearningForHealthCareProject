@@ -41,7 +41,7 @@ def parse_feature_data_dict(f_dir, cv, runtype):
 
 
 #cvs = ['cv1','cv2','cv3','cv4','cv5']
-def parse_data_dict(f_dir, cv, runtype):
+def parse_data_dict(f_dir, cv, runtype, is_patched):
   labels = []
   all_predict_v = []
   fff = True
@@ -56,9 +56,13 @@ def parse_data_dict(f_dir, cv, runtype):
     with open(filepath,'r') as f:
       csv_reader = csv.reader(f)
       for row in csv_reader:
+        if is_patched:
+          # print('using original probabilities')
+          xxx = np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])])
+        else:
 #        xxx = np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])])
-        xxx = np.exp(np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])]))
-        xxx = xxx/np.sum(xxx)
+          xxx = np.exp(np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])]))
+          xxx = xxx/np.sum(xxx)
 #        print (xxx)
         predict_v.append(xxx)
         if fff:
@@ -198,7 +202,7 @@ class EnsembleDataset(BaseDataset):
             opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions
         """
         BaseDataset.__init__(self, opt)
-        features, label_list = parse_data_dict(opt.data_dir, opt.cv, run_type)  # get image paths
+        features, label_list = parse_data_dict(opt.data_dir, opt.cv, run_type, opt.patched)  # get image paths
         self.features = torch.from_numpy(features)
         self.label_list = torch.from_numpy(label_list)
         

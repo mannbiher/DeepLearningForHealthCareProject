@@ -58,7 +58,7 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
 
         input_size = header.img_size
 
-    elif model_name == 'restnet152':
+    elif model_name == 'resnet152':
         model_ft = models.resnet152(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.fc.in_features
@@ -128,8 +128,8 @@ def initialize_model(model_name, num_classes, feature_extract, use_pretrained=Tr
     elif model_name == "resnext101_32x8d":
         model_ft = models.resnext101_32x8d(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_extract)
-        num_ftrs = model_ft.classifier.in_features
-        model_ft.classifier = nn.Linear(num_ftrs, num_classes)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = header.img_size
 
     else:
@@ -285,5 +285,5 @@ def save_checkpoint(state, epoch_id, is_best,
     torch.save(state, filepath)
     if cloud_sync:
         # sync whole directory
-        sync_dir = os.path.dirname(checkpoint)
+        sync_dir = os.path.dirname(os.path.dirname(checkpoint))
         cloud_sync(sync_dir)

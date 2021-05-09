@@ -149,7 +149,12 @@ dmypy.json
 standard_data_multiclass_0922_crossentropy/
 standard_data_patched_0922_crossentropy/
 explore_version_03/
-patched/
+patched_results/
+patched_final_results.zip
 
 # tensorflow board
 classifier_newset/
+
+# Extra region
+ec2_us_east_1/
+network_us_east_1/

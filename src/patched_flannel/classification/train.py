@@ -51,7 +51,7 @@ def main(opts):
         model_name, num_classes, feature_extract, use_pretrained=True)
 
     # Print the model we just instantiated
-    print(model_ft)
+    # print(model_ft)
 
     print("Initializing Datasets and Dataloaders...")
 
@@ -121,6 +121,10 @@ def main(opts):
         num_epochs=opts.epochs,
         is_inception=(model_name.startswith("inception")),
         opts=opts)
+    plot_train(
+        hist_t, hist_v,
+        hist_f1_t, hist_f1_v, epoch_trained, num_epochs,
+        opts.train_plot)
 
 
 # Define training and validation_model
@@ -279,17 +283,19 @@ def train_model(model, dataloaders, criterion, optimizer,
                 else:
                     count_ES += 1
 
-                if epoch_avg > best_avg or not epoch % opts.checkpoint_saved_n or epoch == num_epochs-1:
+                is_best = epoch_avg > best_avg
+
+                if is_best or epoch % opts.checkpoint_saved_n == 0 or epoch == num_epochs-1:
                     print('Current avg score: %f, Best avg score %f, model saved.' % (
                         epoch_avg, best_avg))
+                    best_avg = max(best_avg, epoch_avg)
                     best_model_wts = copy.deepcopy(model.state_dict())
                     save_checkpoint({
                         'epoch': epoch+1,
                         'best_acc': best_avg,
                         'model_state_dict': best_model_wts,
                         'optimizer_state_dict': optimizer.state_dict(),
-                    }, epoch, epoch_avg > best_avg, opts.checkpoint_dir)
-                    best_avg = epoch_avg
+                    }, epoch, is_best, opts.checkpoint_dir)
                 else:
                     print('Model not saved.')
 
@@ -326,7 +332,8 @@ def train_model(model, dataloaders, criterion, optimizer,
 
 def plot_train(hist_t, hist_v,
                hist_f1_t, hist_f1_v,
-               epoch_trained, num_epochs):
+               epoch_trained, num_epochs,
+               plot_file):
     # Plot loss and accuracy
     vhist = [h.cpu().numpy() for h in hist_v]
     thist = [h.cpu().numpy() for h in hist_t]
@@ -340,7 +347,9 @@ def plot_train(hist_t, hist_v,
     plt.ylabel("Accuracy")
     plt.plot(range(epoch_trained + 1, num_epochs + 1),
              vhist, label="Validation")
-    plt.plot(range(epoch_trained + 1, num_epochs + 1), thist, label="Training")
+    plt.plot(range(epoch_trained + 1, num_epochs + 1),
+             thist, label="Training")
+    plt.legend(loc='upper left', frameon=False)
 
     plt.subplot(2, 1, 2)
     plt.title("F1 vs. Number of Training Epochs")
@@ -350,8 +359,10 @@ def plot_train(hist_t, hist_v,
              vhist_f1, label="Validation")
     plt.plot(range(epoch_trained + 1, num_epochs + 1),
              thist_f1, label="Training")
+    plt.legend(loc='upper left', frameon=False)
 
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(plot_file)
 
 
 if __name__ == '__main__':
