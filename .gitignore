@@ -150,6 +150,7 @@ standard_data_multiclass_0922_crossentropy/
 standard_data_patched_0922_crossentropy/
 explore_version_03/
 patched_results/
+patched_final_results.zip
 
 # tensorflow board
 classifier_newset/

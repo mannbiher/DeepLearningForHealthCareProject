@@ -26,6 +26,10 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{color}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage[ruled]{algorithm2e}
 %
 % ACMPROC-SP DOCUMENT STYLE
 % G.K.M. Tobin August-October 1999
@@ -240,7 +244,7 @@
 % \and was modified to count the number of authors.  GKMT 12 Aug 1999
 \def\alignauthor{%                  % \begin{tabular}
 \end{tabular}%
-  \begin{tabular}[t]{p{\auwidth}}\centering}%
+  \begin{tabular}[t]{p{4cm}}\centering}%
 
 %  *** NOTE *** NOTE *** NOTE *** NOTE ***
 %  If you have 'font problems' then you may need
@@ -287,7 +291,7 @@
 
 \def\email#1{{{\eaddfnt{\vskip 4pt#1}}}}
 
-\def\addauthorsection{\ifnum\originalaucount>3
+\def\addauthorsection{\ifnum\originalaucount>4
     \section{Additional Authors}\the\addauthors
   \fi}
 
