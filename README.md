@@ -90,6 +90,10 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 #### Project Modules 
 
 ##### data_preprocess
+Segmentation network acts as the post data preprocessing step for PatchByPatch model. Segmentation model extracts lung and heart contours from the chest radiography images. 
+Segmentation module uses fully convolutional DenseNet103 to perform semantic segmentation
+
+data_preprocess model splits data into K folds and provides all the numbers for each of these K-folds, types of datasets and classes of images
 
 ##### FLANNEL
 
