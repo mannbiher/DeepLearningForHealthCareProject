@@ -122,9 +122,10 @@ def main():
     args.data = args.data % ('%s', args.cv)
     print(args.data)
     args.checkpoint_dir = os.path.join(args.checkpoint, experimentID)
+    args.results_dir = os.path.join(args.results, experimentID)
     # create checkpoint directory
     create_dir(args.checkpoint_dir)
-    create_dir(args.results)
+    create_dir(args.results_dir)
     # args.in_memory = True
 
     if args.test:
@@ -132,12 +133,12 @@ def main():
         for phase, dataloader in dataloaders_dict.items():
             plot_file = 'cf_%s_%s_%s.png' % (
                 args.arch, phase, args.cv)
-            args.cf_plot = os.path.join(args.results, plot_file)
+            args.cf_plot = os.path.join(args.results_dir, plot_file)
             test_loss, test_acc, pred_d, real_d = inference.main(
                 args, dataloader)
             detail_file = 'result_detail_%s_%s_%s.csv' % (
                 args.arch, phase, args.cv)
-            with open(os.path.join(args.results, detail_file), 'w') as f:
+            with open(os.path.join(args.results_dir, detail_file), 'w') as f:
                 csv_writer = csv.writer(f)
                 for i in range(len(real_d)):
                     x = np.zeros(len(pred_d[i]))
@@ -147,7 +148,7 @@ def main():
 
             meaure_file = 'measure_detail_%s_%s_%s.csv' % (
                 args.arch, phase, args.cv)
-            mr = MeasureR(args.results, test_loss, test_acc,
+            mr = MeasureR(args.results_dir, test_loss, test_acc,
                           infile=detail_file, outfile=meaure_file)
             mr.output()
             print(' Test Loss:  %.8f, Test Acc:  %.4f' % (test_loss, test_acc))

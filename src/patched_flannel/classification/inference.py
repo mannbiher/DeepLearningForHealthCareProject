@@ -36,7 +36,7 @@ feature_extract = header.feature_extract
 def main(opts, data_loader=None):
     # Initialize the model for this run
     # Load data
-    data_dir = opts.results
+    data_dir = opts.results_dir
 
     # Model name
     model_name = opts.arch
