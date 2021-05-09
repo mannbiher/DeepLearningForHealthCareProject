@@ -73,8 +73,9 @@ XRay data commit: 78543292f8b01d5e0ed1d0e15dce71949f0657bb
 ### Data Preprocess
 1. extract data from CCX: data_preprocess/get_covid_data_dict.py 
 2. extract data from KCX: data_preprocess/get_kaggle_data_dict.py
-3. perform segmentation on images data_preprocess/segmentation/inference.py
-3. reorganize CCX&KCX data to generate 5-folder cross-validation expdata: data_preprocess/extract_exp_data_crossentropy.py
+3. train segmentation _(follow steps provided in [segmentation readme](data_preprocess/segmentation/README.md))_
+4. perform segmentation on images data_preprocess/segmentation/inference.py
+4. reorganize CCX&KCX data to generate 5-folder cross-validation expdata: data_preprocess/extract_exp_data_crossentropy.py
 
 ## Model Training
 ### Base-modeler Learning

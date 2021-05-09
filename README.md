@@ -10,12 +10,12 @@ Final project for UIUC graduate course CS598 Deep Learning for Healthcare
 
 ### Team Alchemists
 
-| Name                | NetId                 |
-| ------------------- | --------------------- |
-| Maneesh Kumar Singh | mksingh4@illinois.edu |
-| Raman Walwyn-Venugopal        | rsw2@illinois.edu  |
-| Satish Reddy Asi   | sasi2@illinois.edu |
-|Srikanth Bharadwaz Samudrala|sbs7@illinois.edu|
+| Name                         | NetId                 |
+| ---------------------------- | --------------------- |
+| Maneesh Kumar Singh          | mksingh4@illinois.edu |
+| Raman Walwyn-Venugopal       | rsw2@illinois.edu     |
+| Satish Reddy Asi             | sasi2@illinois.edu    |
+| Srikanth Bharadwaz Samudrala | sbs7@illinois.edu     |
 
 
 ## Changes
@@ -51,6 +51,18 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 
 ```bash
 ./train_model.sh
+```
+
+
+
+## Generate Plots
+
+### Confusion Matrix
+
+```bash
+python FLANNEL/utils/result_plots.py explore_version_03/results
+# toggle colormap to differentiate FLANNEL and patched FLANNEL
+python FLANNEL/utils/result_plots.py patched_results/results togglecolor
 ```
 
 ## Acknowledgement
@@ -95,12 +107,15 @@ Segmentation module uses fully convolutional DenseNet103 to perform semantic seg
 
 data_preprocess model splits data into K folds and provides all the numbers for each of these K-folds, types of datasets and classes of images
 
+Responsible for organizing data into different classes and extracting lung contours from CXR images
+
 ##### FLANNEL
 
-##### PatchByPatch
+The original FLANNEL code that was the foundation of our improvements
 
 ##### patched_flannel
 
+The patch-based models that we've developed to be used in the patched_flannel
 
 #### Usage
 
@@ -118,10 +133,10 @@ chmod +x trainmodel.sh
 
 #### Configuration (Infrastructure)
 
-| Purpose  | Instance Type | GPU | vCPU | GPU Memory |
-|----------|---------------|-----|------|------------|
-| Development | AWS p2.xlarge | 1   | 4    | 12 GB      |
-| Training | AWS p3.2xlarge | 1 | 8   | 16 GB      |
+| Purpose     | Instance Type  | GPU | vCPU | GPU Memory |
+| ----------- | -------------- | --- | ---- | ---------- |
+| Development | AWS p2.xlarge  | 1   | 4    | 12 GB      |
+| Training    | AWS p3.2xlarge | 1   | 8    | 16 GB      |
 
 
 #### Known Issues
