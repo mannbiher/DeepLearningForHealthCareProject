@@ -7,13 +7,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from PIL import Image
-from classification import header
-from utils.utils import data_transforms
-from utils.utils import initialize_model
+import header
+from utils import data_transforms
+from utils import initialize_model
 from gradcam import GradCAM
 from gradcam.utils import visualize_cam
 import random
-from utils.utils import augmentation
+from utils import augmentation
 import cv2
 import glob
 
@@ -42,27 +42,27 @@ def main():
 
     # Temporary header
     # directory - normal, bacteria, TB, COVID-19, virus
-    dir_test = '../data/test/COVID/'
+    dir_test = '/home/ubuntu/segmentation/output/COVID-19/'
     label = 3 # set 3 for COVID-19 for virus class
 
     # Data loader
-    test_imgs = sorted(glob.glob(dir_test + '*.image.npy'))
-    test_masks = sorted(glob.glob(dir_test + '*.mask.npy'))
+    test_masked_images = sorted(glob.glob(dir_test + '*.npz'))
+    #test_masks = sorted(glob.glob(dir_test + '*.mask.npy'))
 
-    for img, mask in zip(test_imgs, test_masks):
+    for masked_img in test_masked_images:
 
-        test_img = np.load(img)
-        test_mask = np.load(mask)
+        test_masked_img = np.load(masked_img)
+        #test_mask = np.load(mask)
 
-        test_img = Image.fromarray(test_img).resize((1024,1024))
-        test_mask = Image.fromarray(test_mask).resize((1024,1024))
+        test_masked_img = Image.fromarray(test_masked_img).resize((1024,1024))
+        #test_mask = Image.fromarray(test_mask).resize((1024,1024))
 
-        test_img = np.asarray(test_img)
-        test_mask = np.round(np.asarray(test_mask))
+        #test_img = np.asarray(test_img)
+        #test_mask = np.round(np.asarray(test_mask))
 
-        test_masked = np.multiply(test_img, test_mask)
+        #test_masked = np.multiply(test_img, test_mask)
 
-        test_normalized = test_masked
+        test_normalized = test_masked_img
 
         h_whole = test_normalized.shape[0]  # original w
         w_whole = test_normalized.shape[1]  # original h
@@ -169,7 +169,7 @@ def main():
         final_combined = (final_combined - final_combined.min()) / final_combined.max()
 
         plt.imshow(final_combined)
-        plt.savefig(img.split('.image.npy')[0] +'.patch.heatmap_' + '.png')
+        plt.savefig(test_masked_img.split('.image.npy')[0] +'.patch.heatmap_' + '.png')
 
 if __name__=='__main__':
     main()

@@ -28,12 +28,12 @@ for i in $(seq 1 5); do
 		--checkpoint ./patched_results/checkpoint \
 		--results ./patched_results/results \
 		--epochs=$epochs -ck_n=$ck_n \
-		--data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers
+		--data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers --patched
 	python FLANNEL/ensemble_step2_ensemble_learning.py \
 		--checkpoint ./patched_results/checkpoint \
 		--results ./patched_results/results \
 		--epochs=$epochs -ck_n=$ck_n \
-		--data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers --test
+		--data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers --test --patched
 done
 
-aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v6/ --acl bucket-owner-full-control
+#aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v6/ --acl bucket-owner-full-control
