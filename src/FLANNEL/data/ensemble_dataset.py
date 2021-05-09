@@ -41,7 +41,7 @@ def parse_feature_data_dict(f_dir, cv, runtype):
 
 
 #cvs = ['cv1','cv2','cv3','cv4','cv5']
-def parse_data_dict(f_dir, cv, runtype):
+def parse_data_dict(f_dir, cv, runtype, is_patched):
   labels = []
   all_predict_v = []
   fff = True
@@ -56,7 +56,8 @@ def parse_data_dict(f_dir, cv, runtype):
     with open(filepath,'r') as f:
       csv_reader = csv.reader(f)
       for row in csv_reader:
-        if opt.patched:
+        if is_patched:
+          # print('using original probabilities')
           xxx = np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])])
         else:
 #        xxx = np.array([float(row[0]),float(row[1]),float(row[2]),float(row[3])])
