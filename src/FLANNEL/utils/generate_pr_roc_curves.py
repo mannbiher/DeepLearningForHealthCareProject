@@ -9,10 +9,22 @@ from sklearn.metrics import roc_auc_score
 from itertools import cycle
 
 # Update results home value
-results_home = 'results/'
+result_sets = {
+        'Patched FLANNEL': {
+            'result_set': 'Patched FLANNEL',
+            'results_home': 'patched_final_results/patched_results/results/',
+            'base_learner_folder_format': '{0}_20200407_patched_{1}',
+        },
+        'Original FLANNEL': {
+            'result_set': 'Original FLANNEL',
+            'results_home': 'original_results/results/',
+            'base_learner_folder_format': '{0}_20200407_multiclass_{1}'
+        }
+    }
 base_learners = ["densenet161", "inception_v3", "resnet152", "resnext101_32x8d", "vgg19_bn", "ensemble"]
 labels = ["Covid-19", "Pneumonia Virus", "Pneumonia Bacteria", "Normal"]
 num_folds = 5
+
 
 # create cv index for each learner
 # depending on number of folds the index would be cv1, cv2, cv3 etc..
@@ -41,7 +53,8 @@ def get_cv_y_score_y_true(df):
     return y_score, y_true
 
 # Wrapper function to read P & R, call F1 compute to create DF with for a base learner
-def get_learner_y_score_y_true(learner):
+def get_learner_y_score_y_true(result_set, learner):
+    results_home = result_set['results_home']
     learner_y_score = np.empty((0, 4))
     learner_y_true = np.empty((0, 4))
     for ind in cv_index:
@@ -49,7 +62,7 @@ def get_learner_y_score_y_true(learner):
             learner_results_dir = results_home + learner + 'Novel_20200719_gamma_10_multiclass_' + ind + '_focal'
             raw_df = pd.read_csv(learner_results_dir + '/result_detail.csv')
         else:
-            learner_results_dir = results_home + learner + '_20200407_multiclass_' + ind
+            learner_results_dir = results_home + result_set['base_learner_folder_format'].format(learner, ind)
             raw_df = pd.read_csv(learner_results_dir + '/result_detail_' + learner + '_test_' + ind + '.csv')
         y_score, y_true = get_cv_y_score_y_true(raw_df)
         learner_y_score = np.concatenate( (learner_y_score, y_score), axis=0)
@@ -87,17 +100,17 @@ def compute_learner_stats(y_score, y_true):
         }
 
 
-def generate_stats():
+def generate_stats(result_set):
     stats = {}
 
     for base_learner in base_learners:
-        learner_y_score, learner_y_true = get_learner_y_score_y_true(base_learner)
+        learner_y_score, learner_y_true = get_learner_y_score_y_true(result_set, base_learner)
         stats[base_learner] = compute_learner_stats(learner_y_score, learner_y_true)
-        print(base_learner + ' Average precision score, micro-averaged: {0:0.2f}'.format(stats[base_learner]["average_precision"]["micro"]))
+        print(result_set['result_set'] + ': ' + base_learner + ' Average precision score, micro-averaged: {0:0.2f}'.format(stats[base_learner]["average_precision"]["micro"]))
 
     return stats
 
-def plot_pr_curve(stats):
+def plot_result_set_pr_curve(result_set, stats):
     colors = cycle(['navy', 'turquoise', 'darkorange', 'cornflowerblue', 'teal', 'gold'])
     plt.figure(figsize=(7, 8))
     lines = []
@@ -117,12 +130,12 @@ def plot_pr_curve(stats):
     plt.ylim([0.0, 1.05])
     plt.xlabel('Recall')
     plt.ylabel('Precision')
-    plt.title('Precision-Recall curve')
-    plt.legend(lines, labels, loc=(0, -.60), prop=dict(size=14))
-    plt.savefig(results_home + 'precision_recall_curve.png')
+    plt.title(result_set['result_set'] + ' - Precision-Recall curve')
+    plt.legend(lines, labels, loc="lower left")
+    plt.savefig(result_set['results_home'] + 'precision_recall_curve.png')
     plt.show()
 
-def plot_roc_curve(stats):
+def plot_reset_roc_curve(result_set, stats):
     colors = cycle(['navy', 'turquoise', 'darkorange', 'cornflowerblue', 'teal', 'gold'])
     plt.figure(figsize=(7, 8))
     lines = []
@@ -144,12 +157,64 @@ def plot_roc_curve(stats):
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('ROC curve')
+    plt.title(result_set['result_set'] + ' - ROC curve')
     plt.legend(loc="lower right")
-    plt.savefig(results_home + "roc_curve.png")
+    plt.savefig(result_set['results_home'] + "roc_curve.png")
+    plt.show()
+
+def plot_ensemble_comparison_curves(result_stats):
+    colors = cycle(['navy', 'darkorange'])
+    plt.figure(figsize=(7, 8))
+    for result_set, color in zip(result_stats.keys(), colors):
+        ensemble_stats = result_stats[result_set]['ensemble']
+        precision = ensemble_stats['precision']
+        recall = ensemble_stats['recall']
+        average_precision = ensemble_stats['average_precision']
+        plt.plot(
+                recall['micro'],
+                precision['micro'],
+                label='{0} ensemble (area = {1:0.2f})'.format(result_set, average_precision['micro']),
+                color=color,
+                lw=2
+            )
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Ensemle Comparison - Precision-Recall curve')
+    plt.legend(loc="lower left")
+    plt.savefig("ensemble_comparison_precision_recall_curve.png")
+    plt.show()
+
+
+    plt.figure(figsize=(7, 8))
+    for result_set, color in zip(result_stats.keys(), colors):
+        ensemble_stats = result_stats[result_set]['ensemble']
+        tpr = ensemble_stats['tpr']
+        fpr = ensemble_stats['fpr']
+        roc_auc = ensemble_stats['roc_auc']
+        plt.plot(
+                fpr['micro'],
+                tpr['micro'],
+                label='{0} ensemble (area = {1:0.2f})'.format(result_set, roc_auc['micro']),
+                color=color,
+                linewidth=4
+                )
+    plt.plot([0, 1], [0, 1], 'k--', lw=2)
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Ensemble Comparison - ROC curve')
+    plt.legend(loc="lower left")
+    plt.savefig("ensemble_comparison_roc_curve.png")
     plt.show()
 
 if __name__ == '__main__':
-    stats = generate_stats()
-    plot_pr_curve(stats)
-    plot_roc_curve(stats)
+    result_stats = {}
+    for key,result_set in result_sets.items():
+        stats = generate_stats(result_set)
+        plot_result_set_pr_curve(result_set, stats)
+        plot_reset_roc_curve(result_set, stats)
+        result_stats[key] = stats
+    plot_ensemble_comparison_curves(result_stats)
