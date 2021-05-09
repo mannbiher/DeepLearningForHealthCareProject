@@ -21,12 +21,18 @@ patches=100
 #     python patched_flannel/entrypoint.py --arch vgg19_bn --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers --in_memory
 #     python patched_flannel/entrypoint.py --arch vgg19_bn --epochs=$epochs -ck_n=$ck_n --cv=cv$i -j=$workers -k=$patches --test --in_memory
 # done
-aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v3/ --acl bucket-owner-full-control
+# aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v3/ --acl bucket-owner-full-control
 epochs=200
 for i in $(seq 1 5); do
-    python FLANNEL/ensemble_step2_ensemble_learning.py --epochs=1 -ck_n=50 --data_dir='./patched_results/results/%s_20200407_multiclass_%s' --cv=cv$i -j=$workers
-    python FLANNEL/ensemble_step2_ensemble_learning.py --epochs=1 -ck_n=50 --data_dir='./patched_results/results/%s_20200407_multiclass_%s' --cv=cv$i -j=$workers --test
+    python FLANNEL/ensemble_step2_ensemble_learning.py --arch patched_flannel \
+	    --checkpoint ./patched_results/checkpoint \
+	    --results ./patched_results/results \
+	    --epochs=$epochs -ck_n=$ck_n --data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers
+    python FLANNEL/ensemble_step2_ensemble_learning.py --arch patched_flannel \
+	    --checkpoint ./patched_results/checkpoint \
+            --results ./patched_results/results \
+	    --epochs=$epochs -ck_n=$ck_n --data_dir='./patched_results/results/%s_20200407_patched_%s' --cv=cv$i -j=$workers --test
 done
 
-aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v3/ --acl bucket-owner-full-control
+aws s3 sync patched_results/ s3://alchemists-uiuc-dlh-spring2021-us-east-2/patched_results_v4/ --acl bucket-owner-full-control
 
