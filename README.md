@@ -98,13 +98,18 @@ around 36 hours for training and evaluation to finish on AWS p3.2xlarge instance
 		classification
 
 #### Usage
-    git pull https://github.com/mannbiher/DeepLearningForHealthCareProject.git
-    cd DeepLearningForHealthCareProject
-    git pull
-    source ../env
-    workon flannel
-    chmod +x trainmodel.sh
-    ./trainmodel.sh
+
+```shell script:
+git pull https://github.com/mannbiher/DeepLearningForHealthCareProject.git
+source ./env
+workon flannel
+cd DeepLearningForHealthCareProject
+git pull
+cd src
+pip install -r requirements.txt
+chmod +x trainmodel.sh
+./trainmodel.sh
+```
 
 #### Configuration (Infrastructure)
 
