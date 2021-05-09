@@ -94,5 +94,6 @@ def create_bar(scores, errors):
     #plt.xticks(x_pos, base_learners)
     plt.show()
 
-
+print(all_f1_scores)
+print(all_sd_scores)
 create_bar(scores, errors)
