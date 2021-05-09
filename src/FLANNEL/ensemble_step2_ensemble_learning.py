@@ -280,7 +280,7 @@ def main():
 
     logger.close()
     logger.plot()
-    savefig(os.path.join(checkpoint_dir, 'log.eps'))
+    savefig(os.path.join(checkpoint_dir, 'log.png'))
 
     print('Best acc:')
     print(best_acc)
