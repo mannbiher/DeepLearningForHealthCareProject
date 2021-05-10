@@ -80,6 +80,7 @@ def get_results(result_dir, cmap=None):
     result_files = get_result_files(result_dir)
     # print(result_files)
     n = len(TYPES)
+    matrix = np.zeros((n, n), dtype=int)
     for model, cv, filename in result_files:
         matrix = read_measure(filename)
         filename = os.path.join(

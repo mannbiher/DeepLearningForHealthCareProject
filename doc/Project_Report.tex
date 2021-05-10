@@ -144,6 +144,7 @@ Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 \section{Method}
 
 \begin{figure*}[h]
+    \centering
     \includegraphics[width=0.8\textwidth]{../doc/images/FLANNEL-IMPROVED.png}
     \caption{FLANNEL Improvement}
     \label{fig:improve}
@@ -157,7 +158,7 @@ were used in the FLANNEL paper, the COVID Chest X-ray Dataset
 \cite{cohen2020covidProspective} from
 \href{https://github.com/ieee8023/covid-chestxray-dataset}{GitHub} and the
 \href{https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia}{Kaggle
-Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
+    Chest X-ray} images dataset. Similar to the FLANNEL paper, we also restricted
 the types of images used to anteroposterior (AP) or posteroanterior (PA). The
 restricted images were then labelled appropriately into one of the four
 categories.
@@ -218,7 +219,7 @@ the percentage of predictions for each class based on the k patches. The
 optimization algorithm used during training was the Adam optimizer with a
 learning rate of 0.00001. An early stopping strategy based on validation
 performance was applied and a weight decay and L1 regularization were used to
-prevent overfitting. The best model is selected among 200 epochs training. 
+prevent overfitting. The best model is selected among 200 epochs training.
 
 \subsection{Ensemble model learning}
 Ensemble model learning step is similar to baseline FLANNEL paper. We take
@@ -236,8 +237,8 @@ classification. It downweighs the well classified classes, in-favor of
 poorly classified classes so the model can focus on learning imbalanced examples.
 
 \begin{align}
-    LossFunc &=FocalLoss(\hat{y},y) \\
-    &=\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
+    LossFunc & =FocalLoss(\hat{y},y)                                               \\
+             & =\sum_{m=1}^{M} - \alpha_m y_m (1-\hat{y}_m)^\gamma \log{\hat{y}_m}
     \label{eq:loss}
 \end{align}
 
@@ -356,24 +357,25 @@ Here are our considerations discussed below -
     \centering
     \caption{Performance comparison on F1 score: Class-specific F1 score is calculated using 1 class vs the rest strategy}
     \label{table:resultstats}
-    \begin{tabular}{ lccccc } \hline
+    \begin{tabular}{ |lccccc| } \hline
                          & COVID-19      & Pneumonia virus & Pneumonia bacteria &
-        Normal           & Macro-F1                                               \\ \hline
-
+        Normal           & Macro-F1                                                   \\ \hline
+        Original Base Learners    &               &                 &                    & 
+        & \\
         Densenet161      & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
-        0.8875 (0.02)    & 0.7625 (0.02)                                          \\
+        0.8875 (0.02)    & 0.7625 (0.02)                                              \\
         InceptionV3      & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
-        0.9015 (0.03)    & 0.8120 (0.02)                                          \\
+        0.9015 (0.03)    & 0.8120 (0.02)                                              \\
         Resnet152        & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
-        0.9080 (0.00)    & 0.7911 (0.01)                                          \\
+        0.9080 (0.00)    & 0.7911 (0.01)                                              \\
         ResNeXt101       & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
-        0.9046 (0.01)    & 0.7852 (0.02)                                          \\
+        0.9046 (0.01)    & 0.7852 (0.02)                                              \\
         Vgg19\_bn        & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
-        0.8950 (0.00)    & 0.7936 (0.00)                                          \\
+        0.8950 (0.00)    & 0.7936 (0.00)                                              \\
         FLANNEL\_OldData & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
-        0.9144 (0.01)    & 0.7910 (0.01)                                          \\
-        FLANNEL          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
-        0.9322 (0.00)    & 0.8385 (0.01)                                          \\ \hline
+        0.9144 (0.01)    & 0.7910 (0.01)                                              \\
+        Original FLANNEL          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
+        0.9322 (0.00)    & 0.8385 (0.01)                                              \\ \hline
     \end{tabular}\par
     \bigskip
     The values in parentheses are the standard deviations.
@@ -426,11 +428,11 @@ Training the Segmentation Network on the JSRT/SCR dataset had a Jaccard Index
 (JI) score of 93.39\% for creating the lung contour masks. The figure \ref{fig:segtrain}
 shows the mask creation and applying the mask on the image.
 
-\begin{figure*}[h]
-    \includegraphics[width=0.8\textwidth]{../doc/images/segmentation_training.png}
+\begin{figure}[h]
+    \includegraphics[width=8cm]{../doc/images/segmentation_training.png}
     \caption{Segmentation Training}
     \label{fig:segtrain}
-\end{figure*}
+\end{figure}
 
 \subsubsection{FLANNEL}
 
@@ -457,6 +459,64 @@ scores are better than when run with old dataset containing only 100 COVID-19 im
 \end{figure}
 
 
+\begin{figure*}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_comparison_precision_recall_curve.png}
+        \caption{first figure}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_comparison_roc_curve.png}
+        \caption{second figure}
+    \end{minipage}
+
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_covid_19_comparison_precision_recall_curve.png}
+        \caption{second figure}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_covid_19_comparison_roc_curve.png}
+        \caption{first figure}
+    \end{minipage}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/base_flannel_cf.png}
+        \caption{second figure}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{../doc/images/patched_flannel_cf.png}
+        \caption{first figure}
+    \end{minipage}
+\end{figure*}
+
+% \begin{figure}[H]
+%     \includegraphics[width=8cm]{../doc/images/precision_recall_curve-2.png}
+%     \caption{Patched FLANNEL PR Curve}
+%     \label{fig:pf_pr_curve}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \includegraphics[width=8cm]{../doc/images/roc_curve-2.png}
+%     \caption{Patched FLANNEL ROC Curve}
+%     \label{fig:pf_roc_curve}
+% \end{figure}
+
+
 We also provided the visual description of FLANNEL performance, via confusion
 matrix as shown in figure \ref{fig:cfmatrix}. As the matrix depicts, For
 COVID-19 identification, FLANNEL has higher precision and recall than the other
@@ -464,11 +524,45 @@ COVID-19 identification, FLANNEL has higher precision and recall than the other
 normal images and differentiate chest x-ray images of COVID-19 against other
 pneumonia images.
 
-\begin{figure}[h]
-    \includegraphics[width=8cm]{../doc/images/confusion_matrix.png}
-    \caption{Confusion Matrix}
-    \label{fig:cfmatrix}
-\end{figure}
+
+\section{Discussion}
+
+\subsection{Slow Model Training}
+\begin{itemize}
+    \item Training the original FLANNEL base model is slow already where
+          training a single model takes on average X hours.
+    \item Training the patch-based models is even slower due to two reasons. The
+          first is that the patch-base model dataloader was originally responsible for
+          applying the mask to the cxr image, this was addressed by transitioning the
+          responsibility to the segmentation task to immediately apply the mask to the
+          CXR. The second reason for the patch-based models being slow is that a
+          classification is run for each patch sequentially. This increases the
+          complexity from N to kN where k is the number of patches. We were unable to
+          address this due to time constraints but we believe parallelizing the patch
+          predictions could lead to major improvements.
+\end{itemize}
+
+Reasons for patch-based models for not improving F1-Score over original FLANNEL based models:
+\begin{itemize}
+    \item Mask production of CXR images was inaccurate. This is difficult to
+          judge as we would need experts to determine if this was an actual problem
+    \item Currently predictions for patch-based classifiers are performed using
+          majority voting. This can potentially work against us if detections of
+          Covid-19/Pneumonia are localized in certain areas of a CXR
+    \item Local-patterns within a lung areas of a CXR are less important than
+          the global patterns within the lung
+\end{itemize}
+
+
+We realized very early in the project that running FLANNEL model using five base
+models and 200 epochs for five foldes is going to take at least 3-4 days on a
+Tesla V100 GPU or equivalent. We had to find a solution on both cost and runtime
+in order to have results early. We tried multiple optimization methods such as
+increasing the number of workers, mounting training images in memory to bring
+the runtime down. We also used spot instances in parallel to bring the cost
+down. We were able to complete training and evaluation of the FLANNEL model in
+36 hours and considerably less cost around 100 dollars.
+
 
 \section{Conclusion}
 As we are making progress, we have run the base models and FLANNEL on the new
@@ -482,6 +576,20 @@ measuring classification performance, we will also measure timing performance to
 note how much of an impact the patch-based classification technique has on
 runtime.
 
+
+\section{Contribution}
+
+All authors were actively involved in patched-FLANNEL development and
+implementations. Major contribution from authors are Maneesh: AWS Setup, batch
+run of FLANNEL and patch-by-patch models on AWS, debugging and fixing base
+FLANNEL and patched-FLANNEL issues, project report, Github documentation Satish:
+Sync checkpoint, output graphs and reports development, Github documentation
+Raman: patch-by-patch segmentation, classification development, project report,
+GitHub documentation Srikanth: patch-by-patch segmentation, classification
+development, project report,GitHub documentation
+
+
+
 \section{Acknowledgement}
 GitHub source code for both FLANNEL and Patch-by-Patch classification
 \cite{pmid32396075} paper are used as baseline for this improvement.
@@ -491,7 +599,7 @@ GitHub source code for both FLANNEL and Patch-by-Patch classification
           {Patch-by-Patch classification}
 \end{itemize}
 
-
+TODO: Specify commit ID for COVID-xray data 78543292f8b01d5e0ed1d0e15dce71949f0657bb
 
 \clearpage
 %
