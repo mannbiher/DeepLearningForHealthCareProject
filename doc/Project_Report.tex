@@ -402,7 +402,7 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
         Vgg19\_bn                 & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
         0.8950 (0.00)             & 0.7936 (0.00)                                          \\
 
-        \textit{FLANNEL}          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
+        FLANNEL          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
         0.9322 (0.00)             & 0.8385 (0.01)                                          \\ \hline
         \textbf{Patched FLANNEL}  &               &                 &                    &
                                   &                                                        \\
@@ -419,7 +419,7 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
 
         FLANNEL                   & 0.9121 (0.02) & 0.6009 (0.01)   & 0.8270 (0.01)      &
         0.9319 (0.01)             & 0.8180 (0.01)                                          \\ \hline
-        \textbf{FLANNEL\_OldData} & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
+        FLANNEL\_OldData & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
         0.9144 (0.01)             & 0.7910 (0.01)                                          \\ \hline
     \end{tabular}\par
     \bigskip
@@ -538,62 +538,74 @@ shows the mask creation and applying the mask on the image.
 
 \subsubsection{FLANNEL}
 
-We compared original FLANNEL base models and ensemble performance with the
-patched FLANNEL. Because COVID-19 class is heavily imbalanced compared to other
-categories, overall accuracy would not be the appropriate measure for
-performance evaluation. It wouldn’t be able to show performance increase in
-COVID-19 detection, instead we use F1-score for COVID-19 vs rest comparing the
-different models.  As shown in figure \ref{fig:f1score}, we can see the ensemble
-approach in the original FLANNEL clearly outperforms state-of-the-art base
-models in detecting COVID-19. We however, don’t see the same performance gain in
-the patched FLANNEL approach where ensemble performance is slightly worse than
-the base models. We do notice an improvement in patched base models compared to
-the original base models. We also compare original FLANNEL and the patched
-FLANNEL ensemble performance with FLANNEL run as done in the research paper and
-clearly see improvement. This improvement can be contributed to having improved
-COVID-19 distribution compared to the original dataset only 100 COVID-19 images
-\cite{10.1093/jamia/ocaa280}.
+In this section, we compare original FLANNEL base models and ensemble
+performance with the patched FLANNEL. Because COVID-19 class is heavily
+imbalanced compared to other categories, overall accuracy would not be the
+appropriate measure for performance evaluation. It would not be able to show
+performance increase in COVID-19 detection, So instead we use F1-score for COVID-19
+vs rest comparing the different models. As shown in figure \ref{fig:f1score}, we
+can see the ensemble approach in the original FLANNEL clearly outperforms
+state-of-the-art base models in detecting COVID-19. We however, don’t see the
+same performance gain in the patched FLANNEL approach where ensemble performance
+is slightly worse than the base models. We see a 1.17\% decrease in F1-score
+compared to original FLANNEL model. We do notice significant improvement in all patched base
+models compared to the original base models for COVID-19 detection.
 
 \begin{figure*}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{../doc/images/original_vs_patched_flannel_f1.png}
-    \caption{FLANNEL Improvement}
+    \includegraphics[width=0.8\textwidth]{../doc/images/original_vs_patched_flannel_f1.png}
+    \caption{COVID-19 F1 score comparison}
     \label{fig:f1score}
 \end{figure*}
 
 
-In Table \ref{table:resultstats}, we also show F1-score for each classification
+In Table \ref{table:resultstats}, we show F1-score for each classification
 and macro F1-score for all classes. In Table \ref{table:resultstats}, we can see
-FLANNEL performed better than base models. We also see with improved data FLANNEL
-scores are better than when run with old dataset containing only 100 COVID-19 images
-\cite{10.1093/jamia/ocaa280}.
+original FLANNEL performs better than base models and also performs better than 
+FLANNEL run with old dataset\cite{10.1093/jamia/ocaa280}. We see 13.11\% increase in performance of original 
+FLANNEL when run on new dataset. This can be attributed to now much better distribution
+of COVID-19 images in current data. In patched based models, we see all base models
+are performing better than original base models except for Pneumonia virus classification.
+However, patched FLANNEL performs slightly poor in all four classification.
+We see a decrease of 2.44\% in macro-F1 score for patched FLANNEL compared to 
+original FLANNEL.
 
 
-We also compared the performance of the original FLANNEL ensemble with the
-patched ensemble using micro-F1 score and saw a slight increase in overall
-performance compared to the original approach.
+We now compare the performance of the original FLANNEL ensemble with the patched
+FLANNEL ensemble using micro-averaged precision and recall and see a slight
+increase in overall performance compared to the original approach. This is
+apparent in comparison of Precision-Recall curves in Figure \ref{fig:ec_prcurve}
+and ROC (Receiver operating characteristic) curves in Figure
+\ref{fig:ec_roccurve} of both ensemble method. As shown in Figure
+\ref{fig:ec_prcurve} We see a 1.15\% increase in precision-recall AUC (Area
+under curve) and 2.08\% increase in ROC AUC. As micro-average gives equal weight
+to all predictions irrespective of classes. This shows patched ensemble model
+performs slightly better in overall predictions.
 
-\begin{figure*}[h]
+
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_comparison.png}
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
     \caption{Ensemble Comparison PR Curve}
     \label{fig:ec_prcurve}
-\end{figure*}
+\end{figure}
 
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
-%     \caption{EnsembLe Comparision ROC Cuve}
-%     \label{fig:ec_roccurve}
-% \end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \caption{EnsembLe Comparison ROC Curve}
+    \label{fig:ec_roccurve}
+\end{figure}
 
 We also compare the patched and original FLANNEL performance via confusion
-matrix as shown in Figure \ref{fig:f_cf} and Figure \ref{fig:p_cf}. We see both
-patched and original FLANNEL performs similarly in detection of COVID-19 images
+matrix as shown in Figure \ref{fig:f_cf} and Figure \ref{fig:p_cf}. Due to
+nature of random split between different runs, we see different numbers in both
+confusion matrix. However it still provides enough information for us to compare.
+We see patched and original FLANNEL performs similarly in detection of COVID-19 images
 where it has higher precision and recall than other two types of Pneumonia. Both
 models struggle with Pneumonia viral images classification and misclassifies
-them as Pneumonia bacteria images.
+them as Pneumonia bacteria images. 
 
 \begin{figure}[h]
     \centering
@@ -611,37 +623,22 @@ them as Pneumonia bacteria images.
 \end{figure}
 
 
-
-
-We also present the ROC curve in Figure \ref{fig:pf_roccurve} and PR curve in
-Figure \ref{fig:pf_prcurve} to show diagnostic ability of patched FLANNEL.
+We also present the ROC and Precision-Recall curve for COVID-19 classification
+in Figure \ref{fig:pf_roccurve} to show diagnostic ability of patched FLANNEL.
 As ROC curve can be misleading for highly imbalanced classifications, we also
-present Precision-Recall curve for patched FLANNEL. As we can see ROC curve AUC
-all models are performing well they have very less false positives. However when
-we look at PR curve, we could see all models performance differ and InceptionV3
-and Ensemble model performing better than others.
+present Precision-Recall curve for patched FLANNEL. As we see using ROC curve
+AUC gives an impression of all models are performing well as they have very less
+false positives. However when we look at PR curve, we could see models
+performance differ and InceptionV3 and Ensemble model performing better than
+others.
 
 
 \begin{figure*}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
+    \includegraphics[width=0.8\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
     \caption{Patched FLANNEL PR and ROC Curve}
     \label{fig:pf_roccurve}
 \end{figure*}
-
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
-%     \caption{Patched FLANNEL PR Curve}
-%     \label{fig:pf_prcurve}
-% \end{figure}
-
-
-
-
-
-
-
 
 
 \section{Discussion}
