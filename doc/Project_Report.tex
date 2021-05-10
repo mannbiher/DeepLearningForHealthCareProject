@@ -563,11 +563,11 @@ performance compared to the original approach.
 
 
 We also compare the patched and original FLANNEL performance via confusion
-matrix as shown in figure 4 and Fig 5. We see both patched and original FLANNEL
-performs similarly in detection of COVID-19 images where it has higher precision
-and recall than other two types of Pneumonia. Both models struggle with
-Pneumonia viral images classification and misclassifies them as Pneumonia
-bacteria images.
+matrix as shown in Figure \ref{fig:f_cf} and Figure \ref{fig:p_cf}. We see both
+patched and original FLANNEL performs similarly in detection of COVID-19 images
+where it has higher precision and recall than other two types of Pneumonia. Both
+models struggle with Pneumonia viral images classification and misclassifies
+them as Pneumonia bacteria images.
 
 
 \begin{figure}[H]
@@ -581,29 +581,17 @@ bacteria images.
     \centering
 
     \includegraphics[width=8cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
-    \caption{first figure}
-    \label{fig:f2score}
+    \caption{Patched FLANNEL PR Curve}
+    \label{fig:pf_prcurve}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_roc_curve.png}
-    \caption{second figure}
+    \caption{Patched FLANNEL ROC Curve}
+    \label{fig:pf_roccurve}
 \end{figure}
 
-
-\begin{figure}
-    \centering
-
-    \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_covid_19_comparison_precision_recall_curve.png}
-    \caption{second figure}
-\end{figure}
-\begin{figure}
-    \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_covid_19_comparison_roc_curve.png}
-    \caption{first figure}
-\end{figure}
 
 
 
@@ -611,13 +599,17 @@ bacteria images.
     \centering
 
     \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_covid_19_comparison_precision_recall_curve.png}
-    \caption{second figure}
+    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
+    \caption{Ensemble Comparision PR Curve}
+    \label{fig:ec_prcurve}
 \end{figure}
+
+
 \begin{figure}
     \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_covid_19_comparison_roc_curve.png}
-    \caption{first figure}
+    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \caption{EnsembLe Comparision ROC Cuve}
+    \label{fig:ec_roccurve}
 \end{figure}
 
 
@@ -625,11 +617,15 @@ bacteria images.
     \centering
     \includegraphics[width=8cm]{../doc/images/base_flannel_cf.png}
     \caption{Original FLANNEL Confusion Matrix}
+    \label{fig:f_cf}
 \end{figure}
+
+
 \begin{figure}
     \centering
     \includegraphics[width=8cm]{../doc/images/patched_flannel_cf.png}
     \caption{Patched FLANNEL Confusion Matrix}
+    \label{fig:p_cf}
 \end{figure}
 
 % \begin{figure}[H]
