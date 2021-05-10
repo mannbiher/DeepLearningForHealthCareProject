@@ -150,7 +150,7 @@ Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 
 Here we discuss some of the related works that are being carried out in this area on using deep learning techniques to detect COVID-19. Most of these works either used CXR or CT scans for patients to detect COVID-19. Our current research also falls in the same lines to accurately classify the patients CXR images to COVID-19 class or non COVID-19 classes.
 
-\subsubsection{AI-Covid}
+\subsubsection{AI-COVID}
 
 X. Bai and Wang \cite{pmid32339081} were able to create an AI system that could
 differentiate COVID-19 and other pneumonia using a chest CT scan. They
@@ -164,7 +164,7 @@ radiologists in detection of COVID-19 in Chest CT images.
 
 \subsubsection{COVID-Net}
 
-Wang L, Qiu Z, Wang A, et al. are able to create COVID-Net [9] architecture by
+Wang et al. are able to create COVID-Net [9] architecture by
 considering COVIDx dataset which contains 13,975 CXR images for training and
 experiments. COVID-Net architecture makes heavy use of a lightweight residual
 ‘projection expansion projection extension’ (PPEX) design pattern that contains
@@ -175,7 +175,7 @@ such as VGG-19 and ResNet-50.
 
 \subsubsection{Focal loss for dense object detection}
 
-Lin T, Goyal P, Girshick R propose Focal loss \cite{lin2018focal}, a
+Lin et al. propose Focal loss \cite{lin2018focal}, a
 modification to the standard cross entropy criterion that focuses weights for
 loss on hard examples versus well classified examples. This is accomplished by
 adding a factor $(1 - p_t)^\gamma$ to the standard cross entropy criterion where
@@ -267,7 +267,22 @@ produced by the network to the mask provided in the SCR dataset. An early
 stopping strategy was used based on the validation performance to prevent the
 model from overfitting.
 
-We then applied the trained FC-DenseNet103 segmentation model on the AP and PA CXR images from the Covid Chest X-ray and Kaggle X-ray datasets. The original inference script provided by Park et. al would produce two outputs, a numpified version of the CXR and a numpified version of the mask separating the lung contours. The numpified version of the mask is just 0s and 1s where the 1s represent the area of the lung contours.  We modified the inference script to apply the mask to the CXR by performing together by performing multiplication, we then saved the numpy compressed version of the masked CXR. This modification has two benefits, the first being that less disk space is used and the second being that our dataloader for the patch-based classifiers can improve performance since they no longer have to be responsible for applying the mask to the CXR as which was done by Park et. al. We then split the masked CXR dataset using a train-test ratio of 4:1 to randomly generate train test splits. To ensure reporting accurate performance on the base models, we used five fold cross validation while training. The detailed statistics are shown in Table 2.
+We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
+CXR images from the COVID Chest X-ray and Kaggle X-ray datasets. The original
+inference script provided by Park et. al would produce two outputs, a Numpy\footnote{
+https://numpy.org/devdocs/reference/generated/numpy.lib.format.html} format 
+from the CXR and a Numpy format of the mask separating the lung
+contours. The Numpy format of the mask is just 0s and 1s where the 1s
+represent the area of the lung contours.  We modified the inference script to
+apply the mask to the CXR by performing together by performing multiplication,
+we then saved the Numpy compressed version of the masked CXR. This modification
+has two benefits, the first being that less disk space is used and the second
+being that our dataloader for the patch-based classifiers can improve
+performance since they no longer have to be responsible for applying the mask to
+the CXR as which was done by Park et. al. We then split the masked CXR dataset
+using a train-test ratio of 4:1 to randomly generate train test splits. To
+ensure reporting accurate performance on the base models, we used five fold
+cross validation while training. The detailed statistics are shown in Table
 \ref{table:datastats}.
 
 \subsection{Base model training}
@@ -495,16 +510,22 @@ We are evaluating the global base models independently, the global ensemble,
 the patch-based models independently and the patch-based ensemble.
 
 \subsection{Implementation Details}
-The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was used. 
+The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
+a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was
+used. 
 
 FLANNEL with patch-based classification are implemented in PyTorch and are
 trained on 4 different Amazon Web Services Elastic Compute Cloud virtual
-machines each featuring a single NVIDIA Tesla V100 GPU. The base models
-are fine tuned using pre-trained models. The data are
-augmented with random flips, crops and scaling during the fine tuning process.
+machines each featuring a single NVIDIA Tesla V100 GPU. The base models are fine
+tuned using pre-trained models. The data are augmented with random flips, crops
+and scaling during the fine tuning process.
 
 
-We created and trained patch-based versions in the same environment as the original FLANNEL base learners. The primary difference was that the dataset fed to the patch-based learners was the masked CXR images. Since the CXR images were already masked, no random flips, crops or scaling was applied to the data for training.
+We created and trained patch-based versions in the same environment as the
+original FLANNEL base learners. The primary difference was that the dataset fed
+to the patch-based learners was the masked CXR images. Since the CXR images were
+already masked, no random flips, crops or scaling was applied to the data for
+training.
 
 
 After the base models are trained, FLANNEL is trained by passing in the
@@ -527,9 +548,9 @@ shows the mask creation and applying the mask on the image.
 We compared original FLANNEL base models and ensemble performance with the
 patched FLANNEL. Because COVID-19 class is heavily imbalanced compared to other
 categories, overall accuracy would not be the appropriate measure for
-performance evaluation. Overall accuracy wouldn’t be able to show performance
+performance evaluation. It wouldn’t be able to show performance
 increase in COVID-19 detection, instead we use F1-score for COVID-19 vs rest
-comparing the different models.  As shown in figure \ref{} We can see the
+comparing the different models.  As shown in figure \ref{fig:f1score}, we can see the
 ensemble approach in the original FLANNEL clearly outperforms state-of-the-art
 base models in detecting COVID-19. We however, don’t see the same performance
 gain in the patched FLANNEL approach where ensemble performance is slightly
@@ -548,14 +569,7 @@ and recall than other two types of Pneumonia. Both models struggle with
 Pneumonia viral images classification and misclassifies them as Pneumonia
 bacteria images.
 
-In this section, We compared FLANNEL ensemble performance with the independent
-performance for each of the base models. Due to imbalance dataset, overall
-accuracy is not the appropriate measure for evaluation of the model. With this
-imbalance, even a significant increase in COVID-19 detection performance will
-not affect overall accuracy much. So, we will use F1 score for COVID-19 vs the
-rest comparing different models. As shown in the figure \ref{fig:f1score},
-clearly FLANNEL outperformed the other state-of-the-art models in detecting
-COVID-19 cases.
+
 
 In Table \ref{table:resultstats}, we also show F1-score for each classification
 and macro F1-score for all classes. In Table \ref{table:resultstats}, we can see
@@ -618,7 +632,7 @@ and Ensemble model performing better than others.
     \centering
 
     \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
     \caption{Ensemble Comparision PR Curve}
     \label{fig:ec_prcurve}
 \end{figure}
@@ -626,7 +640,7 @@ and Ensemble model performing better than others.
 
 \begin{figure}
     \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
     \caption{EnsembLe Comparision ROC Cuve}
     \label{fig:ec_roccurve}
 \end{figure}
@@ -634,7 +648,7 @@ and Ensemble model performing better than others.
 
 \begin{figure}
     \centering
-    \includegraphics[width=8cm]{../doc/images/base_flannel_cf.png}
+    \includegraphics[width=7cm]{../doc/images/base_flannel_cf.png}
     \caption{Original FLANNEL Confusion Matrix}
     \label{fig:f_cf}
 \end{figure}
@@ -642,7 +656,7 @@ and Ensemble model performing better than others.
 
 \begin{figure}
     \centering
-    \includegraphics[width=8cm]{../doc/images/patched_flannel_cf.png}
+    \includegraphics[width=7cm]{../doc/images/patched_flannel_cf.png}
     \caption{Patched FLANNEL Confusion Matrix}
     \label{fig:p_cf}
 \end{figure}
