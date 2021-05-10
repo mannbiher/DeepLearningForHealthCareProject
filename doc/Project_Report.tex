@@ -421,14 +421,6 @@ Here are our considerations discussed below -
 \end{itemize}
 
 
-
-
-
-
-
-
-
-
 \begin{table*}
     \centering
     \caption{Performance comparison on F1 score: Class-specific F1 score is calculated using 1 class vs the rest strategy}
@@ -533,6 +525,23 @@ shows the mask creation and applying the mask on the image.
 
 \subsubsection{FLANNEL}
 
+We compared original FLANNEL base models and ensemble performance with the
+patched FLANNEL. Because COVID-19 class is heavily imbalanced compared to other
+categories, overall accuracy would not be the appropriate measure for
+performance evaluation. Overall accuracy wouldn’t be able to show performance
+increase in COVID-19 detection, instead we use F1-score for COVID-19 vs rest
+comparing the different models.  As shown in figure \ref{} We can see the
+ensemble approach in the original FLANNEL clearly outperforms state-of-the-art
+base models in detecting COVID-19. We however, don’t see the same performance
+gain in the patched FLANNEL approach where ensemble performance is slightly
+worse than the base models. We do notice an improvement in patched base models
+compared to the original base models. We also compare original FLANNEL and the
+patched FLANNEL ensemble performance with FLANNEL run as done in the research
+paper and clearly see improvement. This improvement can be contributed to having
+improved COVID-19 distribution compared to the original dataset containing only
+100 images [7].
+
+
 We also compare the patched and original FLANNEL performance via confusion
 matrix as shown in figure 4 and Fig 5. We see both patched and original FLANNEL
 performs similarly in detection of COVID-19 images where it has higher precision
@@ -577,20 +586,31 @@ them as Pneumonia bacteria images.
 \end{figure}
 
 
-\begin{figure}
-    \centering
 
-    \includegraphics[width=8cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
-    \caption{Patched FLANNEL PR Curve}
-    \label{fig:pf_prcurve}
-\end{figure}
+We also present the ROC curve in Figure \ref{fig:pf_roccurve} and PR curve in
+Figure \ref{fig:pf_prcurve} to show diagnostic ability of patched FLANNEL.
+As ROC curve can be misleading for highly imbalanced classifications, we also
+present Precision-Recall curve for patched FLANNEL. As we can see ROC curve AUC 
+all models are performing well they have very less false positives. However when
+we look at PR curve, we could see all models performance differ and InceptionV3
+and Ensemble model performing better than others.
 
-\begin{figure}
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_roc_curve.png}
     \caption{Patched FLANNEL ROC Curve}
     \label{fig:pf_roccurve}
 \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
+    \caption{Patched FLANNEL PR Curve}
+    \label{fig:pf_prcurve}
+\end{figure}
+
+
 
 
 
@@ -753,6 +773,10 @@ GitHub source code for both FLANNEL and Patch-by-Patch classification
           {Patch-by-Patch classification}
 \end{itemize}
 
+
+\section{Appendix}
+GitHub source code for the Patched FLANNEL
+\url{https://github.com/mannbiher/DeepLearningForHealthCareProject}
 
 \clearpage
 %
