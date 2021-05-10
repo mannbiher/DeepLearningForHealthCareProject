@@ -148,7 +148,7 @@ Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 
 \subsection{Related Work}
 
-Here we discuss some of the related works that are being carried out in this area on using deep learning techniques to detect COVID-19. Most of these works either used CXR or CT scans for patients to detect COVID-19. Our current research also falls in the same lines to accurately classify the patients CXR images to COVID-19 class or non COVID-19 classes. 
+Here we discuss some of the related works that are being carried out in this area on using deep learning techniques to detect COVID-19. Most of these works either used CXR or CT scans for patients to detect COVID-19. Our current research also falls in the same lines to accurately classify the patients CXR images to COVID-19 class or non COVID-19 classes.
 
 \subsubsection{AI-Covid}
 
@@ -190,7 +190,7 @@ COVID-19 pneumonia lesion segmentation. To make the training process robust
 against noisy labels, a novel noise-robust Dice loss function was proposed and
 integrated into a self-ensembling framework, where an adaptive teacher and an
 adaptive student are introduced to further improve the performance in dealing
-with noisy labels. 
+with noisy labels.
 
 
 
@@ -329,7 +329,12 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
     \begin{tabular}{llrrrrr} \hline
         Source                                 &           & Total  & COVID-19 &
         Viral                                  & Bacterial & Normal              \\ \hline
-        \multirow{2}{*}{} Original data        & CCX data  & 554    & 478      &
+        \multirow{2}{*}{} Old data             & CCX data  & 119    & 100      &
+        11                                     & 7         & 1                   \\
+                                               & KCX data  & 5389   & 0        &
+        1492                                   & 2780      & 1117                \\
+        \hline
+        \multirow{2}{*}{} Current data         & CCX data  & 554    & 478      &
         16                                     & 42        & 18                  \\
                                                & KCX data  & 5856   & 0        &
         1493                                   & 2780      & 1583                \\
@@ -435,7 +440,7 @@ Here are our considerations discussed below -
         Vgg19\_bn                 & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
         0.8950 (0.00)             & 0.7936 (0.00)                                          \\
 
-        \textit{FLANNEL}                   & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
+        \textit{FLANNEL}          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
         0.9322 (0.00)             & 0.8385 (0.01)                                          \\ \hline
         \textbf{Patched FLANNEL}  &               &                 &                    &
                                   &                                                        \\
