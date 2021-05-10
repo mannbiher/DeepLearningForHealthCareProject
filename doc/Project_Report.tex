@@ -152,15 +152,15 @@ Here we discuss some of the related works that are being carried out in this are
 
 \subsubsection{AI-Covid}
 
-X. Bai and Wang were able to create an AI system [1] that could differentiate
-COVID-19 and other pneumonia using a chest CT scan. They approached this as a
-classification problem and used the EfficientNet B4 architecture which is a CNN.
-They were able to achieve results of 96% accuracy, 95% sensitivity , 96%
-specificity, and an area under receiver operating characteristic curve of 0.95
-and an area under the precision recall curve of 0.90. When compared with
-radiologists on the same test dataset, the AI system performed better. This
-study concluded that the AI can support radiologists in detection of Covid 19 in
-Chest CT images.
+X. Bai and Wang \cite{pmid32339081} were able to create an AI system that could
+differentiate COVID-19 and other pneumonia using a chest CT scan. They
+approached this as a classification problem and used the EfficientNet B4
+architecture which was a CNN based network. They were able to achieve results of
+96\% accuracy, 95\% sensitivity, 96\% specificity, and an area under receiver
+operating characteristic curve of 0.95 and an area under the precision recall
+curve of 0.90. When compared with radiologists on the same test dataset, the AI
+system performed better. This study concluded that the AI can support
+radiologists in detection of COVID-19 in Chest CT images.
 
 \subsubsection{COVID-Net}
 
@@ -173,24 +173,47 @@ at the end. COVID-Net achieved higher test accuracy than other architectures
 such as VGG-19 and ResNet-50.
 
 
+\subsubsection{Focal loss for dense object detection}
 
-\subsubsection{Noise Robust system for COVID-19 detection}
+Lin T, Goyal P, Girshick R propose Focal loss \cite{lin2018focal}, a
+modification to the standard cross entropy criterion that focuses weights for
+loss on hard examples versus well classified examples. This is accomplished by
+adding a factor $(1 - p_t)^\gamma$ to the standard cross entropy criterion where
+setting $\gamma  > 0$ reduces the relative loss for well-classified examples
+$(p_t > .5)$. This results in achieving higher accuracy than using the standard
+cross entropy loss and surpassed speed and accuracy when compared with state of
+the art two stage detectors; Faster R CNN Variants.
 
-Wang G, Liu X, Li C, et al. developed a CNN model which is very effective with
-detection of COVID-19 lesions from CT images that have a lot of noise [13]. This
-is a novel noise-robust learning framework based on self-ensembling of CNNs. To
-better deal with the complex lesions, a novel COVID-19 Pneumonia Lesion
-segmentation network (COPLE-Net) was proposed that uses a combination of
-max-pooling and average pooling to reduce information loss during downsampling,
-and employs bridge layers to alleviate the semantic gap between features in the
-encoder and decoder. Experimental results with CT images of 558 COVID-19
-patients showed the effectiveness of the noise-robust Dice loss function,
-COPLE-Net and adaptive self-ensembling in learning from noisy labels for
-COVID-19 pneumonia lesion segmentation. To make the training process robust
-against noisy labels, a novel noise-robust Dice loss function was proposed and
-integrated into a self-ensembling framework, where an adaptive teacher and an
-adaptive student are introduced to further improve the performance in dealing
-with noisy labels.
+\subsubsection{Ensemble Models}
+
+FLANNEL model applies ensemble approach to combine multiple base learners to get
+classification from each model. As shown by Larse Kai Hansen and Peter Salamon
+\cite{58871} compared to individual model, a better classification can be achieved
+by training an ensemble of neural networks on same data and then using a
+consensus scheme to decide the collective classification by vote.
+
+Modular ensemble models have also been shown to perform better and reduce
+training time in several researches \cite{combine}. It has been also shown to
+reduce model complexity and making the overall system easier to understand.
+
+
+\subsubsection{Noise-robust segmentation of COVID-19 from CT images}
+
+This is a CNN model \cite{wang2020covidnet} developed to be effective with
+detection of COVID-19 lesions from CT images that have a lot of noise. This
+paper discusses how Wang et al developed a novel noise-robust learning framework
+based on self-ensembling of CNNs.  To better deal with the complex lesions, a
+novel COVID-19 Pneumonia Lesion segmentation network (COPLE-Net) was proposed
+that uses a combination of max-pooling and average pooling to reduce information
+loss during downsampling, and employs bridge layers to alleviate the semantic
+gap between features in the encoder and decoder. Experimental results with CT
+images of 558 COVID-19 patients showed the effectiveness of the noise-robust
+Dice loss function, COPLE-Net and adaptive self-ensembling in learning from
+noisy labels for COVID-19 pneumonia lesion segmentation. To make the training
+process robust against noisy labels, a novel noise-robust Dice loss function was
+proposed and integrated into a self-ensembling framework, where an adaptive
+teacher and an adaptive student are introduced to further improve the
+performance in dealing with noisy labels.
 
 
 
@@ -244,21 +267,7 @@ produced by the network to the mask provided in the SCR dataset. An early
 stopping strategy was used based on the validation performance to prevent the
 model from overfitting.
 
-We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
-CXR images from the Covid Chest X-ray and Kaggle X-ray datasets. The original
-inference script provided by Park et. al would produce two outputs, a numpified
-version of the CXR and a numpified version of the mask separating the lung
-contours. The numpified version of the mask is just 0s and 1s where the 1s
-represent the area of the lung contours.  We modified the inference script to
-apply the mask to the CXR by performing together by performing multiplication,
-we then saved the numpy compressed version of the masked CXR. This modification
-has two benefits, the first being that less disk space is used and the second
-being that our dataloader for the patch-based classifiers can improve
-performance since they no longer have to be responsible for applying the mask to
-the CXR as which was done by Park et. al. We then split the masked CXR dataset
-using a train-test ratio of 4:1 to randomly generate train test splits. To
-ensure reporting accurate performance on the base models, we used five fold
-cross validation while training. The detailed statistics are shown in Table 2
+We then applied the trained FC-DenseNet103 segmentation model on the AP and PA CXR images from the Covid Chest X-ray and Kaggle X-ray datasets. The original inference script provided by Park et. al would produce two outputs, a numpified version of the CXR and a numpified version of the mask separating the lung contours. The numpified version of the mask is just 0s and 1s where the 1s represent the area of the lung contours.  We modified the inference script to apply the mask to the CXR by performing together by performing multiplication, we then saved the numpy compressed version of the masked CXR. This modification has two benefits, the first being that less disk space is used and the second being that our dataloader for the patch-based classifiers can improve performance since they no longer have to be responsible for applying the mask to the CXR as which was done by Park et. al. We then split the masked CXR dataset using a train-test ratio of 4:1 to randomly generate train test splits. To ensure reporting accurate performance on the base models, we used five fold cross validation while training. The detailed statistics are shown in Table 2.
 \ref{table:datastats}.
 
 \subsection{Base model training}
@@ -471,6 +480,8 @@ Resnet152, ResneXt101 and Vgg19\_bn. These models were fine-tuned using default
 parameter values, settings and by using the Adam optimizer. We compared FLANNEL
 with these 5 base models of the framework.
 
+The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was used. 
+
 We are planning to create and train patch-based versions of the base models
 that will use the masked version of the same images from the dataset. We will
 then re-run the FLANNEL with the patch-based models and compare performance.
@@ -493,14 +504,17 @@ We are evaluating the global base models independently, the global ensemble,
 the patch-based models independently and the patch-based ensemble.
 
 \subsection{Implementation Details}
-The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
-a NVIDIA 1080 GPU.
+The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was used. 
 
 FLANNEL with patch-based classification are implemented in PyTorch and are
 trained on 4 different Amazon Web Services Elastic Compute Cloud virtual
 machines each featuring a single NVIDIA Tesla V100 GPU. The base models
 are fine tuned using pre-trained models. The data are
 augmented with random flips, crops and scaling during the fine tuning process.
+
+
+We created and trained patch-based versions in the same environment as the original FLANNEL base learners. The primary difference was that the dataset fed to the patch-based learners was the masked CXR images. Since the CXR images were already masked, no random flips, crops or scaling was applied to the data for training.
+
 
 After the base models are trained, FLANNEL is trained by passing in the
 concatenated output layers of the base models as the input features.
@@ -519,6 +533,13 @@ shows the mask creation and applying the mask on the image.
 
 \subsubsection{FLANNEL}
 
+We also compare the patched and original FLANNEL performance via confusion
+matrix as shown in figure 4 and Fig 5. We see both patched and original FLANNEL
+performs similarly in detection of COVID-19 images where it has higher precision
+and recall than other two types of Pneumonia. Both models struggle with
+Pneumonia viral images classification and misclassifies them as Pneumonia
+bacteria images.
+
 In this section, We compared FLANNEL ensemble performance with the independent
 performance for each of the base models. Due to imbalance dataset, overall
 accuracy is not the appropriate measure for evaluation of the model. With this
@@ -535,6 +556,20 @@ scores are better than when run with old dataset containing only 100 COVID-19 im
 \cite{10.1093/jamia/ocaa280}.
 
 
+We also compared the performance of the original FLANNEL ensemble with the
+patched ensemble using micro-F1 score and saw a slight increase in overall
+performance compared to the original approach.
+
+
+
+We also compare the patched and original FLANNEL performance via confusion
+matrix as shown in figure 4 and Fig 5. We see both patched and original FLANNEL
+performs similarly in detection of COVID-19 images where it has higher precision
+and recall than other two types of Pneumonia. Both models struggle with
+Pneumonia viral images classification and misclassifies them as Pneumonia
+bacteria images.
+
+
 \begin{figure}[H]
     \includegraphics[width=8cm]{../doc/images/F1Score_vs_rest.png}
     \caption{FLANNEL Improvement}
@@ -545,14 +580,14 @@ scores are better than when run with old dataset containing only 100 COVID-19 im
 \begin{figure}
     \centering
 
-    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
+    \includegraphics[width=8cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
     \caption{first figure}
     \label{fig:f2score}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=8cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \includegraphics[width=8cm]{../doc/images/patched_flannel_covid_19_roc_curve.png}
     \caption{second figure}
 \end{figure}
 
@@ -620,66 +655,96 @@ pneumonia images.
 
 \section{Discussion}
 
-\subsection{Slow Model Training}
-\begin{itemize}
-    \item Training the original FLANNEL base model is slow already where
-          training a single model takes on average X hours.
-    \item Training the patch-based models is even slower due to two reasons. The
-          first is that the patch-base model dataloader was originally responsible for
-          applying the mask to the cxr image, this was addressed by transitioning the
-          responsibility to the segmentation task to immediately apply the mask to the
-          CXR. The second reason for the patch-based models being slow is that a
-          classification is run for each patch sequentially. This increases the
-          complexity from N to kN where k is the number of patches. We were unable to
-          address this due to time constraints but we believe parallelizing the patch
-          predictions could lead to major improvements.
-\end{itemize}
+Training the original FLANNEL model was extremely slow already where training a
+single model takes on average 6 hours. When using the original architecture for
+the patch-based models, their training process was even slower due to two
+reasons. The first is that the patch-base model dataloader was originally
+responsible for applying the mask to the cxr image, this was addressed by
+transitioning the responsibility to the segmentation task to immediately apply
+the mask to the CXR. The second reason for the patch-based models being slow is
+that a classification is run for each patch sequentially. This increases the
+complexity from N to kN where k is the number of patches. We were unable to
+address this due to time constraints but we believe parallelizing the patch
+predictions could lead to major improvements.
 
-Reasons for patch-based models for not improving F1-Score over original FLANNEL based models:
-\begin{itemize}
-    \item Mask production of CXR images was inaccurate. This is difficult to
-          judge as we would need experts to determine if this was an actual problem
-    \item Currently predictions for patch-based classifiers are performed using
-          majority voting. This can potentially work against us if detections of
-          Covid-19/Pneumonia are localized in certain areas of a CXR
-    \item Local-patterns within a lung areas of a CXR are less important than
-          the global patterns within the lung
-\end{itemize}
+After training the patch-based models we were hoping to see substantial
+improvements similar to Park et al. but we only noticed minor changes in
+performance where some models slightly increased while others decreased. Two
+models that had an increase in average precision performance were inceptionv3
+and densenet161. While resnet152, resnext101 and vgg19 had minor decreases in
+average precision. Even though three of the base-models had decreased
+performance, the patched ensemble still had a minor improvement over the base
+ensemble in average precision by 0.01. We were originally hopeful to have more
+significant increases in performance. Some of the reasons that could explain
+this result is the segmentation that generated the masked CXR is inaccurate and
+is masking important information surrounding the edges of the lungs. This
+hypothesis will need to be verified by a medical expert. Another reason the
+patch-based method was not as effective was that local patterns within the lung
+areas of a CXR are less important than the global patterns detected within a
+lung. This hypothesis can potentially be tested by increasing the patch size and
+measuring performance again.
 
+Running FLANNEL with improved data distribution We realized very early in the
+project that running FLANNEL model using five base models and 200 epochs for
+five foldes is going to take at least 3-4 days on a Tesla V100 GPU or
+equivalent. We had to find a solution on both cost and runtime in order to have
+results early. We tried multiple optimization methods such as increasing the
+number of workers, mounting training images in memory to bring the runtime down.
+We also used spot instances in parallel to bring the cost down. We were able to
+complete training and evaluation of the FLANNEL model in 36 hours and
+considerably less cost around 100 dollars.
 
-We realized very early in the project that running FLANNEL model using five base
-models and 200 epochs for five foldes is going to take at least 3-4 days on a
-Tesla V100 GPU or equivalent. We had to find a solution on both cost and runtime
-in order to have results early. We tried multiple optimization methods such as
-increasing the number of workers, mounting training images in memory to bring
-the runtime down. We also used spot instances in parallel to bring the cost
-down. We were able to complete training and evaluation of the FLANNEL model in
-36 hours and considerably less cost around 100 dollars.
+We could have done below things to improve the patch classifier performance. We
+removed the weight assignment step from the patch classifier, because we thought
+the classification output is already being passed through an ensemble method
+where a neural network learns proper weight. We could have also run it for 200
+epochs like FLANNEL and implemented learning rate adjustment at 150 epochs.
+
 
 
 \section{Conclusion}
-As we are making progress, we have run the base models and FLANNEL on the new
-dataset. With the improved distribution of COVID-19 data we see FLANNEL
-outperforms the metrics as seen in the base FLANNEL paper by 13\%. We created the
-Segmentation model that can produce mask of lung contours from Chest x-ray
-images. We are working on integrating the patch-based model in the FLANNEL
-ensemble model that would accept masked images as input. We will compare the
-performance of patched FLANNEL against the original FLANNEL. In addition to
-measuring classification performance, we will also measure timing performance to
-note how much of an impact the patch-based classification technique has on
-runtime.
+We had two major goals for this project. To faithfully reproduce FLANNEL on an
+updated dataset with improved distribution of COVID-19 images and to apply
+segmentation and patched classification to improve the COVID-19 detection
+performance of FLANNEL model. 
+
+We ran the base models and FLANNEL ensemble on the new dataset using all five
+folds and 200 epochs. With the improved distribution of COVID-19 data we see
+FLANNEL outperforms the metrics as seen in the Original FLANNEL paper by 13%.
+This large increase in performance highlights the importance of curating a rich
+dataset.
+
+Then we created the Segmentation model that produced masked CXR images that
+displayed only the lung contours. These masked images were then used as a
+dataset for patch-based versions of the FLANNEL model. The performance of the
+patch-based models was very similar to their “global” counterparts with three of
+the five models having a slight increase in performance while the other two had
+a slight decrease. We then ran the ensemble on the outputs of the patch-based
+classifier and did not note major improvement in classification performance. For
+COVID-19, ensemble on patched classifiers performed slightly worse than Original
+FLANNEL ensemble. However, for overall classification the average precision
+increased by 0.01 over the Original FLANNEL.
+
+We were able to complete patch classifier run earlier than Original FLANNEL
+(stage-1 and stage-2) where early stopping and less epochs (100 vs 200 epochs
+for Original FLANNEL).
+
+We were partially able to achieve our goal of improving the original FLANNEL
+architecture using patch-based models. Even though the performance was slightly
+increased, we see both Original FLANNEL and Patched FLANNEL clearly outperforms
+the other base models. 
+
 
 
 \section{Contribution}
 
-All authors were actively involved in patched-FLANNEL development and
-implementations. Major contribution from authors are Maneesh: AWS Setup, batch
-run of FLANNEL and patch-by-patch models on AWS, debugging and fixing base
-FLANNEL and patched-FLANNEL issues, project report, Github documentation Satish:
-Sync checkpoint, output graphs and reports development, Github documentation
-Raman: patch-by-patch segmentation, classification development, project report,
-GitHub documentation Srikanth: patch-by-patch segmentation, classification
-development, project report,GitHub documentation
+All authors were actively involved in Patched FLANNEL development and implementations. Major contribution from authors are
+
+Maneesh: AWS Setup, batch run of FLANNEL and patch-based models on AWS, Development of patch-based classification and ensemble, project report, GitHub documentation
+Satish: FLANNEL checkpoints, output graphs and reports development, Github documentation
+Raman: segmentation, patch-based classification development, output graphs and reports development, project report, GitHub documentation
+Srikanth:  segmentation, patch-based classification development, project report,GitHub documentation
+
 
 
 
@@ -691,8 +756,6 @@ GitHub source code for both FLANNEL and Patch-by-Patch classification
     \item \href{https://github.com/jongcye/Deep-Learning-COVID-19-on-CXR-using-Limited-Training-Data-Sets}
           {Patch-by-Patch classification}
 \end{itemize}
-
-TODO: Specify commit ID for COVID-xray data 78543292f8b01d5e0ed1d0e15dce71949f0657bb
 
 
 \clearpage
