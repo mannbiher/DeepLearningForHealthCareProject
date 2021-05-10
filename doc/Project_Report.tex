@@ -148,7 +148,11 @@ Figure \ref{fig:improve} and similar to FLANNEL consists of two stage approach.
 
 \subsection{Related Work}
 
-Here we discuss some of the related works that are being carried out in this area on using deep learning techniques to detect COVID-19. Most of these works either used CXR or CT scans for patients to detect COVID-19. Our current research also falls in the same lines to accurately classify the patients CXR images to COVID-19 class or non COVID-19 classes.
+Here we discuss some of the related works that are being carried out in this
+area on using deep learning techniques to detect COVID-19. Most of these works
+either used CXR or CT scans for patients to detect COVID-19. Our current
+research also falls in the same lines to accurately classify the patients CXR
+images to COVID-19 class or non COVID-19 classes.
 
 \subsubsection{AI-COVID}
 
@@ -215,7 +219,39 @@ proposed and integrated into a self-ensembling framework, where an adaptive
 teacher and an adaptive student are introduced to further improve the
 performance in dealing with noisy labels.
 
-
+\begin{table*}[h]
+    \centering
+    \caption{Experimental data description}
+    \label{table:datastats}
+    \begin{tabular}{llrrrrr} \hline
+        Source                                 &           & Total  & COVID-19 &
+        Viral                                  & Bacterial & Normal              \\ \hline
+        \multirow{2}{*}{} Old data             & CCX data  & 119    & 100      &
+        11                                     & 7         & 1                   \\
+                                               & KCX data  & 5389   & 0        &
+        1492                                   & 2780      & 1117                \\
+        \hline
+        \multirow{2}{*}{} Current data         & CCX data  & 554    & 478      &
+        16                                     & 42        & 18                  \\
+                                               & KCX data  & 5856   & 0        &
+        1493                                   & 2780      & 1583                \\
+        \hline
+        \multirow{2}{*}{} View Distribution    & AP view   & 6163   & 282      &
+        1501                                   & 2789      & 1591                \\
+                                               & PA view   & 247    & 196      &
+        8                                      & 33        & 10                  \\ \hline
+        \multirow{3}{*}{} Training/test splits & Training  & 5127   & 378      &
+        1509                                   & 2291      & 1288                \\
+                                               & Testing   & 1283   & 100      &
+        339                                    & 531       & 313                 \\
+                                               & Total     & 6410   & 478      &
+        1509                                   & 2822      & 1601                \\
+        \hline
+    \end{tabular}\par
+    \bigskip
+    AP: anteroposterior; CCX: COVID Chest X-ray; COVID-19: coronavirus disease
+    2019; KCX: Kaggle Chest X-ray; PA: posteroanterior.
+\end{table*}
 
 \section{Method}
 
@@ -270,7 +306,7 @@ model from overfitting.
 We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
 CXR images from the COVID Chest X-ray and Kaggle X-ray datasets. The original
 inference script provided by Park et. al would produce two outputs, a Numpy\footnote{
-https://numpy.org/devdocs/reference/generated/numpy.lib.format.html} format 
+https://numpy.org/devdocs/reference/generated/numpy.lib.format.html} format
 from the CXR and a Numpy format of the mask separating the lung
 contours. The Numpy format of the mask is just 0s and 1s where the 1s
 represent the area of the lung contours.  We modified the inference script to
@@ -292,7 +328,7 @@ used were pre-trained from
 ImageNet\footnote{http://www.image-net.org/challenges/LSVRC/index} to account
 for the small size of the dataset. The pre-processed images were first resized
 to 1024x1024 to be as close to the original pixel distribution. The masks
-generated from the FC-DenseNet103 segmentation model were also upsampled to
+generated from the FC-DenseNet103 segmentation model were also up-sampled to
 1024x1024 to match the new CXR image size.The resized images were then masked
 with the lung-contours and passed as input to the patch-based classifier. The
 patch-based classifier then produced k number crops/patches of size 224x224 from
@@ -346,38 +382,48 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
 
 \end{table}
 
-\begin{table*}[h]
+\begin{table*}
     \centering
-    \caption{Experimental data description}
-    \label{table:datastats}
-    \begin{tabular}{llrrrrr} \hline
-        Source                                 &           & Total  & COVID-19 &
-        Viral                                  & Bacterial & Normal              \\ \hline
-        \multirow{2}{*}{} Old data             & CCX data  & 119    & 100      &
-        11                                     & 7         & 1                   \\
-                                               & KCX data  & 5389   & 0        &
-        1492                                   & 2780      & 1117                \\
-        \hline
-        \multirow{2}{*}{} Current data         & CCX data  & 554    & 478      &
-        16                                     & 42        & 18                  \\
-                                               & KCX data  & 5856   & 0        &
-        1493                                   & 2780      & 1583                \\
-        \hline
-        \multirow{2}{*}{} View Distribution    & AP view   & 6163   & 282      &
-        1501                                   & 2789      & 1591                \\
-                                               & PA view   & 247    & 196      &
-        8                                      & 33        & 10                  \\ \hline
-        \multirow{3}{*}{} Training/test splits & Training  & 5127   & 378      &
-        1509                                   & 2291      & 1288                \\
-                                               & Testing   & 1283   & 100      &
-        339                                    & 531       & 313                 \\
-                                               & Total     & 6410   & 478      &
-        1509                                   & 2822      & 1601                \\
-        \hline
+    \caption{Performance comparison on F1 score: Class-specific F1 score is calculated using 1 class vs the rest strategy}
+    \label{table:resultstats}
+    \begin{tabular}{ |lccccc| } \hline
+                                  & COVID-19      & Pneumonia virus & Pneumonia bacteria &
+        Normal                    & Macro-F1                                               \\ \hline
+        \textbf{Original FLANNEL} &               &                 &                    &
+                                  &                                                        \\
+        Densenet161               & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
+        0.8875 (0.02)             & 0.7625 (0.02)                                          \\
+        InceptionV3               & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
+        0.9015 (0.03)             & 0.8120 (0.02)                                          \\
+        Resnet152                 & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
+        0.9080 (0.00)             & 0.7911 (0.01)                                          \\
+        ResNeXt101                & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
+        0.9046 (0.01)             & 0.7852 (0.02)                                          \\
+        Vgg19\_bn                 & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
+        0.8950 (0.00)             & 0.7936 (0.00)                                          \\
+
+        \textit{FLANNEL}          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
+        0.9322 (0.00)             & 0.8385 (0.01)                                          \\ \hline
+        \textbf{Patched FLANNEL}  &               &                 &                    &
+                                  &                                                        \\
+        Densenet161               & 0.8994 (0.02) & 0.5815 (0.02)   & 0.8171 (0.01)      &
+        0.9195 (0.01)             & 0.8043 (0.01)                                          \\
+        InceptionV3               & 0.8974 (0.03) & 0.6161 (0.00)   & 0.8286 (0.00)      &
+        0.9351 (0.01)             & 0.8193 (0.01)                                          \\
+        Resnet152                 & 0.8738 (0.02) & 0.5527 (0.03)   & 0.8204 (0.00)      &
+        0.9133 (0.00)             & 0.7901 (0.01)                                          \\
+        ResNeXt101                & 0.8978 (0.01) & 0.5875 (0.01)   & 0.8215 (0.01)      &
+        0.9200 (0.01)             & 0.8067 (0.00)                                          \\
+        Vgg19\_bn                 & 0.8870 (0.03) & 0.5786 (0.03)   & 0.8201 (0.00)      &
+        0.9159 (0.01)             & 0.8004 (0.01)                                          \\
+
+        FLANNEL                   & 0.9121 (0.02) & 0.6009 (0.01)   & 0.8270 (0.01)      &
+        0.9319 (0.01)             & 0.8180 (0.01)                                          \\ \hline
+        \textbf{FLANNEL\_OldData} & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
+        0.9144 (0.01)             & 0.7910 (0.01)                                          \\ \hline
     \end{tabular}\par
     \bigskip
-    AP: anteroposterior; CCX: COVID Chest X-ray; COVID-19: coronavirus disease
-    2019; KCX: Kaggle Chest X-ray; PA: posteroanterior.
+    The values in parentheses are the standard deviations.
 \end{table*}
 
 % \setlength{\algomargin}
@@ -423,61 +469,8 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
     \label{algo:flannel-improved}
 \end{algorithm}
 
-\subsection{Considerations}
-Here are our considerations discussed below -
-\begin{itemize}
-    \item The pretrained model for segmentation (FC-Densenet103) will perform
-          well on the datasets used in FLANNEL \cite{10.1093/jamia/ocaa280} paper.
-    \item The number of patches(K) to be 100 to start with, will be fine tuned
-          after evaluating the results.
-    \item The patch image size will be chosen as 224X224 initially and will be
-          fine tuned after evaluating the results.
-\end{itemize}
 
 
-\begin{table*}
-    \centering
-    \caption{Performance comparison on F1 score: Class-specific F1 score is calculated using 1 class vs the rest strategy}
-    \label{table:resultstats}
-    \begin{tabular}{ |lccccc| } \hline
-                                  & COVID-19      & Pneumonia virus & Pneumonia bacteria &
-        Normal                    & Macro-F1                                               \\ \hline
-        \textbf{Original FLANNEL} &               &                 &                    &
-                                  &                                                        \\
-        Densenet161               & 0.7694 (0.03) & 0.5901 (0.05)   & 0.8030 (0.01)      &
-        0.8875 (0.02)             & 0.7625 (0.02)                                          \\
-        InceptionV3               & 0.8938 (0.01) & 0.6413 (0.03)   & 0.8112 (0.02)      &
-        0.9015 (0.03)             & 0.8120 (0.02)                                          \\
-        Resnet152                 & 0.8302 (0.02) & 0.6218 (0.02)   & 0.8046 (0.01)      &
-        0.9080 (0.00)             & 0.7911 (0.01)                                          \\
-        ResNeXt101                & 0.8197 (0.03) & 0.6151 (0.04)   & 0.8016 (0.01)      &
-        0.9046 (0.01)             & 0.7852 (0.02)                                          \\
-        Vgg19\_bn                 & 0.8753 (0.02) & 0.6023 (0.01)   & 0.8016 (0.01)      &
-        0.8950 (0.00)             & 0.7936 (0.00)                                          \\
-
-        \textit{FLANNEL}          & 0.9239 (0.01) & 0.6675 (0.02)   & 0.8306 (0.01)      &
-        0.9322 (0.00)             & 0.8385 (0.01)                                          \\ \hline
-        \textbf{Patched FLANNEL}  &               &                 &                    &
-                                  &                                                        \\
-        Densenet161               & 0.8994 (0.02) & 0.5815 (0.02)   & 0.8171 (0.01)      &
-        0.9195 (0.01)             & 0.8043 (0.01)                                          \\
-        InceptionV3               & 0.8974 (0.03) & 0.6161 (0.00)   & 0.8286 (0.00)      &
-        0.9351 (0.01)             & 0.8193 (0.01)                                          \\
-        Resnet152                 & 0.8738 (0.02) & 0.5527 (0.03)   & 0.8204 (0.00)      &
-        0.9133 (0.00)             & 0.7901 (0.01)                                          \\
-        ResNeXt101                & 0.8978 (0.01) & 0.5875 (0.01)   & 0.8215 (0.01)      &
-        0.9200 (0.01)             & 0.8067 (0.00)                                          \\
-        Vgg19\_bn                 & 0.8870 (0.03) & 0.5786 (0.03)   & 0.8201 (0.00)      &
-        0.9159 (0.01)             & 0.8004 (0.01)                                          \\
-
-        FLANNEL                   & 0.9121 (0.02) & 0.6009 (0.01)   & 0.8270 (0.01)      &
-        0.9319 (0.01)             & 0.8180 (0.01)                                          \\ \hline
-        \textbf{FLANNEL\_OldData} & 0.8168 (0.03) & 0.6063 (0.02)   & 0.8267 (0.00)      &
-        0.9144 (0.01)             & 0.7910 (0.01)                                          \\ \hline
-    \end{tabular}\par
-    \bigskip
-    The values in parentheses are the standard deviations.
-\end{table*}
 
 \section{Results}
 
@@ -486,7 +479,7 @@ Resnet152, ResneXt101 and Vgg19\_bn. These models were fine-tuned using default
 parameter values, settings and by using the Adam optimizer. We compared FLANNEL
 with these 5 base models of the framework.
 
-The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was used. 
+The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was used.
 
 We are planning to create and train patch-based versions of the base models
 that will use the masked version of the same images from the dataset. We will
@@ -512,7 +505,7 @@ the patch-based models independently and the patch-based ensemble.
 \subsection{Implementation Details}
 The FC-DenseNet103 segmentation model was implemented in PyTorch and trained on
 a NVIDIA 1080 GPU. The operating system was windows 10 pro and python 3.8 was
-used. 
+used.
 
 FLANNEL with patch-based classification are implemented in PyTorch and are
 trained on 4 different Amazon Web Services Elastic Compute Cloud virtual
@@ -548,27 +541,24 @@ shows the mask creation and applying the mask on the image.
 We compared original FLANNEL base models and ensemble performance with the
 patched FLANNEL. Because COVID-19 class is heavily imbalanced compared to other
 categories, overall accuracy would not be the appropriate measure for
-performance evaluation. It wouldn’t be able to show performance
-increase in COVID-19 detection, instead we use F1-score for COVID-19 vs rest
-comparing the different models.  As shown in figure \ref{fig:f1score}, we can see the
-ensemble approach in the original FLANNEL clearly outperforms state-of-the-art
-base models in detecting COVID-19. We however, don’t see the same performance
-gain in the patched FLANNEL approach where ensemble performance is slightly
-worse than the base models. We do notice an improvement in patched base models
-compared to the original base models. We also compare original FLANNEL and the
-patched FLANNEL ensemble performance with FLANNEL run as done in the research
-paper and clearly see improvement. This improvement can be contributed to having
-improved COVID-19 distribution compared to the original dataset containing only
-100 images [7].
+performance evaluation. It wouldn’t be able to show performance increase in
+COVID-19 detection, instead we use F1-score for COVID-19 vs rest comparing the
+different models.  As shown in figure \ref{fig:f1score}, we can see the ensemble
+approach in the original FLANNEL clearly outperforms state-of-the-art base
+models in detecting COVID-19. We however, don’t see the same performance gain in
+the patched FLANNEL approach where ensemble performance is slightly worse than
+the base models. We do notice an improvement in patched base models compared to
+the original base models. We also compare original FLANNEL and the patched
+FLANNEL ensemble performance with FLANNEL run as done in the research paper and
+clearly see improvement. This improvement can be contributed to having improved
+COVID-19 distribution compared to the original dataset only 100 COVID-19 images
+\cite{10.1093/jamia/ocaa280}.
 
-
-We also compare the patched and original FLANNEL performance via confusion
-matrix as shown in figure 4 and Fig 5. We see both patched and original FLANNEL
-performs similarly in detection of COVID-19 images where it has higher precision
-and recall than other two types of Pneumonia. Both models struggle with
-Pneumonia viral images classification and misclassifies them as Pneumonia
-bacteria images.
-
+\begin{figure}[h]
+    \includegraphics[width=8cm]{../doc/images/original_vs_patched_f1.png}
+    \caption{FLANNEL Improvement}
+    \label{fig:f1score}
+\end{figure}
 
 
 In Table \ref{table:resultstats}, we also show F1-score for each classification
@@ -582,7 +572,20 @@ We also compared the performance of the original FLANNEL ensemble with the
 patched ensemble using micro-F1 score and saw a slight increase in overall
 performance compared to the original approach.
 
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../doc/images/ensemble_comparison.png}
+    \caption{Ensemble Comparison PR Curve}
+    \label{fig:ec_prcurve}
+\end{figure*}
 
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
+%     \caption{EnsembLe Comparision ROC Cuve}
+%     \label{fig:ec_roccurve}
+% \end{figure}
 
 We also compare the patched and original FLANNEL performance via confusion
 matrix as shown in Figure \ref{fig:f_cf} and Figure \ref{fig:p_cf}. We see both
@@ -591,62 +594,7 @@ where it has higher precision and recall than other two types of Pneumonia. Both
 models struggle with Pneumonia viral images classification and misclassifies
 them as Pneumonia bacteria images.
 
-
-\begin{figure}[H]
-    \includegraphics[width=8cm]{../doc/images/F1Score_vs_rest.png}
-    \caption{FLANNEL Improvement}
-    \label{fig:f1score}
-\end{figure}
-
-
-
-We also present the ROC curve in Figure \ref{fig:pf_roccurve} and PR curve in
-Figure \ref{fig:pf_prcurve} to show diagnostic ability of patched FLANNEL.
-As ROC curve can be misleading for highly imbalanced classifications, we also
-present Precision-Recall curve for patched FLANNEL. As we can see ROC curve AUC 
-all models are performing well they have very less false positives. However when
-we look at PR curve, we could see all models performance differ and InceptionV3
-and Ensemble model performing better than others.
-
-
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_roc_curve.png}
-    \caption{Patched FLANNEL ROC Curve}
-    \label{fig:pf_roccurve}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
-    \caption{Patched FLANNEL PR Curve}
-    \label{fig:pf_prcurve}
-\end{figure}
-
-
-
-
-
-
-\begin{figure}
-    \centering
-
-    \centering
-    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_precision_recall_curve.png}
-    \caption{Ensemble Comparision PR Curve}
-    \label{fig:ec_prcurve}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
-    \caption{EnsembLe Comparision ROC Cuve}
-    \label{fig:ec_roccurve}
-\end{figure}
-
-
-\begin{figure}
     \centering
     \includegraphics[width=7cm]{../doc/images/base_flannel_cf.png}
     \caption{Original FLANNEL Confusion Matrix}
@@ -654,32 +602,45 @@ and Ensemble model performing better than others.
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=7cm]{../doc/images/patched_flannel_cf.png}
     \caption{Patched FLANNEL Confusion Matrix}
     \label{fig:p_cf}
 \end{figure}
 
-% \begin{figure}[H]
-%     \includegraphics[width=8cm]{../doc/images/precision_recall_curve-2.png}
+
+
+
+We also present the ROC curve in Figure \ref{fig:pf_roccurve} and PR curve in
+Figure \ref{fig:pf_prcurve} to show diagnostic ability of patched FLANNEL.
+As ROC curve can be misleading for highly imbalanced classifications, we also
+present Precision-Recall curve for patched FLANNEL. As we can see ROC curve AUC
+all models are performing well they have very less false positives. However when
+we look at PR curve, we could see all models performance differ and InceptionV3
+and Ensemble model performing better than others.
+
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
+    \caption{Patched FLANNEL PR and ROC Curve}
+    \label{fig:pf_roccurve}
+\end{figure*}
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=7cm]{../doc/images/patched_flannel_covid_19_precision_recall_curve.png}
 %     \caption{Patched FLANNEL PR Curve}
-%     \label{fig:pf_pr_curve}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \includegraphics[width=8cm]{../doc/images/roc_curve-2.png}
-%     \caption{Patched FLANNEL ROC Curve}
-%     \label{fig:pf_roc_curve}
+%     \label{fig:pf_prcurve}
 % \end{figure}
 
 
-We also provided the visual description of FLANNEL performance, via confusion
-matrix as shown in figure \ref{fig:cfmatrix}. As the matrix depicts, For
-COVID-19 identification, FLANNEL has higher precision and recall than the other
-2 types of pneumonia. This proves FLANNEL can distinguish pneumonia images from
-normal images and differentiate chest x-ray images of COVID-19 against other
-pneumonia images.
+
+
+
+
+
 
 
 \section{Discussion}
@@ -735,7 +696,7 @@ epochs like FLANNEL and implemented learning rate adjustment at 150 epochs.
 We had two major goals for this project. To faithfully reproduce FLANNEL on an
 updated dataset with improved distribution of COVID-19 images and to apply
 segmentation and patched classification to improve the COVID-19 detection
-performance of FLANNEL model. 
+performance of FLANNEL model.
 
 We ran the base models and FLANNEL ensemble on the new dataset using all five
 folds and 200 epochs. With the improved distribution of COVID-19 data we see
@@ -761,7 +722,7 @@ for Original FLANNEL).
 We were partially able to achieve our goal of improving the original FLANNEL
 architecture using patch-based models. Even though the performance was slightly
 increased, we see both Original FLANNEL and Patched FLANNEL clearly outperforms
-the other base models. 
+the other base models.
 
 
 
