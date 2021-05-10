@@ -102,13 +102,20 @@ python FLANNEL/utils/result_plots.py patched_results/results togglecolor
 #### Project Modules 
 
 ##### data_preprocess
+Segmentation network acts as the post data preprocessing step for PatchByPatch model. Segmentation model extracts lung and heart contours from the chest radiography images. 
+Segmentation module uses fully convolutional DenseNet103 to perform semantic segmentation
+
+data_preprocess model splits data into K folds and provides all the numbers for each of these K-folds, types of datasets and classes of images
+
+Responsible for organizing data into different classes and extracting lung contours from CXR images
 
 ##### FLANNEL
 
-##### PatchByPatch
+The original FLANNEL code that was the foundation of our improvements
 
 ##### patched_flannel
 
+The patch-based models that we've developed to be used in the patched_flannel
 
 #### Usage
 
