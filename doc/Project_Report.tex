@@ -365,8 +365,8 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
     2019; KCX: Kaggle Chest X-ray; PA: posteroanterior.
 \end{table*}
 
-\setlength{\algomargin}{0pt}
-\begin{algorithm}
+% \setlength{\algomargin}
+\begin{algorithm}[h]
     \SetAlgoNoLine
     \DontPrintSemicolon
     \SetKwProg{Input}{Input:}{}{}
@@ -393,8 +393,7 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
             3. Upscale the mask to 1024x1024.\;
             4. Separate image into random k patches.\;
             5. Pass random k-patches to base models.\;
-            6. Perform majority voting to get get confidence scores/prediction values from each base model.\;
-            7. Get prediction values from all Base Models.\;
+            7. Get mean probability score from all Base Models.\;
             $P_i = Learner_i(X) \in R^{B\times 4}$, where i = 1,...n\;
             8. Get Learner weights.\;
             $W=NeuralWeightModule([P_i, i=1,..,n]) \in R^{B\times 5}$\;
