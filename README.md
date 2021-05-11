@@ -311,7 +311,7 @@ python FLANNEL/ensemble_step2_ensemble_learning.py \
 
 ## Generate Plots
 
-### bar chart
+### F1 Score Bar Chart
 
 ```bash
 python FLANNEL/utils/generate_bar.py
