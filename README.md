@@ -9,8 +9,11 @@ change base models from original FLANNEL to accept patch image for
 classification and inference.
 
 More details about our proposed model can be found in [project
-report](doc/Project_Report.pdf). Below we provide description to setup, train
-and test original FLANNEL and patched FLANNEL models.
+report](doc/Project_Report.pdf),
+[slides](https://docs.google.com/presentation/d/1F-7r4yMlsDHU1sbWj8aXkCuru2vJPpXnTpzeCDLBreM/edit?usp=sharing)
+and [presentation](https://mediaspace.illinois.edu/media/t/1_atvzrp1d). Below
+we provide description to setup, train and test original FLANNEL and patched
+FLANNEL models.
 
 ## Authors
 
@@ -230,10 +233,15 @@ python FLANNEL/utils/result_plots.py explore_version_03/results
 python FLANNEL/utils/result_plots.py patched_results/results togglecolor
 ```
 
+### PR ROC Curves
+```
+python FLANNEL/utils/generate_pr_roc_curves.py
+```
+
 ## References
 
 - [FLANNEL paper](https://academic.oup.com/jamia/article/28/3/444/5943880)
-- [Patch by Patch paper](https://ieeexplore.ieee.org/document/9090149)
+- [Patch-based paper](https://ieeexplore.ieee.org/document/9090149)
 
 ## Acknowledgement
 
