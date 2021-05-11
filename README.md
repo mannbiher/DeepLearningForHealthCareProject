@@ -136,7 +136,7 @@ This process should generate a series of compressed Numpy files that contain a
 Numpified version of the CXR with the mask applied. It also generates two new
 pkl files [forml_covid_dict_ap.pkl.segmented.pkl,
 formal_kaggle_dict.pkl.segmented.pkl]. These new pkl files annotate the original
-entries with the path the the masked cxr npz file.
+entries with the path of the masked cxr npz file.
 
 ## Original FLANNEL
 
@@ -181,8 +181,11 @@ python FLANNEL/ensemble_step1.py --arch inception_v3 \
   --epochs=200 --crop_size=299 -ck_n=50 --cv=cv1 -j=4
 ```
 
-Or you could use [train_model.sh](src/train_model.sh) script in src folder, which run
-all five folds using appropriate parameters for each model.
+Or you could use [train_model.sh](src/train_model.sh) script in src folder,
+which run all five folds using appropriate parameters for each model. This
+scripts trains each model on 200 epochs and then evaluate the trained model.
+There are total six models trained and it takes around 36 hours for training
+and evaluation to finish on AWS p3.2xlarge instance.
 
 ```bash
 ./train_model.sh
@@ -296,7 +299,7 @@ output as is as it is already probability. During training and inference, you ne
 specify this using `--patched` parameter.
 
 ```bash
-  python FLANNEL/ensemble_step2_ensemble_learning.py \
+python FLANNEL/ensemble_step2_ensemble_learning.py \
     --checkpoint ./patched_results/checkpoint \
     --results ./patched_results/results \
     --epochs=$epochs -ck_n=$ck_n \
@@ -325,7 +328,7 @@ python FLANNEL/utils/generate_pr_roc_curves.py
 ## References
 
 - [FLANNEL paper](https://academic.oup.com/jamia/article/28/3/444/5943880)
-- [Patch by Patch paper](https://ieeexplore.ieee.org/document/9090149)
+- [Patch-based paper](https://ieeexplore.ieee.org/document/9090149)
 
 ## Acknowledgement
 
