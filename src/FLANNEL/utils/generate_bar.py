@@ -1,3 +1,10 @@
+#
+# This utility is to generate the bar chart of FLANNEL vs Patched FLANNEL Covid-19 scores
+# Make sure results_home and measure_detail* file names are adjusted accordingly while running this util.
+#        results_home - line 12
+#        measure_detail* files in create_f1df function
+#
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

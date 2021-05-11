@@ -311,6 +311,12 @@ python FLANNEL/ensemble_step2_ensemble_learning.py \
 
 ## Generate Plots
 
+### bar chart
+
+```bash
+python FLANNEL/utils/generate_bar.py
+```
+
 ### Confusion Matrix
 
 ```bash
