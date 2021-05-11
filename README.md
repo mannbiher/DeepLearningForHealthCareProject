@@ -77,8 +77,8 @@ in Python pickle files.
 
 ```bash
 # inside src folder
-data_preprocess/get_covid_data_dict.py 
-data_preprocess/get_kaggle_data_dict.py
+python data_preprocess/get_covid_data_dict.py 
+python data_preprocess/get_kaggle_data_dict.py
 ```
 
 ## Segmentation
@@ -109,7 +109,7 @@ data
 - run train.py
 
 ```python
-python train.py
+python ./data_preprocess/segmentation/train.py
 ```
 
 This process should create a new model in output/model_v1.1pth
@@ -129,7 +129,7 @@ cp output/model_v1.1pth ./model_v1.1pth
 - run inference.py
 
 ```python
-python inference.py
+python ./data_preprocess/segmentation/inference.py
 ```
 
 This process should generate a series of compressed Numpy files that contain a
@@ -146,7 +146,7 @@ Run below python module, to generate five-fold cross validation experiment data
 from pickle files generated during metadata creation.
 
 ```bash
- python extract_exp_data_crossentropy \
+ python ./data_preprocess/extract_exp_data_crossentropy \
     --out-dir ./data_preprocess/standard_data_multiclass_0922_crossentropy \
     --covid ./data_preprocess/formal_covid_dict_ap.pkl \
     --kaggle ./data_preprocess/formal_kaggle_dict.pkl
