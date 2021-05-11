@@ -9,7 +9,7 @@
 % \crdata{0-12345-67-8/90/01}  % Allows non-default copyright data to be
 % 'entered' - IF NEED BE. --- End of author Metadata ---
 
-\title{COVID-19 X-ray Image Classification}
+\title{Patched-FLANNEL: COVID-19 X-ray Image Classification}
 %\subtitle{[Extended Abstract]
 
 \numberofauthors{4}
@@ -433,6 +433,7 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
 \end{table*}
 
 \setlength{\algomargin}{0pt}
+\SetInd{0.5em}{0.2em}
 \begin{algorithm}[h]
     \SetAlgoNoLine
     \DontPrintSemicolon
@@ -454,22 +455,22 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
         Run segmentation network on the dataset to generate masks for each CXR image.\;
     }
     \StageTwo{\;
-        \ForE{batch of images from input images and labels}{
+        \ForE{batch of images and labels}{
             1. Fetch the masked CXR image.\;
             2. Separate image into random k patches.\;
             3. Pass random k-patches to base models.\;
             4. Get mean probability score from all Base Models.\;
             $P_i = Learner_i(X) \in R^{B\times 4}$, where i = 1,...n\;
-            8. Get Learner weights.\;
+            5. Get Learner weights.\;
             $W=NeuralWeightModule([P_i, i=1,..,n]) \in R^{B\times 5}$\;
-            9. Linear Combination for Prediction\;
+            6. Linear Combination for Prediction\;
             $\hat{Y}=Softmax(\sum_{i=1}^{n} W_i P_i) \in R^{B \times 4}$ (where $W_i$ represents i-th column of $W$)\;
-            10. Loss = $FocalLoss(\hat{Y}, Y)$\;
-            11. Back-propagate on Loss and update parameters
+            7. Loss = $FocalLoss(\hat{Y}, Y)$\;
+            8. Back-propagate on Loss and update parameters
         }
     }
 
-    \caption{FLANNEL with patch-by-patch Training}
+    \caption{Patched-FLANNEL Training}
     \label{algo:flannel-improved}
 \end{algorithm}
 
@@ -522,9 +523,6 @@ F1 score.
 We evaluate original FLANNEL \textit{global} \footnote{Complete image as input
 instead of patch} base models independently, the global ensemble model, the
 patch-based base models independently and the patch-based FLANNEL ensemble model.
-
-\subsection{Implementation Details}
-
 
 \subsection{Experimental Results}
 \subsubsection{Segmentation Training}
@@ -709,17 +707,16 @@ dataset.
 Then we created the Segmentation model that produced masked CXR images that
 displayed only the lung contours. These masked images were then used as a
 dataset for patch-based versions of the FLANNEL model. The performance of the
-patch-based models was very similar to their “global” counterparts with three of
-the five models having a slight increase in performance while the other two had
-a slight decrease. We then ran the ensemble on the outputs of the patch-based
-classifier and did not note major improvement in classification performance. For
-COVID-19, ensemble on patched classifiers performed slightly worse than Original
-FLANNEL ensemble. However, for overall classification the average precision
-increased by 1\% over the Original FLANNEL.
+patch-based models based on F1-Score had significant improvements when compared
+with their original counterparts with the exception of the Pneumonia Viral
+class. We then ran the ensemble on the outputs of the patch-based classifier
+and did not note major improvement in classification performance. For COVID-19,
+ensemble on patched classifiers performed slightly worse than Original FLANNEL
+ensemble. However, for overall classification the average precision increased
+by 1\% over the Original FLANNEL.
 
-We were able to complete patch classifier run earlier than Original FLANNEL
-(stage-1 and stage-2) where early stopping and less epochs (100 vs 200 epochs
-for Original FLANNEL).
+Due to limited time, we only trained Patched FLANNEL for 100 epochs which is
+much less than Original FLANNEL (stage-1 and stage-2) at 200 epochs
 
 We were partially able to achieve our goal of improving the original FLANNEL
 architecture using patch-based models. Even though the performance was slightly
@@ -746,12 +743,12 @@ GitHub documentation, presentation video
 report,GitHub documentation, presentation video
 
 \section{Acknowledgement}
-GitHub source code for both FLANNEL and Patch-by-Patch classification
+GitHub source code for both FLANNEL and Patch-Based classification
 \cite{pmid32396075} paper are used as baseline for this improvement.
 \begin{itemize}
     \item \href{https://github.com/qxiaobu/FLANNEL}{FLANNEL GitHub Repository}
     \item \href{https://github.com/jongcye/Deep-Learning-COVID-19-on-CXR-using-Limited-Training-Data-Sets}
-          {Patch-by-Patch classification}
+          {Patch-Based classification}
 \end{itemize}
 
 
