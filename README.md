@@ -213,26 +213,28 @@ python FLANNEL/utils/result_plots.py patched_results/results togglecolor
 
 <!--![](https://img.shields.io/badge/OS-Linux-informational?style=flat&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)
 ![](https://img.shields.io/badge/Code-Python-informational?style=flat&logo=<LOGO_NAME>&logoColor=white&color=2bbc8a)-->
-![](https://img.shields.io/static/v1?label=OS&message=Linux&color=yellowgreen)
+![](https://img.shields.io/static/v1?label=OS&message=Linux&color=brightgreen)
 ![](https://img.shields.io/static/v1?label=Code&message=Python%203.8.0&color=brightgreen)
-![](https://img.shields.io/static/v1?label=Infrastructure&message=AWS&color=green)
-![](https://img.shields.io/static/v1?label=Infrastructure-Automation&message=Terraform&color=yellowgreen)
-![](https://img.shields.io/static/v1?label=Editor&message=VSCode&color=yellow)
-![](https://img.shields.io/static/v1?label=Processor&message=GPU%20Tesla&color=orange)
+![](https://img.shields.io/static/v1?label=Infrastructure&message=AWS&color=brightgreen)
+![](https://img.shields.io/static/v1?label=Infrastructure-Automation&message=Terraform&color=brightgreen)
+![](https://img.shields.io/static/v1?label=Editor&message=VSCode&color=brightgreen)
+![](https://img.shields.io/static/v1?label=Processor&message=GPU%20Tesla&color=brightgreen)
+<!--color  yellowgreen brightgreen green yellow orange https://shields.io/ -->
+###### Python Modules
+```
+  | - Python
+	| - pandas
+	| - numpy
+	| - pytorch
+	| - matplotlib
+	| - opencsv
+	| - torchvision
+	| - scikit-learn
+	| - tensorboard
+	| - seaborn
+```
 
-    Core part
-	Python
-	Libraries
-		pandas
-		numpy
-		pytorch
-		matplotlib
-		opencsv
-		torchvision
-		scikit-learn
-		tensorboard
-		seaborn
-#### Infrastructure
+###### Infrastructure
 		Terraform
 		Linux Bash
 
@@ -287,8 +289,3 @@ chmod +x trainmodel.sh
 #### Technical challenges
 <!-- Can we update google doc with all the known issues -->
 #### References
-#### Collaborators
-* [Maneesh](mailto:msingh4@illinois.edu)
-* [Raman](mailto:rsw2@illinois.edu)
-* [Satish](mailto:sasi2@illinois.edu)
-* [Srikanth](mailto:sbs7@illinois.edu)
