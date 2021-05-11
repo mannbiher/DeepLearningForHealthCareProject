@@ -136,16 +136,6 @@ pkl files [forml_covid_dict_ap.pkl.segmented.pkl,
 formal_kaggle_dict.pkl.segmented.pkl]. These new pkl files annotate the original
 entries with the path of the masked cxr npz file.
 
-To train and evaluate the model. This scripts trains each model on 200 epochs
-and then evaluate the trained model. There are total six models trained and it
-takes around 36 hours for training and evaluation to finish on AWS p3.2xlarge
-instance.
-
-
-```bash
-./train_model.sh
-```
-
 ## Original FLANNEL
 
 ### Five Fold CV
@@ -171,8 +161,11 @@ and provide all necessary arguments.
 python FLANNEL/ensemble_step1.py --arch inception_v3 --epochs=200 --crop_size=299 -ck_n=50 --cv=cv1 -j=4
 ```
 
-Or you could use [train_model.sh](src/train_model.sh) script in src folder, which run
-all five folds using appropriate parameters for each model.
+Or you could use [train_model.sh](src/train_model.sh) script in src folder,
+which run all five folds using appropriate parameters for each model. This
+scripts trains each model on 200 epochs and then evaluate the trained model.
+There are total six models trained and it takes around 36 hours for training
+and evaluation to finish on AWS p3.2xlarge instance.
 
 ```bash
 ./train_model.sh
