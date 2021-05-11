@@ -134,7 +134,7 @@ This process should generate a series of compressed Numpy files that contain a
 Numpified version of the CXR with the mask applied. It also generates two new
 pkl files [forml_covid_dict_ap.pkl.segmented.pkl,
 formal_kaggle_dict.pkl.segmented.pkl]. These new pkl files annotate the original
-entries with the path the the masked cxr npz file.
+entries with the path of the masked cxr npz file.
 
 To train and evaluate the model. This scripts trains each model on 200 epochs
 and then evaluate the trained model. There are total six models trained and it
