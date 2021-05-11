@@ -313,7 +313,7 @@ model from overfitting.
 We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
 CXR images from the COVID Chest X-ray and Kaggle X-ray datasets. The original
 inference script provided by Park et. al would produce two outputs, a Numpy\footnote{
-    https://numpy.org/devdocs/reference/generated/numpy.lib.format.html} format
+    \url{https://numpy.org/devdocs/reference/generated/numpy.lib.format.html}} format
 from the CXR and a Numpy format of the mask separating the lung
 contours. The Numpy format of the mask is just 0s and 1s where the 1s
 represent the area of the lung contours.  We modified the inference script to
@@ -332,7 +332,7 @@ cross validation while training. The detailed statistics are shown in Table
 The next improvement that we produced was creating patch-based classifiers.
 Similar to the original global base models in FLANNEL, the patch base models
 used were pre-trained from
-ImageNet\footnote{http://www.image-net.org/challenges/LSVRC/index} to account
+ImageNet\footnote{\url{http://www.image-net.org/challenges/LSVRC/index}} to account
 for the small size of the dataset. The patch-based classifier then produced k
 number crops/patches of size 224x224 from the masked CXR generated in the
 previous step. To limit patches outside the lung area, the random points were
@@ -430,7 +430,7 @@ The overall algorithm is shown in Algorithm \ref{algo:flannel-improved}.
     The values in parentheses are the standard deviations.
 \end{table*}
 
-% \setlength{\algomargin}
+\setlength{\algomargin}{0pt}
 \begin{algorithm}[h]
     \SetAlgoNoLine
     \DontPrintSemicolon
@@ -735,30 +735,21 @@ the other base models.
 \section{Contribution}
 
 All authors were actively involved in Patched FLANNEL development and
-implementations. Major contribution from authors are
+implementation. Major contribution from authors are:
 
-\begin{table}
-    \centering
-    \begin{tabular}{|p{0.18\linewidth} | p{0.7\linewidth}|}
-        \hline
-        Author   & Contribution
-        \\ \hline
-        Maneesh  & AWS Setup, batch run of FLANNEL and patch-based models on
-        AWS, patch-based classification development and  ensemble, project
-        report, GitHub documentation \\ \hline
-        Raman    & segmentation and patch-based classification development,
-        output graphs and reports development, project report, GitHub
-        documentation report, GitHub documentation
-        \\ \hline
-        Satish   & FLANNEL checkpoints, output graphs and reports development,
-        GitHub documentation
-        \\ \hline
-        Srikanth & segmentation, patch-based classification development, project
-        report,GitHub documentation
-        \\ \hline
-    \end{tabular}
-    \label{tab:contr}
-\end{table}
+\textbf{Maneesh:} AWS Setup, batch run of FLANNEL and patch-based models on
+AWS, patch-based classification and ensemble model development, project
+report, GitHub documentation
+
+\textbf{Raman:} segmentation and patch-based classification development,
+output graphs, presentation slide, project report, GitHub
+documentation
+
+\textbf{Satish:} FLANNEL checkpoints, output graphs and reports development,
+GitHub documentation
+
+\textbf{Srikanth:} segmentation, patch-based classification development, project
+report,GitHub documentation
 
 
 
