@@ -153,6 +153,13 @@ independent base models in the ensemble to be patch-based classifiers. We call
 this new architecture \textbf{Patched FLANNEL}. The network structure is shown in
 Figure \ref{fig:improve} and similar to FLANNEL consists of two-stage approach.
 
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../doc/images/Flannel_Improved_Latest.png}
+    \caption{FLANNEL Improvement}
+    \label{fig:improve}
+\end{figure*}
+
 \subsection{Related Work}
 
 Here we discuss some of the related works that are being carried out in this
@@ -210,7 +217,7 @@ reduce model complexity and making the overall system easier to understand.
 
 \subsubsection{Noise-robust segmentation of COVID-19 from CT images}
 
-This is a CNN model \cite{wang2020covidnet} developed to be effective with
+This is a CNN model \cite{pmid32730215} developed to be effective with
 detection of COVID-19 lesions from CT images that have a lot of noise. This
 paper discusses how Wang et al developed a novel noise-robust learning framework
 based on self-ensembling of CNNs.  To better deal with the complex lesions, a
@@ -225,6 +232,48 @@ process robust against noisy labels, a novel noise-robust Dice loss function was
 proposed and integrated into a self-ensembling framework, where an adaptive
 teacher and an adaptive student are introduced to further improve the
 performance in dealing with noisy labels.
+
+
+\subsubsection{Automatic Detection of COVID-19 using CXR images}
+
+A Narin et al. trained 5 different models to effectively classify the CXR images
+into 3 different binary classes \cite{Narin_2021} ,such as COVID19 vs Normal, COVID19 vs
+Pneumonia Bacteria and COVID19 vs Pneumonia Viral. They have used datasets from
+github repository shared by Dr. Joseph Cohen which contains CXR and CT images
+with ARDS, COVID-19, MERS, pneumonia and SARS. Health Chest X-rays are taken
+from “ChesX-ray8” dataset and also collected bacterial, pneumonia viral CXRs
+from Kaggle repository. They were able to achieve accuracies of 96.1\%, 99.5\% and
+99.7\% for the three different binary classifications, COVID19 vs Normal, COVID19
+vs Viral pneumonia and COVID19 vs Bacterial pneumonia respectively.
+
+\subsubsection{COVIDXnet}
+
+E El-Din et al. proposed COVIDXnet architecture, which is a deep learning
+framework to diagnose COVID19 CXR images. They have compared 7 different models
+to classify CXRs as COVID19 or non COVID19 \cite{hemdan2020covidxnet}. The
+dataset used is the public dataset provided by Dr. Joseph Cohen and Dr. Adrina
+Rosebrock, a limited dataset consisting of 50 X-ray images of which 25 normal
+(health) and 25 positive COVID19 images. They have trained and analyzed VGG!9,
+DenseNet201, ResNetV2, InceptionV3, InceptionResNetV2, Xception and MobileNetV2.
+They have used 80\% of the available for training/evaluation and 20\% to test
+and compare the performances. From their study, it was concluded that VGG19 and
+DenseNEt201 models are better/recommended whereas InceptionV3 did not perform
+well when compared to other deep learning models.
+
+\subsection{COVID-ResNet}
+
+M Farooq and A Hafeez suggested this architecture, COVID-ResNet
+\cite{farooq2020covidresnet}, they have used ResNet50 pre-trained model, applied
+transfer learning and other hyper-tuning to effectively use it for multiclass
+classification of CXRs into normal, bacterial, viral and COVID19. With the help
+of transfer learning techniques they replaced the head of the pre-trained model
+with another head that contains Adaptive average/max pooling, batch
+normalization, drop out and linear layers. They then used this model to further
+stage 2 and stage 3,  to hyper-tune the model parameters on different image
+sizes such as 224X224X3 and 229X229X3 respectively. This architecture achieved
+overall accuracy of 96.23\% compared to COVID-Net with 83.5\% on the same COVIDx
+test dataset. The number of parameters and training epochs are very small
+compared to COVID-Net architecture.
 
 \begin{table*}[h]
     \centering
@@ -261,13 +310,6 @@ performance in dealing with noisy labels.
 \end{table*}
 
 \section{Method}
-
-\begin{figure*}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../doc/images/Flannel_Improved_Latest.png}
-    \caption{FLANNEL Improvement}
-    \label{fig:improve}
-\end{figure*}
 
 The primary objective was to improve the detection of COVID-19 in CXR images
 with a multi-classifier model that can detect four categories: Normal, Pneumonia
@@ -509,7 +551,6 @@ training.
 After the base models are trained, the FLANNEL ensemble is trained by passing in
 the concatenated output layers of the base models as the input features.
 
-
 \subsection{Evaluation strategy}
 Our main goal is to study the detection of COVID-19 among different respiratory
 x-ray images. We first measured the overall accuracy and precision of all 4
@@ -534,6 +575,13 @@ shows the mask creation and applying the mask on the image.
     \includegraphics[width=8cm]{../doc/images/segmentation_training.png}
     \caption{Segmentation Training}
     \label{fig:segtrain}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \caption{EnsembLe Comparison ROC Curve}
+    \label{fig:ec_roccurve}
 \end{figure}
 
 \subsubsection{FLANNEL}
@@ -592,13 +640,6 @@ performs slightly better in overall predictions.
 \end{figure}
 
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
-    \caption{EnsembLe Comparison ROC Curve}
-    \label{fig:ec_roccurve}
-\end{figure}
-
 We also compare the patched and original FLANNEL performance via confusion
 matrix as shown in Figure \ref{fig:f_cf} and Figure \ref{fig:p_cf}. Due to
 nature of random split between different runs, we see different numbers in both
@@ -623,6 +664,12 @@ them as Pneumonia bacteria images.
     \label{fig:p_cf}
 \end{figure}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
+    \caption{Patched FLANNEL PR and ROC Curve}
+    \label{fig:pf_roccurve}
+\end{figure*}
 
 We also present the ROC and Precision-Recall curve for COVID-19 classification
 in Figure \ref{fig:pf_roccurve} to show diagnostic ability of patched FLANNEL.
@@ -631,14 +678,6 @@ As we see using ROC curve AUC gives an impression of all models are performing
 well as they have very few false positives. However when we look at PR curve, we
 could see models performance differ and InceptionV3 and Ensemble model
 performing better than others.
-
-
-\begin{figure*}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
-    \caption{Patched FLANNEL PR and ROC Curve}
-    \label{fig:pf_roccurve}
-\end{figure*}
 
 
 \section{Discussion}
