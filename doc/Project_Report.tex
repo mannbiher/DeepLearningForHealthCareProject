@@ -110,7 +110,7 @@ the standard cross-entropy loss that places a focus on the imbalance negatives
 by applying down-weights to well-classified examples. Focal Loss has been known
 to improve performance for imbalanced datasets.
 
-Park et. al \cite{pmid32396075} has also created a deep learning model that has
+Park et al. \cite{pmid32396075} has also created a deep learning model that has
 been proven to be effective on detecting COVID-19 when trained with limited
 datasets. The approach taken was to first detect lung contours of the CXR and
 perform segmentation. The motivation for performing segmentation first is that
@@ -355,7 +355,7 @@ model from overfitting.
 We then applied the trained FC-DenseNet103 segmentation model on the AP and PA
 CXR images from the COVID Chest X-ray and Kaggle X-ray datasets. These datasets now
 contains 478 COVID-19 and 5932 non-COVID CXR images. The original
-inference script provided by Park et. al would produce two outputs, a Numpy\footnote{
+inference script provided by Park et al. would produce two outputs, a Numpy\footnote{
     \url{https://numpy.org/devdocs/reference/generated/numpy.lib.format.html}} format
 from the CXR and a Numpy format of the mask separating the lung
 contours. The Numpy format of the mask is just 0s and 1s where the 1s
