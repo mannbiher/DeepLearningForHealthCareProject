@@ -126,7 +126,7 @@ interest used to perform analysis.  In general, standard biomarkers
 
 
 Thus it could be observed that most of the initial diagnosis is carried out from
-CXR images by concentrating on the lung area. We also find this strategy also
+CXR images by concentrating on the lung area. We find this strategy also
 makes the model less susceptible to noise happening outside the lung region.
 After the lungs have been segmented, patch-based classification is performed.
 Patch-based classification involves selecting random crops or patches across the
@@ -140,7 +140,7 @@ likely for the image to not recognize “global” patterns throughout the whole
 image. Based on the conclusion provided in the patch based paper
 \cite{pmid32396075} by Park et al., it is clear that the patch-based
 classification outperformed the models that used the whole image for a limited
-train set data. As we have an imbalanced dataset with limited COVID 19 CXR
+train set data. As we have an imbalanced dataset with limited COVID-19 CXR
 images, we were optimistic that utilizing patch-based classification models for
 the FLANNEL ensemble with the combination of focal loss optimization would
 result in a performance improvement.
@@ -237,23 +237,23 @@ performance in dealing with noisy labels.
 \subsubsection{Automatic Detection of COVID-19 using CXR images}
 
 A Narin et al. trained 5 different models to effectively classify the CXR images
-into 3 different binary classes \cite{Narin_2021} ,such as COVID19 vs Normal, COVID19 vs
-Pneumonia Bacteria and COVID19 vs Pneumonia Viral. They have used datasets from
+into 3 different binary classes \cite{Narin_2021} ,such as COVID-19 vs Normal, COVID-19 vs
+Pneumonia Bacteria and -19 vs Pneumonia Viral. They have used datasets from
 github repository shared by Dr. Joseph Cohen which contains CXR and CT images
 with ARDS, COVID-19, MERS, pneumonia and SARS. Health Chest X-rays are taken
 from “ChesX-ray8” dataset and also collected bacterial, pneumonia viral CXRs
 from Kaggle repository. They were able to achieve accuracies of 96.1\%, 99.5\% and
-99.7\% for the three different binary classifications, COVID19 vs Normal, COVID19
-vs Viral pneumonia and COVID19 vs Bacterial pneumonia respectively.
+99.7\% for the three different binary classifications, COVID-19 vs Normal, COVID-19
+vs Viral pneumonia and COVID-19 vs Bacterial pneumonia respectively.
 
 \subsubsection{COVIDXnet}
 
 E El-Din et al. proposed COVIDXnet architecture, which is a deep learning
-framework to diagnose COVID19 CXR images. They have compared 7 different models
-to classify CXRs as COVID19 or non COVID19 \cite{hemdan2020covidxnet}. The
+framework to diagnose COVID-19 CXR images. They have compared 7 different models
+to classify CXRs as COVID-19 or non COVID-19 \cite{hemdan2020covidxnet}. The
 dataset used is the public dataset provided by Dr. Joseph Cohen and Dr. Adrina
 Rosebrock, a limited dataset consisting of 50 X-ray images of which 25 normal
-(health) and 25 positive COVID19 images. They have trained and analyzed VGG!9,
+(health) and 25 positive COVID19 images. They have trained and analyzed VGG19,
 DenseNet201, ResNetV2, InceptionV3, InceptionResNetV2, Xception and MobileNetV2.
 They have used 80\% of the available for training/evaluation and 20\% to test
 and compare the performances. From their study, it was concluded that VGG19 and
@@ -262,18 +262,18 @@ well when compared to other deep learning models.
 
 \subsubsection{COVID-ResNet}
 
-M Farooq and A Hafeez suggested this architecture, COVID-ResNet
-\cite{farooq2020covidresnet}, they have used ResNet50 pre-trained model, applied
-transfer learning and other hyper-tuning to effectively use it for multiclass
-classification of CXRs into normal, bacterial, viral and COVID19. With the help
-of transfer learning techniques they replaced the head of the pre-trained model
-with another head that contains Adaptive average/max pooling, batch
-normalization, drop out and linear layers. They then used this model to further
-stage 2 and stage 3,  to hyper-tune the model parameters on different image
-sizes such as 224X224X3 and 229X229X3 respectively. This architecture achieved
-overall accuracy of 96.23\% compared to COVID-Net with 83.5\% on the same COVIDx
-test dataset. The number of parameters and training epochs are very small
-compared to COVID-Net architecture.
+M Farooq and A Hafeez suggested COVID-ResNet \cite{farooq2020covidresnet}
+architecture for COVID-19 classification. The authors used ResNet50 pre-trained
+model, applied transfer learning and other hyper-tuning to effectively use it
+for multiclass classification of CXRs into normal, bacterial, viral and
+COVID-19. With the help of transfer learning techniques they replaced the head
+of the pre-trained model with another head that contains Adaptive average/max
+pooling, batch normalization, drop out and linear layers. Then they added two
+stages to hyper-tune model parameters on different image sizes where stage-2 was
+$224\times 224\times 3$ and stage-3 was $229\times 229\times 3$ respectively.
+This architecture achieved overall accuracy of 96.23\% compared to COVID-Net
+with 83.5\% on the same COVIDx test dataset. The number of parameters and
+training epochs are very small compared to COVID-Net architecture.
 
 \begin{table*}[h]
     \centering
