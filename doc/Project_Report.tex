@@ -562,7 +562,7 @@ We calculate F1-score for each fold and then average them to calculate the mean
 F1 score.
 
 We evaluate original FLANNEL \textit{global} \footnote{Complete image as input
-instead of patch} base models independently, the global ensemble model, the
+    instead of patch} base models independently, the global ensemble model, the
 patch-based base models independently and the patch-based FLANNEL ensemble model.
 
 \subsection{Experimental Results}
@@ -575,13 +575,6 @@ shows the mask creation and applying the mask on the image.
     \includegraphics[width=8cm]{../doc/images/segmentation_training.png}
     \caption{Segmentation Training}
     \label{fig:segtrain}
-\end{figure}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
-    \caption{EnsembLe Comparison ROC Curve}
-    \label{fig:ec_roccurve}
 \end{figure}
 
 \subsubsection{FLANNEL}
@@ -605,6 +598,13 @@ original base models for COVID-19 detection.
     \includegraphics[width=0.8\textwidth]{../doc/images/original_vs_patched_flannel_f1.png}
     \caption{COVID-19 F1 score comparison}
     \label{fig:f1score}
+\end{figure*}
+
+\begin{figure*}[!htpb]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
+    \caption{Patched FLANNEL PR and ROC Curve}
+    \label{fig:pf_roccurve}
 \end{figure*}
 
 
@@ -631,6 +631,12 @@ under curve) and 2.08\% increase in ROC AUC. As micro-average gives equal weight
 to all predictions irrespective of classes. This shows patched ensemble model
 performs slightly better in overall predictions.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{../doc/images/ensemble_comparison_roc_curve.png}
+    \caption{EnsembLe Comparison ROC Curve}
+    \label{fig:ec_roccurve}
+\end{figure}
 
 \begin{figure}[h]
     \centering
@@ -663,13 +669,6 @@ them as Pneumonia bacteria images.
     \caption{Patched FLANNEL Confusion Matrix}
     \label{fig:p_cf}
 \end{figure}
-
-\begin{figure*}[!htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../doc/images/patched_flannel_covid_19_plot_curve.png}
-    \caption{Patched FLANNEL PR and ROC Curve}
-    \label{fig:pf_roccurve}
-\end{figure*}
 
 We also present the ROC and Precision-Recall curve for COVID-19 classification
 in Figure \ref{fig:pf_roccurve} to show diagnostic ability of patched FLANNEL.
